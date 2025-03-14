@@ -1,3 +1,11 @@
+import HeroSection from "./_components/sections/hero-section";
+import IntroSection from "./_components/sections/intro-section";
+
 export default function Home() {
-  return <div className="min-h-screen bg-gray-900">home</div>;
+  return (
+    <main className="min-h-screen">
+      <HeroSection />
+      <IntroSection />
+    </main>
+  );
 }
