@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PT_Sans_Narrow } from "next/font/google";
+import { Pacifico, PT_Sans_Narrow } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/common/header";
 import Footer from "@/components/common/footer";
@@ -9,6 +9,11 @@ const ptSansNarrow = PT_Sans_Narrow({
   subsets: ["latin"],
   weight: ["400", "700"],
   fallback: ["sans-serif"],
+});
+const pacifico = Pacifico({
+  variable: "--font-pacifico",
+  weight: ["400"],
+  fallback: ["Sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -22,36 +27,42 @@ const products: Product[] = [
       "Special Lemon Juice help me plesaehelphelphelphelphelphelphelphelphelp help help help help help",
     imgSrc: "/images/special-products/lemon.png",
     price: 10.99,
+    category: "drinks",
   },
   {
     id: 2,
     label: "Special Burger",
     imgSrc: "/images/special-products/burger.png",
     price: 10.99,
+    category: "burgers",
   },
   {
     id: 3,
     label: "Green Salad",
     imgSrc: "/images/special-products/green-salad.png",
     price: 10.99,
+    category: "salads",
   },
   {
     id: 4,
     label: "Meat Salad",
     imgSrc: "/images/special-products/meat-salad.png",
     price: 10.99,
+    category: "salads",
   },
   {
     id: 5,
     label: "Olive Salad",
     imgSrc: "/images/special-products/olive-salad.png",
     price: 10.99,
+    category: "salads",
   },
   {
     id: 6,
     label: "Orange Juice",
     imgSrc: "/images/special-products/orange.png",
     price: 10.99,
+    category: "drinks",
   },
 ];
 export default function RootLayout({
@@ -61,7 +72,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${ptSansNarrow.className} h-[10000px]  antialiased`}>
+      <body
+        className={`${ptSansNarrow.className} ${pacifico.variable} h-[9000px]  antialiased`}
+      >
         <Header products={products} />
         {children}
         <Footer />

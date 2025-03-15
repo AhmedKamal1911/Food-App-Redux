@@ -3,4 +3,14 @@ export type Product = {
   label: string;
   price: number;
   imgSrc: string;
+  category: FoodCategoryKeys;
 };
+
+export type FoodCategoryKeys =
+  | "burgers"
+  | "deserts"
+  | "drinks"
+  | "pasta"
+  | "pizzas"
+  | "salads"
+  | "all";

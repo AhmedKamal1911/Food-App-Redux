@@ -15,7 +15,7 @@
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.2 0.01 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
+  --muted: oklch(0.29 0 0);
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
@@ -51,7 +51,7 @@
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.2 0.01 0);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
+  --muted: oklch(0.29 0 0);
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
@@ -149,7 +149,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
-
+  --font-pacifico: var(--font-pacifico);
   @keyframes accordion-down {
     from {
       height: 0;
