@@ -8,7 +8,7 @@ type Props = {
 };
 export default function MenuSection({ categories, products }: Props) {
   return (
-    <section className="bg-secondary py-50">
+    <section className="bg-secondary pt-50 pb-70">
       <div className="container">
         <SpecialHeading
           title="Fresh From Pizzon"

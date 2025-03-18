@@ -1,12 +1,12 @@
 "use client";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { FoodCategoryKeys, Product } from "@/lib/types/shared";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Button } from "../ui/button";
 import Link from "next/link";
 import { Star } from "lucide-react";
+import { Button } from "../ui/button";
 
 export default function ProductFilterTabs({
   categories,
@@ -23,19 +23,37 @@ export default function ProductFilterTabs({
         : products.filter((product) => product.category === category),
     [category, products]
   );
+
+  const getMoreProducts = () => {};
   console.log({ filteredProducts });
+  // TODO: create pagination here
   return (
-    <div>
+    <div className="flex flex-col gap-10 mt-10">
       <FilterTabs
         selectedCategory={category}
         categories={categories}
         setCategory={setCategory}
       />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5  xl:gap-10">
-        {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      {filteredProducts.length < 1 ? (
+        <span className="text-center block text-red-600 font-bold text-xl">
+          No Any Products In This Category
+        </span>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5  xl:gap-10">
+          {filteredProducts.map((product) => (
+            <AnimatePresence key={product.id}>
+              <ProductCard product={product} />
+            </AnimatePresence>
+          ))}
+        </div>
+      )}
+      <Button
+        onClick={getMoreProducts}
+        variant={"outline"}
+        className="text-white py-6 px-11 rounded-4xl font-bold capitalize text-xl  self-center"
+      >
+        load more
+      </Button>
     </div>
   );
 }
@@ -50,7 +68,7 @@ function FilterTabs({
   selectedCategory: string;
 }) {
   return (
-    <div className="bg-muted rounded-sm overflow-hidden flex my-20 gap-2  w-fit  mx-auto max-md:flex-wrap max-md:justify-center ">
+    <div className="bg-muted rounded-sm overflow-hidden flex  gap-2  w-fit  mx-auto max-md:flex-wrap max-md:justify-center ">
       {Object.keys(categories)
         .reverse()
         .map((category, i) => (
@@ -79,7 +97,15 @@ function FilterTabs({
 
 function ProductCard({ product }: { product: Product }) {
   return (
-    <div className=" bg-gradient-to-b from-[#f5482a] to-[#f56003] p-4 rounded-xl shadow-lg transform transition duration-300 hover:scale-105">
+    <motion.div
+      layout
+      key={product.id}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className=" bg-gradient-to-b from-[#f5482a] to-[#f56003] p-4 rounded-xl shadow-lg transform transition duration-300 hover:scale-105"
+    >
       <Link
         href={`/products/${product.label}`}
         className="bg-white rounded-lg shadow-md flex justify-center items-center py-3"
@@ -119,14 +145,6 @@ function ProductCard({ product }: { product: Product }) {
           Order Now
         </button>
       </div>
-    </div>
+    </motion.div>
   );
-}
-{
-  /* <Button
-variant={"outline"}
-className="bg-white rounded-3xl text-secondary border-secondary hover:border-secondary hover:bg-secondary hover:text-white font-bold w-fit"
->
-Add to Cart
-</Button> */
 }

@@ -29,7 +29,7 @@ export default function HeroSection() {
     setCurrentSlide((prev) => (prev <= 0 ? 2 : prev - 1));
   }
   return (
-    <section className="h-[60vh] md:h-screen relative overflow-hidden bg-[url('/images/hero-section/chef-bg.png')] bg-cover bg-no-repeat ">
+    <section className="h-[60vh] md:h-screen relative overflow-hidden bg-[url('/images/decorations/chef-bg.png')] bg-cover bg-no-repeat ">
       <div className="container h-full">
         <div className="absolute left-0 top-1/2 w-full flex justify-between z-[888]">
           <Button

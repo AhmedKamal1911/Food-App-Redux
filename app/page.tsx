@@ -3,6 +3,8 @@ import CategoriesSection from "./_components/sections/categories-section";
 import HeroSection from "./_components/sections/hero-section";
 import IntroSection from "./_components/sections/intro-section";
 import MenuSection from "./_components/sections/menu-section";
+import BookTableSection from "./_components/sections/book-table-section";
+import BestChefSection from "./_components/sections/best-chef-section";
 const FoodCategories: Record<FoodCategoryKeys, string> = {
   burgers: "burgers",
   deserts: "deserts",
@@ -56,6 +58,62 @@ const products: Product[] = [
     price: 10.99,
     category: "drinks",
   },
+  {
+    id: 7,
+    label: "Orange Juice",
+    imgSrc: "/images/special-products/orange.png",
+    price: 10.99,
+    category: "drinks",
+  },
+  {
+    id: 8,
+    label: "Orange Juice",
+    imgSrc: "/images/special-products/orange.png",
+    price: 10.99,
+    category: "drinks",
+  },
+  {
+    id: 9,
+    label: "Orange Juice",
+    imgSrc: "/images/special-products/orange.png",
+    price: 10.99,
+    category: "drinks",
+  },
+  {
+    id: 10,
+    label: "Orange Juice",
+    imgSrc: "/images/special-products/orange.png",
+    price: 10.99,
+    category: "drinks",
+  },
+  {
+    id: 11,
+    label: "Orange Juice",
+    imgSrc: "/images/special-products/orange.png",
+    price: 10.99,
+    category: "drinks",
+  },
+  {
+    id: 12,
+    label: "Orange Juice",
+    imgSrc: "/images/special-products/orange.png",
+    price: 10.99,
+    category: "drinks",
+  },
+  {
+    id: 13,
+    label: "Orange Juice",
+    imgSrc: "/images/special-products/orange.png",
+    price: 10.99,
+    category: "drinks",
+  },
+  {
+    id: 14,
+    label: "Orange Juice",
+    imgSrc: "/images/special-products/orange.png",
+    price: 10.99,
+    category: "drinks",
+  },
 ];
 export default function Home() {
   return (
@@ -64,6 +122,8 @@ export default function Home() {
       <IntroSection />
       <CategoriesSection />
       <MenuSection products={products} categories={FoodCategories} />
+      <BookTableSection />
+      <BestChefSection />
     </main>
   );
 }

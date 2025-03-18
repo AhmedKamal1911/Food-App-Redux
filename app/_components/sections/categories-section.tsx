@@ -31,8 +31,8 @@ export default function CategoriesSection({}: Props) {
       </div>
       <Image
         src={"/images/categories-section/weavy-white-bottom.png"}
-        height={139}
-        width={1918}
+        height={372}
+        width={1536}
         alt="weavy top"
         className="absolute start-0  w-full bottom-1 translate-y-full "
       />

@@ -234,7 +234,7 @@ export function SubMenuContainer({
   return (
     <div
       className={cn(
-        "absolute bg-white border-t-2 border-primary p-2 opacity-0 pointer-events-none translate-y-2  transition-[opacity,translate]",
+        "absolute bg-white border-t-3 border-primary p-2 opacity-0 pointer-events-none translate-y-2  transition-[opacity,translate] shadow-md",
         className
       )}
     >

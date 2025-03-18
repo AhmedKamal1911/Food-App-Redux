@@ -31,14 +31,14 @@ export default function IntroSection() {
   return (
     <section className="bg-primary py-25 relative">
       <Image
-        src={"/images/intro-section/weavy-top.png"}
+        src={"/images/decorations/weavy-orange-top.png"}
         height={139}
         width={1918}
         alt="weavy top"
         className="absolute start-0  w-full top-1 -translate-y-full "
       />
       <Image
-        src={"/images/intro-section/weavy-bottom.png"}
+        src={"/images/decorations/weavy-orange-bottom.png"}
         height={139}
         width={1918}
         alt="weavy top"
