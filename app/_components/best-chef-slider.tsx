@@ -25,7 +25,7 @@ export default function BestChefSlider({ chefsList }: Props) {
   const swiperRef = useRef<SwiperCore | null>(null); // ✅ Correct Type
 
   return (
-    <div className="relative">
+    <div className="relative px-5 lg:px-10">
       <BestChefCustomNavigationButtons swiperRef={swiperRef} />
 
       <Swiper
@@ -35,7 +35,7 @@ export default function BestChefSlider({ chefsList }: Props) {
         loop={true}
         pagination={{ clickable: true }}
         modules={[Pagination, Navigation]}
-        className="mySwiper pb-16!"
+        className="mySwiper  pb-16!"
         breakpoints={{
           0: { slidesPerView: 1, spaceBetween: 5 }, // Small screens (sm): 1 slide, 5px gap
           768: { slidesPerView: 2, spaceBetween: 5 }, // Medium screens (md): 3 slides, 10px gap
@@ -59,18 +59,18 @@ function BestChefCustomNavigationButtons({
   swiperRef: RefObject<SwiperCore | null>; // ✅ Correct Type
 }) {
   return (
-    <div className="absolute top-1/2 -translate-y-1/2 -left-5 -right-5 md:-left-5 md:-right-5 lg:-left-6 lg:-right-6 xl:-left-12 xl:-right-12 flex justify-between px-1 z-10 max-md:hidden">
+    <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 md:-left-2 md:-right-2   flex justify-between px-1 z-10 max-md:hidden">
       <button
         className="cursor-pointer p-0  text-primary/50 hover:text-primary transition-colors"
         onClick={() => swiperRef.current?.slidePrev()} // ✅ Correct Access
       >
-        <ChevronLeft className="size-8 md:size-8 lg:size-10 xl:size-14" />
+        <ChevronLeft className="md:size-10 lg:size-13 " />
       </button>
       <button
         className="cursor-pointer p-0  text-primary/50 hover:text-primary transition-colors"
         onClick={() => swiperRef.current?.slideNext()} // ✅ Correct Access
       >
-        <ChevronRight className="size-8 md:size-8 lg:size-10 xl:size-14" />
+        <ChevronRight className="md:size-10 lg:size-13 " />
       </button>
     </div>
   );
