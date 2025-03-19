@@ -61,7 +61,7 @@ export default function Header({ products }: { products: Product[] }) {
       <header
         className={clsx(
           "fixed start-0 end-0 transition-colors z-[999]",
-          isInView ? "bg-black/0" : "bg-secondary"
+          isInView ? "bg-black/0" : "bg-secondary shadow-md"
         )}
       >
         <div className="container">

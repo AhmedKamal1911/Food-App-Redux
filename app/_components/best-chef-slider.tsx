@@ -25,7 +25,7 @@ export default function BestChefSlider({ chefsList }: Props) {
   const swiperRef = useRef<SwiperCore | null>(null); // ✅ Correct Type
 
   return (
-    <div className="min-h-[320px] relative">
+    <div className="relative">
       <BestChefCustomNavigationButtons swiperRef={swiperRef} />
 
       <Swiper
@@ -35,7 +35,7 @@ export default function BestChefSlider({ chefsList }: Props) {
         loop={true}
         pagination={{ clickable: true }}
         modules={[Pagination, Navigation]}
-        className="mySwiper h-full pb-16!"
+        className="mySwiper pb-16!"
         breakpoints={{
           0: { slidesPerView: 1, spaceBetween: 5 }, // Small screens (sm): 1 slide, 5px gap
           768: { slidesPerView: 2, spaceBetween: 5 }, // Medium screens (md): 3 slides, 10px gap
@@ -85,7 +85,7 @@ function ChefCard({ chef }: { chef: Chef }) {
           alt="chef img"
           height={263}
           width={287}
-          className="object-cover aspect-[7/6] size-full"
+          className="object-cover  w-full"
         />
       </div>
       <div className="flex flex-col items-center bg-white p-3">

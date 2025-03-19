@@ -5,6 +5,9 @@ import IntroSection from "./_components/sections/intro-section";
 import MenuSection from "./_components/sections/menu-section";
 import BookTableSection from "./_components/sections/book-table-section";
 import BestChefSection from "./_components/sections/best-chef-section";
+import ReviewsSection from "./_components/sections/reviews-section";
+import AboutSection from "./_components/sections/about-section";
+
 const FoodCategories: Record<FoodCategoryKeys, string> = {
   burgers: "burgers",
   deserts: "deserts",
@@ -124,6 +127,8 @@ export default function Home() {
       <MenuSection products={products} categories={FoodCategories} />
       <BookTableSection />
       <BestChefSection />
+      <ReviewsSection />
+      <AboutSection />
     </main>
   );
 }

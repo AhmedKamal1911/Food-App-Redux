@@ -31,8 +31,7 @@ function BookTableInfoBox({ desc, tel }: Props) {
         <SpecialHeading
           title="fresh from pizzon"
           subTitle="book online"
-          titleClassName="text-center md:text-start"
-          subTitleClassName="text-center md:text-start"
+          className="text-center md:text-start"
         />
         <p className="text-secondary text-center md:text-start">{desc}</p>
         <Link href={`tel:${tel}`} className="border-4 border-primary group ">

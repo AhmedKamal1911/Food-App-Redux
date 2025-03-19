@@ -13,7 +13,7 @@ export default function MenuSection({ categories, products }: Props) {
         <SpecialHeading
           title="Fresh From Pizzon"
           subTitle="our special menu"
-          subTitleClassName="text-white"
+          className="text-white"
         />
         <ProductFilterTabs categories={categories} products={products} />
       </div>

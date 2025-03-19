@@ -1,6 +1,6 @@
 import SpecialHeading from "@/components/common/special-heading";
 import BestChefSlider, { Chef } from "../best-chef-slider";
-import Image from "next/image";
+
 type Props = {};
 const chefList: Chef[] = [
   {
@@ -48,7 +48,7 @@ export default function BestChefSection({}: Props) {
         <SpecialHeading
           title="meet our experts"
           subTitle="our best chef"
-          subTitleClassName="text-white md:text-7xl"
+          className="text-white"
         />
         <div className="mt-10">
           <BestChefSlider chefsList={chefList} />

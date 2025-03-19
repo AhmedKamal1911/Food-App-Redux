@@ -73,7 +73,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${ptSansNarrow.className} ${pacifico.variable} h-[9000px]  antialiased`}
+        className={`${ptSansNarrow.className} ${pacifico.variable}  antialiased`}
       >
         <Header products={products} />
         {children}
