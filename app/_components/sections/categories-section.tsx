@@ -2,10 +2,17 @@ import SpecialHeading from "@/components/common/special-heading";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-type Props = {};
-export default function CategoriesSection({}: Props) {
+
+export default function CategoriesSection() {
   return (
-    <section className="py-50  relative">
+    <section className="py-10 sm:py-30  relative">
+      <Image
+        src={"/images/decorations/weavy-white-bottom.png"}
+        height={372}
+        width={1536}
+        alt="weavy top"
+        className="absolute start-0  w-full bg-cover max-h-[120px] bottom-5 translate-y-full rotate-x-180 z-[9]"
+      />
       <div className="container">
         <SpecialHeading title="fresh from pizzon" subTitle="our speciality" />
         <div className="my-7 p-2  flex max-md:flex-col items-center justify-between gap-10">
@@ -29,13 +36,6 @@ export default function CategoriesSection({}: Props) {
           View More
         </Button>
       </div>
-      <Image
-        src={"/images/categories-section/weavy-white-bottom.png"}
-        height={372}
-        width={1536}
-        alt="weavy top"
-        className="absolute start-0  w-full bottom-1 translate-y-full "
-      />
     </section>
   );
 }

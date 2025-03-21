@@ -25,7 +25,7 @@ export default function ProductFilterTabs({
   );
 
   const getMoreProducts = () => {};
-  console.log({ filteredProducts });
+
   // TODO: create pagination here
   return (
     <div className="flex flex-col gap-10 mt-10">

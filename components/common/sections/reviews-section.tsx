@@ -1,5 +1,6 @@
 import SpecialHeading from "@/components/common/special-heading";
-import CustomerReviewsSlider from "../customer-reviews-slider";
+import CustomerReviewsSlider from "../../../app/_components/customer-reviews-slider";
+import Image from "next/image";
 export type Review = {
   id: number;
   userName: string;
@@ -44,7 +45,21 @@ const reviewsList: Review[] = [
 type Props = {};
 export default function ReviewsSection({}: Props) {
   return (
-    <section className="py-40 bg-secondary">
+    <section className="py-20 sm:py-40 bg-secondary relative">
+      <Image
+        src={"/images/decorations/weavy-white-top.png"}
+        height={80}
+        width={1200}
+        alt="weavy top"
+        className="absolute start-0 max-h-[150px] bg-cover w-full -top-0.5  rotate-x-180 z-[9]"
+      />
+      <Image
+        src={"/images/decorations/weavy-white-bottom.png"}
+        height={372}
+        width={1536}
+        alt="weavy top"
+        className="absolute start-0  w-full bg-cover max-h-[120px] -bottom-1  z-[9] "
+      />
       <div className="container">
         <SpecialHeading
           title="what say our clients"

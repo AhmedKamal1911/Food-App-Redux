@@ -1,5 +1,6 @@
 import SpecialHeading from "@/components/common/special-heading";
 import BestChefSlider, { Chef } from "../best-chef-slider";
+import Image from "next/image";
 
 type Props = {};
 const chefList: Chef[] = [
@@ -36,14 +37,14 @@ const chefList: Chef[] = [
 ];
 export default function BestChefSection({}: Props) {
   return (
-    <section className="py-30 bg-[url('/images/decorations/chef-bg.png')] bg-no-repeat relative">
-      {/* <Image
-        src={"/images/best-chef-section/menu-bottom-bg.png"}
-        height={372}
-        width={1500}
+    <section className="py-30 bg-[url('/images/decorations/chef-bg.png')] bg-cover bg-no-repeat relative">
+      <Image
+        src={"/images/decorations/weavy-white-top.png"}
+        height={80}
+        width={1200}
         alt="weavy top"
-        className="absolute start-0  w-full bottom-30 -translate-y-full"
-      /> */}
+        className="absolute start-0 max-h-[140px] bg-cover  w-full -top-1  rotate-x-180 z-[9]"
+      />
       <div className="container">
         <SpecialHeading
           title="meet our experts"

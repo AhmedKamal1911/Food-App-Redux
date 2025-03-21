@@ -3,33 +3,84 @@ import { SubMenuContainer } from ".";
 import { Product } from "@/lib/types/shared";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export default function ShoppingCartMenu({
   products,
 }: {
   products: Product[];
 }) {
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="group">
-      <button className="flex  py-6 items-center gap-1.5 text-white cursor-pointer ">
-        <ShoppingBag className="text-primary size-6 sm:size-6" />{" "}
-        <span className="max-[660px]:hidden">0 items - $0.00</span>
-      </button>
-      <SubMenuContainer className="p-4 max-sm:start-0 end-0 sm:end-10 xl:end-0 sm:w-[300px]  max-w-full lg:group-hover:opacity-100 lg:group-hover:pointer-events-auto lg:group-hover:translate-y-0">
-        <ShoppingCartMenuContent products={products} />
-      </SubMenuContainer>
+    <div>
+      <div className="group max-lg:hidden">
+        <ShoppingCartButton />
+        <SubMenuContainer className="p-4 max-sm:start-0 end-0 sm:end-10 xl:end-0 sm:w-[300px]  max-w-full lg:group-hover:opacity-100 lg:group-hover:pointer-events-auto lg:group-hover:translate-y-0">
+          <ShoppingCartMenuContent products={products} />
+        </SubMenuContainer>
+      </div>
+
+      <ShoppingCartButton
+        className="max-lg:flex lg:hidden"
+        onClick={() => setIsOpen((prev) => !prev)}
+      />
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetContent
+          side="right"
+          className="items-start justify-center z-[999] p-4 "
+        >
+          <SheetTitle>Shopping Cart</SheetTitle>
+          <ShoppingCartMenuContent products={products} />
+          <SheetDescription className="sr-only">
+            Review the items in your cart before proceeding to checkout.
+          </SheetDescription>
+        </SheetContent>
+      </Sheet>
     </div>
+  );
+}
+
+function ShoppingCartButton({
+  onClick,
+  className,
+}: {
+  onClick?: () => void;
+  className?: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "flex  py-6 items-center gap-1.5 text-white cursor-pointer ",
+        className
+      )}
+    >
+      <ShoppingBag className="text-primary size-6 sm:size-6" />
+      <span className="max-[660px]:hidden">0 items - $0.00</span>
+    </button>
   );
 }
 
 function ShoppingCartMenuContent({ products }: { products: Product[] }) {
   return (
-    <div>
+    <div className="overflow-y-auto lg:max-h-[400px]">
       <span className="text-center block text-xl font-semibold relative before:absolute before:h-0.5 before:w-[32%] before:bg-gray-300 before:start-2 before:top-1/2 before:-translate-y-1/2 before:rounded-1/2  after:absolute after:h-0.5 after:w-[32%] after:bg-gray-300 after:end-2 after:top-1/2 after:-translate-y-1/2 after:rounded-1/2 ">
         3 items
       </span>
 
       <ul className="flex flex-col gap-3 divide-y-1 divide-gray-200">
+        {products.map((product) => (
+          <li key={product.id}>
+            <CartProduct product={product} />
+          </li>
+        ))}
         {products.map((product) => (
           <li key={product.id}>
             <CartProduct product={product} />

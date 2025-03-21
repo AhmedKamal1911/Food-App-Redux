@@ -10,7 +10,7 @@ export default function BookTableSection({}: Props) {
         height={80}
         width={1200}
         alt="weavy top"
-        className="absolute start-0  w-full top-1 -translate-y-full "
+        className="absolute start-0 max-h-[140px] bg-cover  w-full top-1 -translate-y-full "
       />
 
       <div className="container">

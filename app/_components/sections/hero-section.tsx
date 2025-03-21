@@ -21,7 +21,7 @@ const Slides = [
 
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  console.log({ currentSlide });
+
   function slideIncrement() {
     setCurrentSlide((prev) => (prev >= 2 ? 0 : prev + 1));
   }

@@ -35,14 +35,14 @@ export default function IntroSection() {
         height={139}
         width={1918}
         alt="weavy top"
-        className="absolute start-0  w-full top-1 -translate-y-full "
+        className="absolute start-0  w-full bg-cover max-h-[100px] top-1 -translate-y-full "
       />
       <Image
         src={"/images/decorations/weavy-orange-bottom.png"}
         height={139}
         width={1918}
         alt="weavy top"
-        className="absolute start-0  w-full bottom-1 translate-y-full "
+        className="absolute start-0  w-full bg-cover max-h-[100px] bottom-1 translate-y-full "
       />
       <div className="container">
         <div className="flex max-md:flex-col items-center justify-between gap-6">
