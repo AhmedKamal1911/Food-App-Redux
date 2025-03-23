@@ -1,10 +1,11 @@
 import ProductFilterTabs from "@/components/common/product-filter-tabs";
 import SpecialHeading from "@/components/common/special-heading";
-import { FoodCategoryKeys, Product } from "@/lib/types/shared";
+import { ProductWithRelations } from "@/lib/types/product";
+import { ProductCategory } from "@prisma/client";
 
 type Props = {
-  categories: Record<FoodCategoryKeys, string>;
-  products: Product[];
+  categories: ProductCategory[];
+  products: ProductWithRelations[];
 };
 export default function MenuSection({ categories, products }: Props) {
   return (

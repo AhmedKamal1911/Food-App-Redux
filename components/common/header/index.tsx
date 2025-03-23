@@ -7,8 +7,6 @@ import clsx from "clsx";
 import { cn } from "@/lib/utils";
 import { ReactNode, useMemo, useRef } from "react";
 
-import { Product } from "@/lib/types/shared";
-
 import { useInView } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -20,6 +18,7 @@ import {
 } from "@/components/ui/accordion";
 import ProductsMenu from "./products-menu";
 import ShoppingCartMenu from "./cart-menu";
+import { Product } from "@prisma/client";
 type PageLink = { label: string; href: string };
 type NavItem = PageLink & {
   submenu?: NavItem[] | ReactNode | PageLink[];

@@ -5,10 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getProductSlug(label: string) {
-  return label.toLowerCase().replace(/\s/g, "-");
-}
-
 export function formatPhoneNumber(value: string): string {
   let digits = value.replace(/[^\d+]/g, "");
 

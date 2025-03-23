@@ -1,6 +1,6 @@
 import { ShoppingBag, X } from "lucide-react";
 import { SubMenuContainer } from ".";
-import { Product } from "@/lib/types/shared";
+
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/sheet";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Product } from "@prisma/client";
 
 export default function ShoppingCartMenu({
   products,
@@ -72,7 +73,7 @@ function ShoppingCartMenuContent({ products }: { products: Product[] }) {
   return (
     <div className="overflow-y-auto lg:max-h-[400px]">
       <span className="text-center block text-xl font-semibold relative before:absolute before:h-0.5 before:w-[32%] before:bg-gray-300 before:start-2 before:top-1/2 before:-translate-y-1/2 before:rounded-1/2  after:absolute after:h-0.5 after:w-[32%] after:bg-gray-300 after:end-2 after:top-1/2 after:-translate-y-1/2 after:rounded-1/2 ">
-        3 items
+        {products.length} items
       </span>
 
       <ul className="flex flex-col gap-3 divide-y-1 divide-gray-200">
@@ -119,14 +120,14 @@ function ShoppingCartMenuContent({ products }: { products: Product[] }) {
 function CartProduct({ product }: { product: Product }) {
   return (
     <div className="flex items-center">
-      <Image src={product.imgSrc} alt={product.label} width={80} height={80} />
+      <Image src={product.image} alt={product.name} width={80} height={80} />
       <div className="flex flex-col gap-1 flex-1 px-4">
         <Link
-          href={`/products/${product.id}`}
+          href={`/products/${product.slug}`}
           className="line-clamp-2 word-break"
-          title={product.label}
+          title={product.name}
         >
-          {product.label}
+          {product.name}
         </Link>
         <span className="text-primary">1 x ${product.price}</span>
       </div>

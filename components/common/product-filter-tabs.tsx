@@ -1,26 +1,34 @@
 "use client";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { FoodCategoryKeys, Product } from "@/lib/types/shared";
+
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { Star } from "lucide-react";
 import { Button } from "../ui/button";
+import { ProductWithRelations } from "@/lib/types/product";
+import { ProductCategory } from "@prisma/client";
+import { CategoriesNameList } from "@/lib/types/category";
 
 export default function ProductFilterTabs({
   categories,
   products,
 }: {
-  categories: Record<FoodCategoryKeys, string>;
-  products: Product[];
+  categories: ProductCategory[];
+  products: ProductWithRelations[];
 }) {
+  const categoriesNameList = useMemo(
+    () => ["all", ...categories.map((category) => category.name)],
+    [categories]
+  );
+  // FIXME: think about usememo here
   const [category, setCategory] = useState("all");
   const filteredProducts = useMemo(
     () =>
       category === "all"
         ? products
-        : products.filter((product) => product.category === category),
+        : products.filter((product) => product.category?.name === category),
     [category, products]
   );
 
@@ -31,7 +39,7 @@ export default function ProductFilterTabs({
     <div className="flex flex-col gap-10 mt-10">
       <FilterTabs
         selectedCategory={category}
-        categories={categories}
+        categories={categoriesNameList}
         setCategory={setCategory}
       />
       {filteredProducts.length < 1 ? (
@@ -64,38 +72,36 @@ function FilterTabs({
   selectedCategory,
 }: {
   setCategory: Dispatch<SetStateAction<string>>;
-  categories: Record<FoodCategoryKeys, string>;
+  categories: CategoriesNameList;
   selectedCategory: string;
 }) {
   return (
     <div className="bg-muted rounded-sm overflow-hidden flex  gap-2  w-fit  mx-auto max-md:flex-wrap max-md:justify-center ">
-      {Object.keys(categories)
-        .reverse()
-        .map((category, i) => (
-          <button
-            key={i}
-            onClick={() => {
-              setCategory(category);
-            }}
-            className={cn(
-              "relative z-10 focus:outline-0 cursor-pointer transition-colors w-fit py-2 px-7 rounded-sm text-[18px] capitalize text-white font-semibold",
-              selectedCategory !== category && "hover:bg-primary"
-            )}
-          >
-            {category}
-            {selectedCategory === category && (
-              <motion.div
-                layoutId="red-box"
-                className="absolute inset-0  bg-primary rounded-sm -z-10"
-              />
-            )}
-          </button>
-        ))}
+      {categories.map((category, i) => (
+        <button
+          key={i}
+          onClick={() => {
+            setCategory(category);
+          }}
+          className={cn(
+            "relative z-10 focus:outline-0 cursor-pointer transition-colors w-fit py-2 px-7 rounded-sm text-[18px] capitalize text-white font-semibold",
+            selectedCategory !== category && "hover:bg-primary"
+          )}
+        >
+          {category}
+          {selectedCategory === category && (
+            <motion.div
+              layoutId="red-box"
+              className="absolute inset-0  bg-primary rounded-sm -z-10"
+            />
+          )}
+        </button>
+      ))}
     </div>
   );
 }
 
-function ProductCard({ product }: { product: Product }) {
+function ProductCard({ product }: { product: ProductWithRelations }) {
   return (
     <motion.div
       layout
@@ -107,12 +113,12 @@ function ProductCard({ product }: { product: Product }) {
       className=" bg-gradient-to-b from-[#f5482a] to-[#f56003] p-4 rounded-xl shadow-lg transform transition duration-300 hover:scale-105"
     >
       <Link
-        href={`/products/${product.label}`}
+        href={`/products/${product.slug}`}
         className="bg-white rounded-lg shadow-md flex justify-center items-center py-3"
       >
         <Image
-          src={product.imgSrc}
-          alt={product.label}
+          src={product.image}
+          alt={product.name}
           height={100}
           width={100}
         />
@@ -120,15 +126,15 @@ function ProductCard({ product }: { product: Product }) {
 
       <div className="mt-4 flex flex-col gap-3 items-start justify-start ">
         <span className="bg-black/20 text-white text-sm uppercase px-3 py-1 rounded-full tracking-wide">
-          {product.category}
+          {product.category?.name}
         </span>
 
         <Link
-          href={`/products/${product.label}`}
-          title={product.label}
+          href={`/products/${product.slug}`}
+          title={product.name}
           className=" text-xl font-bold text-white line-clamp-1 break-words  word-break"
         >
-          {product.label}
+          {product.name}
         </Link>
 
         <div className="flex items-center justify-center gap-1 text-yellow-400">

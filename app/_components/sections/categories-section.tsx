@@ -1,9 +1,14 @@
 import SpecialHeading from "@/components/common/special-heading";
 import { Button } from "@/components/ui/button";
+import { ProductCategory } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function CategoriesSection() {
+export default function CategoriesSection({
+  categories,
+}: {
+  categories: ProductCategory[];
+}) {
   return (
     <section className="py-10 sm:py-30  relative">
       <Image
@@ -15,20 +20,20 @@ export default function CategoriesSection() {
       />
       <div className="container">
         <SpecialHeading title="fresh from pizzon" subTitle="our speciality" />
-        <div className="my-7 p-2  flex max-md:flex-col items-center justify-between gap-10">
-          <CategoryCard
-            name="burgers"
-            src="/images/categories-section/burger.jpg"
-          />
-          <CategoryCard
-            name="pizzas"
-            src="/images/categories-section/pizza.jpg"
-          />
-          <CategoryCard
-            name="coffe"
-            src="/images/categories-section/coffe.jpg"
-          />
-        </div>
+        {categories.length === 0 ? (
+          <span className="text-center block text-red-600 font-bold text-xl">
+            No Any Categories Found!
+          </span>
+        ) : (
+          <div className="my-7 p-2  flex max-md:flex-col items-center justify-between gap-10">
+            {categories
+              .slice(0, categories.length > 2 ? 3 : categories.length)
+              .map((category) => (
+                <CategoryCard key={category.id} category={category} />
+              ))}
+          </div>
+        )}
+
         <Button
           variant={"outline"}
           className="block text-xl h-11 w-30 mx-auto rounded-3xl font-bold bg-secondary text-white"
@@ -40,7 +45,7 @@ export default function CategoriesSection() {
   );
 }
 
-function CategoryCard({ src, name }: { src: string; name: string }) {
+function CategoryCard({ category }: { category: ProductCategory }) {
   return (
     <div className="group rounded-md relative">
       <div className="overflow-hidden rounded-md">
@@ -48,15 +53,15 @@ function CategoryCard({ src, name }: { src: string; name: string }) {
           className="group-hover:scale-105 group-hover:grayscale-30 transition-all"
           height={400}
           width={400}
-          alt="category"
-          src={src}
+          alt={`${category.name} category`}
+          src={category.image}
         />
       </div>
       <Link
-        href={`/category/${name}`}
+        href={`/category/${category.slug}`}
         className="before:absolute before:inset-0 mt-3 block text-center uppercase text-2xl font-bold group-hover:text-primary transition-colors"
       >
-        {name}
+        {category.name}
       </Link>
     </div>
   );
