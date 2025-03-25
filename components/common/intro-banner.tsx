@@ -1,11 +1,11 @@
 import BreadCramb from "./bread-cramb";
 
 export default function IntroBanner({
-  pageName,
-  backgroundSrc,
+  title,
+  backgroundSrc = "/images/about-page/decoration/about-banner.jpg",
 }: {
-  pageName: string;
-  backgroundSrc: string;
+  title: string;
+  backgroundSrc?: string;
 }) {
   return (
     <div
@@ -15,9 +15,9 @@ export default function IntroBanner({
       <div className="container">
         <div className="relative flex flex-col items-center gap-5">
           <span className="text-3xl md:text-5xl font-bold text-white uppercase">
-            {pageName}
+            {title}
           </span>
-          <BreadCramb currentPage={pageName} />
+          <BreadCramb currentPage={title} />
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ import Link from "next/link";
 import { Star } from "lucide-react";
 import { Button } from "../ui/button";
 import { ProductWithRelations } from "@/lib/types/product";
-import { ProductCategory } from "@prisma/client";
+import { Product, ProductCategory } from "@prisma/client";
 import { CategoriesNameList } from "@/lib/types/category";
 
 export default function ProductFilterTabs({
@@ -101,56 +101,41 @@ function FilterTabs({
   );
 }
 
-function ProductCard({ product }: { product: ProductWithRelations }) {
+function ProductCard({ product }: { product: Product }) {
+  // TODO: add rating here
   return (
-    <motion.div
-      layout
-      key={product.id}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className=" bg-gradient-to-b from-[#f5482a] to-[#f56003] p-4 rounded-xl shadow-lg transform transition duration-300 hover:scale-105"
-    >
-      <Link
-        href={`/products/${product.slug}`}
-        className="bg-white rounded-lg shadow-md flex justify-center items-center py-3"
-      >
-        <Image
-          src={product.image}
-          alt={product.name}
-          height={100}
-          width={100}
-        />
-      </Link>
-
-      <div className="mt-4 flex flex-col gap-3 items-start justify-start ">
-        <span className="bg-black/20 text-white text-sm uppercase px-3 py-1 rounded-full tracking-wide">
-          {product.category?.name}
-        </span>
-
-        <Link
-          href={`/products/${product.slug}`}
-          title={product.name}
-          className=" text-xl font-bold text-white line-clamp-1 break-words  word-break"
-        >
-          {product.name}
-        </Link>
-
-        <div className="flex items-center justify-center gap-1 text-yellow-400">
-          {Array.from({ length: 5 }, (_, i) => (
-            <Star key={i} size={18} fill={"currentColor"} />
-          ))}
+    <div className="">
+      <div className="group relative flex flex-col items-center">
+        <div>
+          <Image
+            className="group-hover:animate-wobble transition-all"
+            src={product.image}
+            alt={product.name}
+            height={150}
+            width={150}
+          />
         </div>
-
-        <span className="block text-lg font-semibold text-white">
-          $ {product.price.toFixed(2)}
-        </span>
-
-        <button className="cursor-pointer mt-3 bg-white text-[#f5632a] px-4 py-2 rounded-lg font-semibold shadow-md hover:bg-gray-100 transition">
-          Order Now
-        </button>
+        <div className="space-y-2 text-center ">
+          <Link
+            title={product.name}
+            href={`/products/${product.slug}`}
+            className="text-lg font-semibold block before:absolute before:inset-0 text-white hover:text-primary transition-colors"
+          >
+            {product.name}
+          </Link>
+          <p
+            aria-description={product.description}
+            className="text-white/80 max-w-[220px] line-clamp-1 break-words"
+          >
+            {product.description}
+          </p>
+          <span className="text-primary">${product.price}</span>
+        </div>
       </div>
-    </motion.div>
+
+      <Button className="capitalize font-semibold mx-auto block mt-5">
+        Add to cart
+      </Button>
+    </div>
   );
 }

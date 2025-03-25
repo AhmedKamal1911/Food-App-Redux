@@ -11,7 +11,7 @@ export default function AboutUs({}: Props) {
     <main className="min-h-screen">
       <IntroBanner
         backgroundSrc="/images/about-page/decoration/about-banner.jpg"
-        pageName="Sollow Burger"
+        title="Sollow Burger"
       />
       <AboutRestaurantSection />
       <OurStorySection />

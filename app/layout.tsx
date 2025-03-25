@@ -4,7 +4,7 @@ import "./globals.css";
 import Header from "@/components/common/header";
 import Footer from "@/components/common/footer";
 
-import { getAllProducts } from "@/lib/server";
+import { getAllProducts } from "@/lib/server/queries";
 
 const ptSansNarrow = PT_Sans_Narrow({
   subsets: ["latin"],
@@ -27,7 +27,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const products = await getAllProducts();
+  const products = await getAllProducts({});
   return (
     <html lang="en">
       <body

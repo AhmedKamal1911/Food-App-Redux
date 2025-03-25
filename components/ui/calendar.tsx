@@ -32,10 +32,10 @@ function Calendar({
         table: "w-full border-collapse space-x-1",
         head_row: "flex",
         head_cell:
-          "text-muted-foreground rounded-0 w-8 font-normal text-[0.8rem]",
+          "text-muted-foreground rounded-none w-8 font-normal text-[0.8rem]",
         row: "flex gap-[2px] w-full mt-2",
         cell: cn(
-          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-range-end)]:rounded-r-sm rounded-0",
+          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-range-end)]:rounded-r-sm rounded-none",
           props.mode === "range"
             ? "[&:has(>.day-range-end)]:rounded-r-sm [&:has(>.day-range-start)]:rounded-l-sm first:[&:has([aria-selected])]:rounded-l-sm last:[&:has([aria-selected])]:rounded-r-sm"
             : "[&:has([aria-selected])]:rounded-sm"

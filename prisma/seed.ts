@@ -3,27 +3,17 @@ import slugify from "slugify";
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("🗑️ Clearing existing data...");
-  await prisma.size.deleteMany({});
-  await prisma.extra.deleteMany({});
-  await prisma.product.deleteMany({});
-  await prisma.productCategory.deleteMany({});
-
   console.log("🌱 Seeding categories...");
-  const categories = [
-    { name: "Burgers" },
-    { name: "Pizzas" },
-    { name: "Sandwiches" },
-  ];
+  const categories = ["Burgers", "Pizzas", "Sandwiches"];
 
   const categoryData = await Promise.all(
-    categories.map(async (category) => {
-      const slug = slugify(category.name, { lower: true });
+    categories.map(async (name) => {
+      const slug = slugify(name, { lower: true });
       return await prisma.productCategory.upsert({
         where: { slug },
         update: {},
         create: {
-          name: category.name,
+          name,
           slug,
           image: "/images/categories-section/burger.jpg",
         },
@@ -33,50 +23,31 @@ async function main() {
 
   console.log("🍔 Seeding products...");
   const products = [
-    {
-      name: "Cheeseburger",
-      description: "Delicious cheeseburger with beef patty",
-    },
-    { name: "Double Burger", description: "Double patty for extra hunger" },
-    { name: "BBQ Burger", description: "Smoky BBQ-flavored burger" },
-    {
-      name: "Margherita Pizza",
-      description: "Classic Margherita with fresh tomatoes",
-    },
-    { name: "Pepperoni Pizza", description: "Topped with spicy pepperoni" },
-    { name: "Veggie Pizza", description: "Loaded with fresh veggies" },
-    {
-      name: "Chicken Sandwich",
-      description: "Crispy chicken with fresh lettuce",
-    },
-    {
-      name: "Club Sandwich",
-      description: "Multi-layer sandwich with turkey and ham",
-    },
-    {
-      name: "Grilled Cheese",
-      description: "Perfectly grilled cheese sandwich",
-    },
-    {
-      name: "Philly Cheesesteak",
-      description: "Tender beef with melted cheese",
-    },
+    "Cheeseburger",
+    "Double Burger",
+    "BBQ Burger",
+    "Margherita Pizza",
+    "Pepperoni Pizza",
+    "Veggie Pizza",
+    "Chicken Sandwich",
+    "Club Sandwich",
+    "Grilled Cheese",
+    "Philly Cheesesteak",
   ];
 
   const productData = await Promise.all(
-    products.map(async (product, index) => {
-      const slug = slugify(product.name, { lower: true });
+    products.map(async (name, index) => {
+      const slug = slugify(name, { lower: true });
       const category = categoryData[index % categoryData.length];
-
       return await prisma.product.upsert({
         where: { slug },
         update: {},
         create: {
-          name: product.name,
+          name,
           slug,
-          description: product.description,
+          description: `${name} description`,
           image: "/images/special-products/burger.png",
-          price: parseFloat((Math.random() * 10 + 5).toFixed(2)), // Random price between $5 - $15
+          price: parseFloat((Math.random() * 10 + 5).toFixed(2)),
           categoryId: category.id,
         },
       });
@@ -88,13 +59,13 @@ async function main() {
 
   await Promise.all(
     productData.flatMap((product) =>
-      sizes.map(async (size: SizeEnum, index) => {
+      sizes.map(async (size, index) => {
         return await prisma.size.upsert({
-          where: { name_productId: { productId: product.id, name: size } }, // 🔥 استخدام مفتاح مركب
+          where: { name_productId: { productId: product.id, name: size } },
           update: {},
           create: {
-            name: size, // ✅ بدون `as SizeEnum` إذا كان معرّفًا في Prisma
-            price: +(index + 1 * 2.5).toFixed(2), // Small: 2.5, Medium: 5, Large: 7.5
+            name: size,
+            price: (index + 1) * 2.5,
             productId: product.id,
           },
         });
@@ -113,7 +84,7 @@ async function main() {
           update: {},
           create: {
             name: extra,
-            price: parseFloat((Math.random() * 2 + 1).toFixed(2)), // Random price between $1 - $3
+            price: parseFloat((Math.random() * 2 + 1).toFixed(2)),
             productId: product.id,
           },
         });
