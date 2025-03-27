@@ -76,7 +76,7 @@ export default function Header({ products }: { products: Product[] }) {
                 alt="logo"
                 width={isInView ? 180 : 150}
                 height={100}
-                className={`transition-[width] duration-300`}
+                className={`transition-[width] duration-300  h-auto`}
               />
             </Link>
             <div className="flex items-center gap-2 min-[420px]:gap-3 md:gap-10">

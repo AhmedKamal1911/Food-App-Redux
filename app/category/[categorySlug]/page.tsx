@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 
 import ProductsViewer from "./_components/products-viewer";
 import AsideContentWrapper from "./_components/aside-content-wrapper";
-import Link from "next/link";
+
 import CategoriesViewer from "./_components/categories-viewer";
 import SearchInput from "./_components/search-input";
 import RecentProductsViewer from "./_components/recent-products-viewer";

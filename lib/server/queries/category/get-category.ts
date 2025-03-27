@@ -20,6 +20,7 @@ export async function getCategory({
       products: {
         take: productsLimit,
         orderBy: { createdAt: productsOrder },
+        include: { extras: true, sizes: true, category: true },
         where: searchQuery
           ? { name: { contains: searchQuery, mode: "insensitive" } }
           : {},

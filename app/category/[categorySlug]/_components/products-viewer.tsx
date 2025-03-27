@@ -1,8 +1,8 @@
 import ProductCard from "@/components/common/product-card";
-import { Product } from "@prisma/client";
+import { ProductWithRelations } from "@/lib/types/product";
 
 type Props = {
-  categoryProducts: Product[];
+  categoryProducts: ProductWithRelations[];
 };
 export default function ProductsViewer({ categoryProducts }: Props) {
   return (

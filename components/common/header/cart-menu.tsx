@@ -71,7 +71,7 @@ function ShoppingCartButton({
 
 function ShoppingCartMenuContent({ products }: { products: Product[] }) {
   return (
-    <div className="overflow-y-auto lg:max-h-[400px]">
+    <div className="overflow-y-auto lg:max-h-[400px] w-full">
       <span className="text-center block text-xl font-semibold relative before:absolute before:h-0.5 before:w-[32%] before:bg-gray-300 before:start-2 before:top-1/2 before:-translate-y-1/2 before:rounded-1/2  after:absolute after:h-0.5 after:w-[32%] after:bg-gray-300 after:end-2 after:top-1/2 after:-translate-y-1/2 after:rounded-1/2 ">
         {products.length} items
       </span>

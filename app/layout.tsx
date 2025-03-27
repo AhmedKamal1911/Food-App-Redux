@@ -5,6 +5,7 @@ import Header from "@/components/common/header";
 import Footer from "@/components/common/footer";
 
 import { getAllProducts } from "@/lib/server/queries";
+import StoreProvider from "./store-provider";
 
 const ptSansNarrow = PT_Sans_Narrow({
   subsets: ["latin"],
@@ -33,9 +34,11 @@ export default async function RootLayout({
       <body
         className={`${ptSansNarrow.className} ${pacifico.variable}  antialiased`}
       >
-        <Header products={products} />
-        {children}
-        <Footer />
+        <StoreProvider>
+          <Header products={products} />
+          {children}
+          <Footer />
+        </StoreProvider>
       </body>
     </html>
   );

@@ -1,9 +1,14 @@
 import Image from "next/image";
-import { Button } from "../ui/button";
-import { Product } from "@prisma/client";
-import Link from "next/link";
 
-export default function ProductCard({ product }: { product: Product }) {
+import Link from "next/link";
+import AddToCartDialog from "./add-to-cart-dialog";
+import { ProductWithRelations } from "@/lib/types/product";
+
+export default function ProductCard({
+  product,
+}: {
+  product: ProductWithRelations;
+}) {
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="group relative flex flex-col items-center">
@@ -20,13 +25,13 @@ export default function ProductCard({ product }: { product: Product }) {
           <Link
             title={product.name}
             href={`/products/${product.slug}`}
-            className="text-lg font-semibold block before:absolute before:inset-0 hover:text-primary transition-colors"
+            className="text-lg font-semibold  before:absolute before:inset-0 hover:text-primary transition-colors line-clamp-2 word-break"
           >
             {product.name}
           </Link>
           <p
             aria-description={product.description}
-            className="text-gray-500 max-w-[220px] line-clamp-1 break-words"
+            className="text-gray-500 line-clamp-2 h-[48px] word-break "
           >
             {product.description}
           </p>
@@ -34,9 +39,7 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
       </div>
 
-      <Button className="capitalize font-semibold mx-auto  text-xl ">
-        Add to cart
-      </Button>
+      <AddToCartDialog product={product} />
     </div>
   );
 }

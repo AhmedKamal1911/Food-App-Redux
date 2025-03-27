@@ -8,9 +8,10 @@ export async function getAllProducts({
   limit?: number;
 }) {
   const products = await prisma.product.findMany({
-    include: { category: true },
+    include: { category: true, extras: true, sizes: true },
     orderBy: order ? { createdAt: order } : {},
     take: limit,
   });
+
   return products;
 }
