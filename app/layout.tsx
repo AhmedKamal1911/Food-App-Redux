@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Pacifico, PT_Sans_Narrow } from "next/font/google";
-import "./globals.css";
 import Header from "@/components/common/header";
 import Footer from "@/components/common/footer";
 
 import { getAllProducts } from "@/lib/server/queries";
 import StoreProvider from "./store-provider";
+import { ToastContainer } from "react-toastify";
 
+import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
 const ptSansNarrow = PT_Sans_Narrow({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -29,12 +31,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const products = await getAllProducts({});
+
   return (
     <html lang="en">
       <body
         className={`${ptSansNarrow.className} ${pacifico.variable}  antialiased`}
       >
         <StoreProvider>
+          <ToastContainer closeOnClick pauseOnHover />
           <Header products={products} />
           {children}
           <Footer />

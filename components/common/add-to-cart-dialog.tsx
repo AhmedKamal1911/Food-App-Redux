@@ -1,5 +1,5 @@
 "use client";
-import { useAppDispatch } from "@/lib/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { Button } from "../ui/button";
 import { addToCart } from "@/lib/redux/features/cart/cartSlice";
 import {
@@ -18,12 +18,13 @@ import { ProductWithRelations } from "@/lib/types/product";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
-import { memo, useState } from "react";
+import { useState } from "react";
+import { toast } from "react-toastify";
 type SelectedOptionsState = {
   size: Size;
   extras: Extra[];
 };
-export default memo(function AddToCartDialog({
+export default function AddToCartDialog({
   product,
 }: {
   product: ProductWithRelations;
@@ -56,28 +57,23 @@ export default memo(function AddToCartDialog({
       return updatedOptions;
     });
   };
-  console.log(product);
+  const cartProducts = useAppSelector((state) => state.cart.products);
+  const totalQuantity =
+    cartProducts[product.id]?.reduce((acc, curr) => acc + curr.qty, 0) ?? 0;
+  // OPTIMIZE: Lift state up and memoized product to improve performance
   const dispatch = useAppDispatch();
   function addProductToCart() {
     dispatch(
       addToCart({
-        addedProduct: {
-          id: product.id,
-          size: {
-            id: selectedOptions.size.id,
-            price: selectedOptions.size.price,
-          },
-          extras: selectedOptions.extras.map((extra) => ({
-            id: extra.id,
-            price: extra.price,
-          })),
-          qty: 1,
-        },
+        id: product.id,
+        sizeId: selectedOptions.size.id,
+        extrasIds: selectedOptions.extras.map((extra) => extra.id),
       })
     );
+    toast.success(`${product.name} Added To Cart`);
   }
 
-  console.log("renders");
+  console.log("renders", totalQuantity);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -87,7 +83,7 @@ export default memo(function AddToCartDialog({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]  rounded-sm ">
         <DialogHeader className="text-center">
-          <div className="self-center">
+          <div className="self-center relative">
             <Image
               src={product.image}
               height={100}
@@ -98,6 +94,9 @@ export default memo(function AddToCartDialog({
           <DialogTitle className="text-center line-clamp-2 word-break">
             {product.name}
           </DialogTitle>
+          <span className="text-center font-semibold text-primary ">
+            ${product.price}
+          </span>
           <DialogDescription className="text-center line-clamp-3">
             {product.description}
           </DialogDescription>
@@ -125,13 +124,15 @@ export default memo(function AddToCartDialog({
             onClick={addProductToCart}
             className="capitalize font-semibold w-full bg-orange-600 hover:bg-orange-600/90"
           >
-            add to cart {`($${totalProductPrice.toFixed(2)})`}
+            {cartProducts[product.id]?.length > 0
+              ? `Add to cart (${totalQuantity})`
+              : `Add to cart ($${totalProductPrice.toFixed(2)})`}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-});
+}
 
 function PickSizeRadio({
   sizesList,

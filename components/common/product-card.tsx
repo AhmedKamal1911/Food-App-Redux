@@ -9,6 +9,7 @@ export default function ProductCard({
 }: {
   product: ProductWithRelations;
 }) {
+  console.log("product id ", product.name);
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="group relative flex flex-col items-center">

@@ -1,25 +1,23 @@
 // import { ProductWithRelations } from "@/lib/types/product";
 // import { Size } from "@prisma/client";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-type Item = { id: string; price: number };
+
 type AddToCartPayload = {
-  addedProduct: {
-    id: string;
-    qty: number;
-    size: Item;
-    extras: Item[];
-  };
+  id: string;
+  sizeId: string;
+  extrasIds: string[];
 }; // ✅ Define the payload type
-type CartItem = {
+
+type CartState = {
   products: {
     [id: string]: {
       qty: number;
-      size: Item;
-      extras: Item[];
-    };
+      sizeId: string;
+      extrasIds: string[];
+    }[];
   };
 };
-const initialState: CartItem = {
+const initialState: CartState = {
   products: {},
 };
 
@@ -28,24 +26,38 @@ export const cartSlice = createSlice({
   initialState: initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<AddToCartPayload>) => {
-      const { id, qty, size, extras } = action.payload.addedProduct;
-
-      if (state.products[id]) {
-        state.products[id] = {
-          ...state.products[id],
-          qty: state.products[id].qty + 1,
-        };
-        console.log("exist increment qty", id);
-      } else {
-        state.products = {
-          ...state.products,
-          [id]: { qty, size, extras },
-        };
-        console.log("not exist and add", state.products);
-      }
+      const { id, sizeId, extrasIds } = action.payload;
+      const sizeExtrasStringPayload = generateSizeExtrasString(
+        sizeId,
+        extrasIds
+      );
+      const sizeExtrasStringStore = state.products[id]?.map((product) =>
+        generateSizeExtrasString(product.sizeId, product.extrasIds)
+      );
+      if (sizeExtrasStringStore?.includes(sizeExtrasStringPayload))
+        return state;
+      state.products[id] = [
+        ...(state.products[id] ?? []),
+        { sizeId, extrasIds, qty: 1 },
+      ];
+    },
+    incrementCartItemQty: (
+      state,
+      action: PayloadAction<{ id: string; sizeId: string; extrasIds: string[] }>
+    ) => {
+      state.products[action.payload.id].find(
+        (p) =>
+          generateSizeExtrasString(p.sizeId, p.extrasIds) ===
+          generateSizeExtrasString(
+            action.payload.sizeId,
+            action.payload.extrasIds
+          )
+      )!.qty++;
     },
   },
 });
-
-export const { addToCart } = cartSlice.actions;
+function generateSizeExtrasString(sizeId: string, extrasIds: string[]) {
+  return `${sizeId}-${extrasIds.toSorted().toString()}`;
+}
+export const { addToCart, incrementCartItemQty } = cartSlice.actions;
 export default cartSlice.reducer;
