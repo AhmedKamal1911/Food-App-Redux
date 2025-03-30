@@ -4,11 +4,12 @@ import Header from "@/components/common/header";
 import Footer from "@/components/common/footer";
 
 import { getAllProducts } from "@/lib/server/queries";
-import StoreProvider from "./store-provider";
+import StoreProvider from "../providers/store-provider";
 import { ToastContainer } from "react-toastify";
 
 import "./globals.css";
-import "react-toastify/dist/ReactToastify.css";
+import ReactQueryProvider from "@/providers/react-query-provider";
+
 const ptSansNarrow = PT_Sans_Narrow({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -16,6 +17,7 @@ const ptSansNarrow = PT_Sans_Narrow({
 });
 const pacifico = Pacifico({
   variable: "--font-pacifico",
+  subsets: ["cyrillic"],
   weight: ["400"],
   fallback: ["Sans-serif"],
 });
@@ -39,9 +41,11 @@ export default async function RootLayout({
       >
         <StoreProvider>
           <ToastContainer closeOnClick pauseOnHover />
-          <Header products={products} />
-          {children}
-          <Footer />
+          <ReactQueryProvider>
+            <Header products={products} />
+            {children}
+            <Footer />
+          </ReactQueryProvider>
         </StoreProvider>
       </body>
     </html>

@@ -1,5 +1,5 @@
 "use client";
-import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { useAppDispatch } from "@/lib/redux/hooks";
 import { Button } from "../ui/button";
 import { addToCart } from "@/lib/redux/features/cart/cartSlice";
 import {
@@ -26,8 +26,10 @@ type SelectedOptionsState = {
 };
 export default function AddToCartDialog({
   product,
+  totalQty,
 }: {
   product: ProductWithRelations;
+  totalQty: number;
 }) {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOptionsState>(
     () => ({
@@ -57,9 +59,9 @@ export default function AddToCartDialog({
       return updatedOptions;
     });
   };
-  const cartProducts = useAppSelector((state) => state.cart.products);
-  const totalQuantity =
-    cartProducts[product.id]?.reduce((acc, curr) => acc + curr.qty, 0) ?? 0;
+  // const cartProducts = useAppSelector((state) => state.cart.products);
+  // const totalQuantity =
+  //   cartProducts[product.id]?.reduce((acc, curr) => acc + curr.qty, 0) ?? 0;
   // OPTIMIZE: Lift state up and memoized product to improve performance
   const dispatch = useAppDispatch();
   function addProductToCart() {
@@ -73,7 +75,7 @@ export default function AddToCartDialog({
     toast.success(`${product.name} Added To Cart`);
   }
 
-  console.log("renders", totalQuantity);
+  console.log("renders", totalQty);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -124,8 +126,8 @@ export default function AddToCartDialog({
             onClick={addProductToCart}
             className="capitalize font-semibold w-full bg-orange-600 hover:bg-orange-600/90"
           >
-            {cartProducts[product.id]?.length > 0
-              ? `Add to cart (${totalQuantity})`
+            {totalQty > 0
+              ? `Add to cart (${totalQty})`
               : `Add to cart ($${totalProductPrice.toFixed(2)})`}
           </Button>
         </DialogFooter>

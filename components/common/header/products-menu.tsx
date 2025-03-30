@@ -22,7 +22,7 @@ export default function ProductsMenu({ products }: { products: Product[] }) {
 }
 function MenuProduct({ product }: { product: Product }) {
   return (
-    <div className=" hover:bg-primary/10 transition-colors relative flex items-center px-5 p-1">
+    <div className="text-black hover:bg-primary/10 transition-colors relative flex items-center px-5 p-1">
       <div className="shrink-0">
         <Image
           src={product.image}

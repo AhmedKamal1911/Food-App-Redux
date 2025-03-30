@@ -1,67 +1,118 @@
 "use client";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 
 import { Button } from "../ui/button";
-import { ProductWithRelations } from "@/lib/types/product";
+
 import { ProductCategory } from "@prisma/client";
 import { CategoriesNameList } from "@/lib/types/category";
 
 import ProductCard from "./product-card";
-
+import { useAppSelector } from "@/lib/redux/hooks";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { getProductsByPage } from "@/lib/server/actions/product/get-products-by-page";
 export default function ProductFilterTabs({
   categories,
-  products,
+  className,
 }: {
   categories: ProductCategory[];
-  products: ProductWithRelations[];
+  className?: string;
 }) {
+  const [pageNumber, setPageNumber] = useState(1);
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ["products"],
+      queryFn: () => getProductsByPage({ page: pageNumber, pageSize: 5 }),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) => {
+        console.log({ pageNumber, total: lastPage.totalPages });
+        return pageNumber >= lastPage.totalPages ? undefined : pageNumber;
+      },
+    });
+  console.log(hasNextPage);
+  const cartProducts = useAppSelector((state) => state.cart.products);
+
   const categoriesNameList = useMemo(
     () => ["all", ...categories.map((category) => category.name)],
     [categories]
   );
-  // FIXME: think about usememo here
-  const [category, setCategory] = useState("all");
-  const filteredProducts = useMemo(
+
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const filteredData = useMemo(
     () =>
-      category === "all"
-        ? products
-        : products.filter((product) => product.category?.name === category),
-    [category, products]
+      selectedCategory === "all"
+        ? data?.pages.map((page) => page.products.map((product) => product))
+        : data?.pages.map((page) =>
+            page.products.filter(
+              (product) => product.category?.name === selectedCategory
+            )
+          ),
+
+    [selectedCategory, data]
   );
 
-  const getMoreProducts = () => {};
+  const getMoreProducts = () => {
+    setPageNumber((prev) => prev + 1);
+    fetchNextPage();
+  };
 
-  // TODO: create pagination here
   return (
-    <div className="flex flex-col gap-10 mt-10">
+    <div className={cn("flex flex-col gap-10 my-10 text-white", className)}>
       <FilterTabs
-        selectedCategory={category}
+        selectedCategory={selectedCategory}
         categories={categoriesNameList}
-        setCategory={setCategory}
+        setCategory={setSelectedCategory}
       />
-      {filteredProducts.length < 1 ? (
+      {filteredData && filteredData.length < 1 ? (
         <span className="text-center block text-red-600 font-bold text-xl">
           No Any Products In This Category
         </span>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5  xl:gap-10 text-white">
-          {filteredProducts.map((product) => (
-            <AnimatePresence key={product.id}>
-              <ProductCard product={product} />
-            </AnimatePresence>
-          ))}
+        <div
+          className={
+            "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5  xl:gap-10 "
+          }
+        >
+          {filteredData?.map((page, i) => {
+            return (
+              <Fragment key={`page-${i}`}>
+                {page.map((product) => {
+                  const totalQuantity =
+                    cartProducts[product.id]?.reduce(
+                      (acc, curr) => acc + curr.qty,
+                      0
+                    ) ?? 0;
+
+                  return (
+                    <AnimatePresence key={product.id}>
+                      <ProductCard
+                        product={product}
+                        productQty={totalQuantity}
+                      />
+                    </AnimatePresence>
+                  );
+                })}
+              </Fragment>
+            );
+          })}
         </div>
       )}
-      <Button
-        onClick={getMoreProducts}
-        variant={"outline"}
-        className="text-white py-6 px-11 rounded-4xl font-bold capitalize text-xl  self-center"
-      >
-        load more
-      </Button>
+      {/* TODO: create loading boundry */}
+      {isFetchingNextPage ? (
+        <p className="text-white text-center">Loading</p>
+      ) : (
+        hasNextPage && (
+          <Button
+            onClick={getMoreProducts}
+            variant={"outline"}
+            className="text-white py-6 px-11 rounded-4xl font-bold capitalize text-xl  self-center"
+          >
+            load more
+          </Button>
+        )
+      )}
     </div>
   );
 }

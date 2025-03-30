@@ -3,15 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import AddToCartDialog from "./add-to-cart-dialog";
 import { ProductWithRelations } from "@/lib/types/product";
-
-export default function ProductCard({
+import { memo } from "react";
+import { motion } from "motion/react";
+export default memo(function ProductCard({
   product,
+  productQty,
 }: {
   product: ProductWithRelations;
+  productQty: number;
 }) {
-  console.log("product id ", product.name);
   return (
-    <div className="flex flex-col items-center gap-4">
+    <motion.div className="flex flex-col items-center gap-4">
       <div className="group relative flex flex-col items-center">
         <div>
           <Image
@@ -40,7 +42,7 @@ export default function ProductCard({
         </div>
       </div>
 
-      <AddToCartDialog product={product} />
-    </div>
+      <AddToCartDialog product={product} totalQty={productQty} />
+    </motion.div>
   );
-}
+});
