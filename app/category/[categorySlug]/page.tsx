@@ -1,11 +1,7 @@
 import IntroBanner from "@/components/common/intro-banner";
-import {
-  getAllCategories,
-  getAllProducts,
-  getCategory,
-} from "@/lib/server/queries";
+import { getAllCategories, getCategory } from "@/lib/server/queries";
 
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import ProductsViewer from "./_components/products-viewer";
 import AsideContentWrapper from "./_components/aside-content-wrapper";
@@ -13,22 +9,28 @@ import AsideContentWrapper from "./_components/aside-content-wrapper";
 import CategoriesViewer from "./_components/categories-viewer";
 import SearchInput from "./_components/search-input";
 import RecentProductsViewer from "./_components/recent-products-viewer";
+import { Suspense } from "react";
 
 type Props = {
   params: Promise<{ categorySlug: string }>;
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; page?: string }>;
 };
 export default async function CategoryPage({ params, searchParams }: Props) {
   const { categorySlug } = await params;
-  const { q } = await searchParams;
+  const { q, page } = await searchParams;
   const categories = await getAllCategories();
-  const category = await getCategory({ categorySlug, searchQuery: q });
-  const products = await getAllProducts({ limit: 3, order: "desc" });
-  if (!category) redirect("/404");
-
+  const categoryData = await getCategory({
+    categorySlug,
+    searchQuery: q,
+    page: +(page ?? 1),
+    pageSize: 3,
+  });
+  console.log(categoryData);
+  if (!categoryData) return notFound();
+  console.log(process.env.NEXT_PUBLIC_BASE_URL);
   return (
     <main className="min-h-screen">
-      <IntroBanner title={categorySlug} />
+      <IntroBanner title={categoryData.name} />
       <div className="container">
         <div className="flex max-lg:flex-col-reverse gap-8 py-20">
           <div className="flex flex-col gap-5 min-w-[300px] p-2">
@@ -37,14 +39,16 @@ export default async function CategoryPage({ params, searchParams }: Props) {
               <CategoriesViewer categories={categories} />
             </AsideContentWrapper>
             <AsideContentWrapper title="recent products">
-              <RecentProductsViewer recentProducts={products} />
+              <Suspense>
+                <RecentProductsViewer />
+              </Suspense>
             </AsideContentWrapper>
             {/* <AsideContentWrapper title="tags">
 
             </AsideContentWrapper> */}
           </div>
 
-          <ProductsViewer categoryProducts={category.products} />
+          <ProductsViewer categoryData={categoryData} />
         </div>
       </div>
     </main>

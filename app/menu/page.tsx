@@ -2,7 +2,7 @@ import IntroBanner from "@/components/common/intro-banner";
 import ProductFilterTabs from "@/components/common/product-filter-tabs";
 import { getAllCategories } from "@/lib/server/queries";
 import BestChefSection from "../_components/sections/best-chef-section";
-import BookTableContainer from "@/components/common/book-table-container";
+
 import BookTableSection from "@/components/common/sections/book-table-section";
 
 type Props = {};

@@ -4,12 +4,14 @@ export async function getCategory({
   categorySlug,
   searchQuery,
   productsOrder = "asc",
-  productsLimit = undefined,
+  page,
+  pageSize,
 }: {
   categorySlug: string;
   searchQuery?: string;
   productsOrder?: "asc" | "desc";
-  productsLimit?: number;
+  page: number;
+  pageSize: number;
 }) {
   const category = await prisma.productCategory.findUnique({
     where: {
@@ -17,8 +19,10 @@ export async function getCategory({
     },
 
     include: {
+      _count: true,
       products: {
-        take: productsLimit,
+        take: pageSize,
+        skip: (page - 1) * pageSize,
         orderBy: { createdAt: productsOrder },
         include: { extras: true, sizes: true, category: true },
         where: searchQuery
@@ -27,5 +31,14 @@ export async function getCategory({
       },
     },
   });
-  return category;
+  if (!category) {
+    return undefined;
+  }
+
+  const totalPages = Math.ceil(category._count.products / pageSize);
+
+  return {
+    ...category,
+    products: { data: category.products, page, totalPages },
+  };
 }

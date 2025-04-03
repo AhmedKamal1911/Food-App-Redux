@@ -163,7 +163,7 @@ function PagesLinks({ linksList }: { linksList: PageLink[] }) {
       {linksList.map((page, i) => (
         <li key={i}>
           <Link
-            className="relative block hover:text-primary transition-colors px-5 p-1 before:absolute before:start-3 before:size-1 before:bg-primary before:translate-y-1/2 before:bottom-1/2 before:rounded-1/2 before:translate-x-[-50%]"
+            className="relative block text-black hover:text-primary transition-colors px-5 p-1 before:absolute before:start-3 before:size-1 before:bg-primary before:translate-y-1/2 before:bottom-1/2 before:rounded-1/2 before:translate-x-[-50%]"
             href={page.href}
           >
             {page.label}

@@ -1,13 +1,12 @@
-import { Product } from "@prisma/client";
+import { getAllProducts } from "@/lib/server/queries";
+
 import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function RecentProductsViewer({
-  recentProducts,
-}: {
-  recentProducts: Product[];
-}) {
+export default async function RecentProductsViewer() {
+  const recentProducts = await getAllProducts({ limit: 3, order: "desc" });
+
   return (
     <ul className="space-y-1">
       {recentProducts.map((product) => (

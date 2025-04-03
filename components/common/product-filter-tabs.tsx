@@ -20,18 +20,19 @@ export default function ProductFilterTabs({
   categories: ProductCategory[];
   className?: string;
 }) {
-  const [pageNumber, setPageNumber] = useState(1);
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["products"],
-      queryFn: () => getProductsByPage({ page: pageNumber, pageSize: 5 }),
+      queryFn: ({ pageParam = 1 }) =>
+        getProductsByPage({ page: pageParam, pageSize: 5 }), // Dynamically use pageParam
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
-        console.log({ pageNumber, total: lastPage.totalPages });
-        return pageNumber >= lastPage.totalPages ? undefined : pageNumber;
+        return lastPage.page >= lastPage.totalPages
+          ? undefined
+          : lastPage.page + 1;
       },
     });
-  console.log(hasNextPage);
+
   const cartProducts = useAppSelector((state) => state.cart.products);
 
   const categoriesNameList = useMemo(
@@ -54,7 +55,6 @@ export default function ProductFilterTabs({
   );
 
   const getMoreProducts = () => {
-    setPageNumber((prev) => prev + 1);
     fetchNextPage();
   };
 
