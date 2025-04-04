@@ -3,9 +3,11 @@ import BreadCramb from "./bread-cramb";
 export default function IntroBanner({
   title,
   backgroundSrc = "/images/about-page/decoration/about-banner.jpg",
+  breadcrumbPaths,
 }: {
   title: string;
   backgroundSrc?: string;
+  breadcrumbPaths: { name: string; href?: string }[];
 }) {
   return (
     <div
@@ -17,7 +19,7 @@ export default function IntroBanner({
           <span className="text-3xl md:text-5xl font-bold text-white uppercase">
             {title}
           </span>
-          <BreadCramb currentPage={title} />
+          <BreadCramb pathes={breadcrumbPaths} />
         </div>
       </div>
     </div>

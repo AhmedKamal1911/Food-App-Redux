@@ -23,18 +23,24 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     categorySlug,
     searchQuery: q,
     page: +(page ?? 1),
-    pageSize: 3,
+    pageSize: 6,
   });
 
   if (!categoryData) return notFound();
 
   return (
     <main className="min-h-screen">
-      <IntroBanner title={categoryData.name} />
+      <IntroBanner
+        breadcrumbPaths={[
+          { name: "categories", href: "/categories/" },
+          { name: categoryData.name, href: `/${categorySlug}/` },
+        ]}
+        title={categoryData.name}
+      />
       <div className="container">
         <div className="flex max-lg:flex-col-reverse gap-8 py-20">
           <div className="flex flex-col gap-5 min-w-[300px] p-2">
-            <SearchInput />
+            <SearchInput isDisabled={categoryData.products.data.length < 1} />
             <AsideContentWrapper title="categories">
               <CategoriesViewer categories={categories} />
             </AsideContentWrapper>
@@ -45,7 +51,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
             </AsideContentWrapper>
           </div>
 
-          <ProductsViewer categoryData={categoryData} />
+          <ProductsViewer query={q} categoryData={categoryData} />
         </div>
       </div>
     </main>

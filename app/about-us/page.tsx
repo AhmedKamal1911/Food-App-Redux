@@ -11,6 +11,7 @@ export default function AboutUs({}: Props) {
     <main className="min-h-screen">
       <IntroBanner
         backgroundSrc="/images/about-page/decoration/about-banner.jpg"
+        breadcrumbPaths={[{ name: "about us", href: "/about-us/" }]}
         title="Sollow Burger"
       />
       <AboutRestaurantSection />

@@ -7,7 +7,10 @@ export default async function CategoriesPage() {
   const categories = await getAllCategories();
   return (
     <main className="min-h-screen">
-      <IntroBanner title="Categories" />
+      <IntroBanner
+        title="Categories"
+        breadcrumbPaths={[{ name: "categories", href: "/categories/" }]}
+      />
       <section className="flex flex-col gap-10 py-8 ">
         <SectionDivider title="Our Categories" />
         <div className="container">

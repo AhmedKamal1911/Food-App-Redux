@@ -9,8 +9,9 @@ import { CategoryWithPaginatedProducts } from "@/lib/types/category";
 
 type Props = {
   categoryData: CategoryWithPaginatedProducts;
+  query?: string;
 };
-export default function ProductsViewer({ categoryData }: Props) {
+export default function ProductsViewer({ categoryData, query }: Props) {
   const cartProducts = useAppSelector((state) => state.cart.products);
   console.log({
     totalPages: categoryData.products.totalPages,
@@ -20,6 +21,9 @@ export default function ProductsViewer({ categoryData }: Props) {
   return (
     <div className="flex-1 p-2">
       <div className="flex flex-col h-full">
+        {query && (
+          <p className="text-xl text-primary">{`Results of Query : ${query}`}</p>
+        )}
         <div className="flex-1">
           {categoryData.products.data.length > 0 ? (
             <div className="grid grid-cols-1  md:grid-cols-3  gap-7 ">

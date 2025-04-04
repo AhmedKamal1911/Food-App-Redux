@@ -10,7 +10,10 @@ export default async function MenuPage({}: Props) {
   const categories = await getAllCategories();
   return (
     <main className="bg-white pb-10">
-      <IntroBanner title="Menu" />
+      <IntroBanner
+        title="Menu"
+        breadcrumbPaths={[{ name: "menu", href: "/menu/" }]}
+      />
       <div className="container">
         <ProductFilterTabs categories={categories} className="text-secondary" />
       </div>
