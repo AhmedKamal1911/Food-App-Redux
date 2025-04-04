@@ -31,7 +31,7 @@ export default function Pagination({
             onClick={() => {
               if (currentPage > 1) {
                 return router.replace(
-                  `/category/${currentPageLocation}?page=${currentPage - 1}`
+                  `/categories/${currentPageLocation}?page=${currentPage - 1}`
                 );
               }
             }}
@@ -60,7 +60,7 @@ export default function Pagination({
             onClick={() => {
               if (currentPage !== totalPages) {
                 return router.replace(
-                  `/category/${currentPageLocation}?page=${currentPage + 1}`
+                  `/categories/${currentPageLocation}?page=${currentPage + 1}`
                 );
               }
             }}

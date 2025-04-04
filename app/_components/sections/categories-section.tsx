@@ -59,7 +59,7 @@ function CategoryCard({ category }: { category: ProductCategory }) {
         />
       </div>
       <Link
-        href={`/category/${category.slug}`}
+        href={`/categories/${category.slug}`}
         className="before:absolute before:inset-0 mt-3 block text-center uppercase text-2xl font-bold group-hover:text-primary transition-colors"
       >
         {category.name}

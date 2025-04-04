@@ -10,7 +10,7 @@ export default function CategoryCard({
   return (
     <div className="relative rounded-sm aspect-square overflow-hidden group">
       <Link
-        href={`/category/${category.slug}`}
+        href={`/categories/${category.slug}`}
         className="block w-full h-full relative"
       >
         <Image src={category.image} alt={`${category.name} category`} fill />
@@ -18,7 +18,7 @@ export default function CategoryCard({
         <div
           className="absolute inset-0 bg-gradient-to-t from-black to-transparent
           translate-y-full group-hover:translate-y-0
-          transition-transform duration-500 ease-in-out"
+          transition-transform duration-700 "
         >
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="text-white uppercase text-2xl font-bold">

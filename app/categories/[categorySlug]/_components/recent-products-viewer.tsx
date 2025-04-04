@@ -11,7 +11,7 @@ export default async function RecentProductsViewer() {
       {recentProducts.map((product) => (
         <li key={product.id}>
           <Link
-            href={`/category/`}
+            href={`/categories/`}
             className="group flex gap-1 py-2 uppercase text-[16px]  text-gray-500 hover:text-primary transition-colors"
           >
             <Image

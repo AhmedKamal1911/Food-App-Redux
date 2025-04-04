@@ -8,7 +8,7 @@ export default async function CategoriesPage() {
   return (
     <main className="min-h-screen">
       <IntroBanner title="Categories" />
-      <div className="flex flex-col gap-10 py-8 ">
+      <section className="flex flex-col gap-10 py-8 ">
         <SectionDivider title="Our Categories" />
         <div className="container">
           {categories.length >= 1 ? (
@@ -21,7 +21,7 @@ export default async function CategoriesPage() {
             <p className="text-center">No Categories Found!</p>
           )}
         </div>
-      </div>
+      </section>
     </main>
   );
 }
