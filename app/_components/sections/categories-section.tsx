@@ -35,10 +35,11 @@ export default function CategoriesSection({
         )}
 
         <Button
+          asChild
           variant={"outline"}
-          className="block text-xl h-11 w-30 mx-auto rounded-3xl font-bold bg-secondary text-white"
+          className="block text-center text-xl h-11 w-30 mx-auto rounded-3xl font-bold bg-secondary text-white"
         >
-          View More
+          <Link href={"/categories"}>View More</Link>
         </Button>
       </div>
     </section>

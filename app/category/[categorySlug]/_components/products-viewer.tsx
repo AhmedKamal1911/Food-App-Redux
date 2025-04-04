@@ -1,10 +1,9 @@
 "use client";
 
 import ProductCard from "@/components/common/product-card";
-import { Button } from "@/components/ui/button";
+
 import { useAppSelector } from "@/lib/redux/hooks";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import Link from "next/link";
+
 import Pagination from "./pagination";
 import { CategoryWithPaginatedProducts } from "@/lib/types/category";
 

@@ -25,9 +25,9 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     page: +(page ?? 1),
     pageSize: 3,
   });
-  console.log(categoryData);
+
   if (!categoryData) return notFound();
-  console.log(process.env.NEXT_PUBLIC_BASE_URL);
+
   return (
     <main className="min-h-screen">
       <IntroBanner title={categoryData.name} />
@@ -43,9 +43,6 @@ export default async function CategoryPage({ params, searchParams }: Props) {
                 <RecentProductsViewer />
               </Suspense>
             </AsideContentWrapper>
-            {/* <AsideContentWrapper title="tags">
-
-            </AsideContentWrapper> */}
           </div>
 
           <ProductsViewer categoryData={categoryData} />

@@ -32,7 +32,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const products = await getAllProducts({});
+  const products = await getAllProducts();
 
   return (
     <html lang="en">

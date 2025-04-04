@@ -1,11 +1,10 @@
-import { getAllProducts } from "@/lib/server/queries";
-
+import { getRecentProducts } from "@/lib/server/queries";
 import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function RecentProductsViewer() {
-  const recentProducts = await getAllProducts({ limit: 3, order: "desc" });
+  const recentProducts = await getRecentProducts({});
 
   return (
     <ul className="space-y-1">

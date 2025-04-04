@@ -1,16 +1,8 @@
 import prisma from "@/lib/prisma";
 
-export async function getAllProducts({
-  order = "asc",
-  limit = undefined,
-}: {
-  order?: "desc" | "asc";
-  limit?: number;
-}) {
+export async function getAllProducts() {
   const products = await prisma.product.findMany({
     include: { category: true, extras: true, sizes: true },
-    orderBy: order ? { createdAt: order } : {},
-    take: limit,
   });
 
   return products;
