@@ -1,6 +1,7 @@
 import { Control, FieldPath, FieldValues } from "react-hook-form";
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,12 +34,14 @@ export default function CustomBookTableField<
           <FormLabel className="sr-only">{field.name}</FormLabel>
           <FormControl>
             <CustomBookTableInput
+              className="bg-white"
               icon={icon}
               type={type}
               placeholder={placeholder}
               {...field}
             />
           </FormControl>
+
           <FormMessage />
         </FormItem>
       )}

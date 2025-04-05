@@ -31,7 +31,7 @@ export default function CustomSelectField<
         <FormItem>
           <FormLabel className="sr-only">{field.name}</FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
-            <SelectTrigger className="py-5 w-full focus-visible:ring-primary/50 focus-visible:border-primary capitalize">
+            <SelectTrigger className="bg-white py-5 w-full border-gray-500/40 focus-visible:ring-primary/50 focus-visible:border-primary capitalize">
               <SelectValue className="py-4" placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent className="rounded-sm">{children}</SelectContent>

@@ -15,8 +15,8 @@ import {
   bookTableSchema,
   BookTableSchema,
 } from "@/lib/validation/book-table-schema";
+import { numberOfPersons } from "@/lib/data";
 
-const numberOfPersons = 11;
 export default function BookTableForm() {
   // 1. Define your form.
   const form = useForm<BookTableSchema>({
@@ -24,19 +24,13 @@ export default function BookTableForm() {
     defaultValues: {
       name: "",
       email: "",
-      numberOfCustomers: "0",
+      numberOfCustomers: "empty",
       bookingDate: new Date(),
     },
   });
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof bookTableSchema>) {
-    if (values.numberOfCustomers === "0") {
-      console.log("equal");
-      form.setError("numberOfCustomers", {
-        message: "Must be At least 1 person",
-      });
-    }
     console.log(values);
   }
 
@@ -64,7 +58,11 @@ export default function BookTableForm() {
           placeholder="how many persons?"
         >
           {Array.from({ length: numberOfPersons }).map((_, i) => (
-            <SelectItem key={i} value={String(i)}>
+            <SelectItem
+              className="capitalize"
+              key={i}
+              value={i === 0 ? "empty" : String(i)}
+            >
               {i === 0 ? "how many persons?" : i}
             </SelectItem>
           ))}
