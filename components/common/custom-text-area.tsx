@@ -14,7 +14,7 @@ type Props<T extends FieldValues> = {
   placeholder?: string;
 };
 
-export default function CustomBookTableTextArea<T extends FieldValues>({
+export default function CustomTextArea<T extends FieldValues>({
   control,
   name,
   placeholder,

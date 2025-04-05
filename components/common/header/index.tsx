@@ -43,7 +43,7 @@ const getNavLinks = (products: Product[]) => {
       href: "#",
       submenu: [
         { href: "/about-us", label: "About Us" },
-        { href: "/contact-us", label: "Contact Us" },
+        { href: "/contact", label: "Contact Us" },
         { href: "/my-account", label: "My Account" },
       ],
     },

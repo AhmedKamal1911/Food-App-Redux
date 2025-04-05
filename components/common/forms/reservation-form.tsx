@@ -8,7 +8,7 @@ import CustomSelectField from "../custom-select-field";
 import { SelectItem } from "@/components/ui/select";
 import { numberOfPersons } from "@/lib/data";
 import { DateTimePicker } from "../date-picker/date-time-picker";
-import CustomBookTableTextArea from "../custom-book-table-text-area";
+import CustomTextArea from "../custom-text-area";
 import {
   reservationSchema,
   ReservationSchema,
@@ -69,7 +69,7 @@ export default function ReservationForm() {
           name="emailAddress"
           placeholder="email address"
         />
-        <CustomBookTableTextArea
+        <CustomTextArea
           control={form.control}
           name="comments"
           placeholder="comments"
