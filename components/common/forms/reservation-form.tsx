@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import CustomBookTableField from "../custom-book-table-field";
+import CustomInputField from "../custom-input-field";
 import CustomSelectField from "../custom-select-field";
 import { SelectItem } from "@/components/ui/select";
 import { numberOfPersons } from "@/lib/data";
@@ -54,17 +54,17 @@ export default function ReservationForm() {
           name="bookingDate"
           placeholder="pick up date"
         />
-        <CustomBookTableField
+        <CustomInputField
           control={form.control}
           name="username"
           placeholder="name"
         />
-        <CustomBookTableField
+        <CustomInputField
           control={form.control}
           name="phoneNumber"
           placeholder="phone number"
         />
-        <CustomBookTableField
+        <CustomInputField
           control={form.control}
           name="emailAddress"
           placeholder="email address"

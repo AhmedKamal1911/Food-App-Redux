@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import CustomBookTableField from "../custom-book-table-field";
+import CustomInputField from "../custom-input-field";
 import { Form } from "@/components/ui/form";
 import { Mail, X } from "lucide-react";
 import CustomSelectField from "../custom-select-field";
@@ -40,13 +40,13 @@ export default function BookTableForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex-1 space-y-8 flex flex-col"
       >
-        <CustomBookTableField
+        <CustomInputField
           icon={<X className="text-primary size-4" />}
           control={form.control}
           name="name"
           placeholder="name"
         />
-        <CustomBookTableField
+        <CustomInputField
           icon={<Mail className="text-primary size-4" />}
           control={form.control}
           name="email"

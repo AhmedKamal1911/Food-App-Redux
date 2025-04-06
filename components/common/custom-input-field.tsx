@@ -1,7 +1,6 @@
 import { Control, FieldPath, FieldValues } from "react-hook-form";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -9,7 +8,9 @@ import {
 } from "../ui/form";
 
 import { HTMLInputTypeAttribute, ReactNode } from "react";
-import CustomBookTableInput from "./custom-book-table-input";
+
+import CustomInput from "./custom-input";
+import { cn } from "@/lib/utils";
 
 type Props<
   TFieldValues extends FieldValues = FieldValues,
@@ -20,11 +21,12 @@ type Props<
   placeholder?: string;
   type?: HTMLInputTypeAttribute | undefined;
   icon?: ReactNode;
+  className?: string;
 };
-export default function CustomBookTableField<
+export default function CustomInputField<
   T extends FieldValues = FieldValues,
   K extends FieldPath<T> = FieldPath<T>
->({ control, name, placeholder, type, icon }: Props<T, K>) {
+>({ control, name, placeholder, type, icon, className }: Props<T, K>) {
   return (
     <FormField
       control={control}
@@ -33,8 +35,8 @@ export default function CustomBookTableField<
         <FormItem>
           <FormLabel className="sr-only">{field.name}</FormLabel>
           <FormControl>
-            <CustomBookTableInput
-              className="bg-white"
+            <CustomInput
+              className={cn("bg-white", className)}
               icon={icon}
               type={type}
               placeholder={placeholder}

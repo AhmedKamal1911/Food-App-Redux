@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 import { ReactNode } from "react";
 
-export default function CustomBookTableInput({
+export default function CustomInput({
   className,
   type,
   icon,

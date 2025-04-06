@@ -24,7 +24,7 @@ export default function ShoppingCartMenu({
     <div>
       <div className="group max-lg:hidden">
         <ShoppingCartButton />
-        <SubMenuContainer className="opacity-100 pointer-events-auto py-3 px-2 max-sm:start-0 end-0 sm:end-10 xl:end-0 sm:w-[300px]  max-w-full lg:group-hover:opacity-100 lg:group-hover:pointer-events-auto lg:group-hover:translate-y-0">
+        <SubMenuContainer className=" py-3 px-2 max-sm:start-0 end-0 sm:end-10 xl:end-0 sm:w-[300px]  max-w-full lg:group-hover:opacity-100 lg:group-hover:pointer-events-auto lg:group-hover:translate-y-0">
           <ShoppingCartMenuContent products={products} />
         </SubMenuContainer>
       </div>

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import CustomBookTableField from "../custom-book-table-field";
+import CustomInputField from "../custom-input-field";
 import { Form } from "@/components/ui/form";
 import { File, Mail, Phone, X } from "lucide-react";
 
@@ -35,19 +35,19 @@ export default function ContactForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex-1 space-y-8 flex flex-col"
       >
-        <CustomBookTableField
+        <CustomInputField
           icon={<Mail className="text-primary size-4" />}
           control={form.control}
           name="email"
           placeholder="email"
         />
-        <CustomBookTableField
+        <CustomInputField
           icon={<File className="text-primary size-4" />}
           control={form.control}
           name="subject"
           placeholder="subject"
         />
-        <CustomBookTableField
+        <CustomInputField
           icon={<Phone className="text-primary size-4" />}
           control={form.control}
           name="phone"
