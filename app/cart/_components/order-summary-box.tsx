@@ -1,10 +1,7 @@
-// import CustomInputField from "@/components/common/custom-input-field";
-
 import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
 import { PromoCodeForm } from "./promo-code-form";
-import { useState } from "react";
 
 type Props = {};
 export default function OrderSummaryBox({}: Props) {

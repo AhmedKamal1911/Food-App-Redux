@@ -20,6 +20,7 @@ export default function ProductFilterTabs({
   categories: ProductCategory[];
   className?: string;
 }) {
+  // TODO: change server action getProductsByPage to route
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["products"],
