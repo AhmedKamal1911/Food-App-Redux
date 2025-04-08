@@ -1,20 +1,34 @@
 "use client";
-import { useAppSelector } from "@/lib/redux/hooks";
+
+import { useGetCartProducts } from "@/hooks/use-get-cart-products";
 import OrderSummaryBox from "./order-summary-box";
 import ShoppingCart from "./shopping-cart";
-import { getProductsByIds } from "@/lib/queries/product/get-products-by-ids";
+import { useCartProductsSubtotal } from "@/hooks/use-cart-products-subtotal";
 
-type Props = {};
-export default function CartSectionWrapper({}: Props) {
+import { useCartProductsCount } from "@/hooks/use-cart-products-count";
+
+export default function CartSectionWrapper() {
   // TODO:create hook to get cart products and another one to get subtotal
-  const cartItems = useAppSelector((state) => state.cart.products);
-  const productsIds = Object.keys(cartItems);
-  const products = getProductsByIds(productsIds.toString());
-  console.log(cartItems);
+  const { cartProducts, error, isRefetching, isLoading, refetch } =
+    useGetCartProducts();
+  const itemsCount = useCartProductsCount();
+
+  const cartProductsSubtotal = useCartProductsSubtotal(cartProducts);
+  console.log({ itemsCount });
   return (
     <section className="flex max-lg:flex-col min-h-[80vh]">
-      <ShoppingCart />
-      <OrderSummaryBox />
+      <ShoppingCart
+        products={cartProducts}
+        itemsCount={itemsCount}
+        error={error}
+        isLoading={isLoading}
+        isRefetching={isRefetching}
+        refetchCartProducts={refetch}
+      />
+      <OrderSummaryBox
+        subtotal={cartProductsSubtotal}
+        itemsCount={itemsCount}
+      />
     </section>
   );
 }

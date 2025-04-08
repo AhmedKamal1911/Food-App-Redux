@@ -20,6 +20,8 @@ import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { useState } from "react";
 import { toast } from "react-toastify";
+
+import { useProductTotalPrice } from "@/hooks/use-product-total-price";
 type SelectedOptionsState = {
   size: Size;
   extras: Extra[];
@@ -31,6 +33,7 @@ export default function AddToCartDialog({
   product: ProductWithRelations;
   totalQty: number;
 }) {
+  const dispatch = useAppDispatch();
   const [selectedOptions, setSelectedOptions] = useState<SelectedOptionsState>(
     () => ({
       size:
@@ -38,32 +41,16 @@ export default function AddToCartDialog({
       extras: [],
     })
   );
-  const [totalProductPrice, setTotalProductPrice] = useState(product.price);
+
+  const totalProductPrice = useProductTotalPrice({
+    productPrice: product.price,
+    selectedExtras: selectedOptions.extras,
+    selectedSize: selectedOptions.size,
+  });
   const selectedOptionsUpdater = (o: Partial<SelectedOptionsState>) => {
-    setSelectedOptions((prev) => {
-      const updatedOptions = { ...prev, ...o };
-
-      const selectedSize = updatedOptions.size ?? prev.size;
-      const sizePrice = selectedSize.name === "Medium" ? 0 : selectedSize.price;
-      console.log({ sizePrice });
-
-      const selectedExtras = updatedOptions.extras ?? prev.extras;
-      const extrasPrice = selectedExtras.reduce(
-        (sum, extra) => sum + extra.price,
-        0
-      );
-
-      const newTotalPrice = product.price + sizePrice + extrasPrice;
-
-      setTotalProductPrice(newTotalPrice);
-      return updatedOptions;
-    });
+    setSelectedOptions((prev) => ({ ...prev, ...o }));
   };
-  // const cartProducts = useAppSelector((state) => state.cart.products);
-  // const totalQuantity =
-  //   cartProducts[product.id]?.reduce((acc, curr) => acc + curr.qty, 0) ?? 0;
-  // OPTIMIZE: Lift state up and memoized product to improve performance
-  const dispatch = useAppDispatch();
+
   function addProductToCart() {
     dispatch(
       addToCart({
@@ -128,7 +115,7 @@ export default function AddToCartDialog({
           >
             {totalQty > 0
               ? `Add to cart (${totalQty})`
-              : `Add to cart ($${totalProductPrice.toFixed(2)})`}
+              : `Add to cart ($${totalProductPrice})`}
           </Button>
         </DialogFooter>
       </DialogContent>

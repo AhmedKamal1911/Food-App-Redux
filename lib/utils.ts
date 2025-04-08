@@ -1,3 +1,4 @@
+import { Extra, Size } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -18,4 +19,23 @@ export function formatPhoneNumber(value: string): string {
   if (digits.length > 15) digits = digits.slice(0, 15); // Limit max length
 
   return digits;
+}
+
+export function calcProductTotalPrice({
+  productPrice,
+  size,
+  extras,
+  qty = 1,
+}: {
+  productPrice: number;
+  size: Size;
+  extras: Extra[];
+  qty?: number;
+}) {
+  return (
+    (productPrice +
+      size.price +
+      extras.reduce((acc, curr) => acc + curr.price, 0)) *
+    qty
+  );
 }

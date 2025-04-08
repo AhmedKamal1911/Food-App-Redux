@@ -34,30 +34,94 @@ export const cartSlice = createSlice({
       const sizeExtrasStringStore = state.products[id]?.map((product) =>
         generateSizeExtrasString(product.sizeId, product.extrasIds)
       );
-      if (sizeExtrasStringStore?.includes(sizeExtrasStringPayload))
-        return state;
-      state.products[id] = [
-        ...(state.products[id] ?? []),
-        { sizeId, extrasIds, qty: 1 },
-      ];
+      if (sizeExtrasStringStore?.includes(sizeExtrasStringPayload)) {
+        incrementProductQty(state, action.payload);
+      } else {
+        state.products[id] = [
+          ...(state.products[id] ?? []),
+          { sizeId, extrasIds, qty: 1 },
+        ];
+      }
     },
     incrementCartItemQty: (
       state,
       action: PayloadAction<{ id: string; sizeId: string; extrasIds: string[] }>
     ) => {
-      state.products[action.payload.id].find(
+      incrementProductQty(state, action.payload);
+    },
+    decrementCartItemQty: (
+      state,
+      action: PayloadAction<{ id: string; sizeId: string; extrasIds: string[] }>
+    ) => {
+      const targetProduct = state.products[action.payload.id].find(
         (p) =>
           generateSizeExtrasString(p.sizeId, p.extrasIds) ===
           generateSizeExtrasString(
             action.payload.sizeId,
             action.payload.extrasIds
           )
-      )!.qty++;
+      );
+      if (targetProduct!.qty > 1) {
+        targetProduct!.qty--;
+      }
+    },
+    changeCartItemQty: (
+      state,
+      action: PayloadAction<{
+        id: string;
+        sizeId: string;
+        extrasIds: string[];
+        qty: number;
+      }>
+    ) => {
+      const targetProduct = state.products[action.payload.id].find(
+        (p) =>
+          generateSizeExtrasString(p.sizeId, p.extrasIds) ===
+          generateSizeExtrasString(
+            action.payload.sizeId,
+            action.payload.extrasIds
+          )
+      )!;
+      targetProduct.qty = action.payload.qty;
+    },
+
+    deleteCartItem: (
+      state,
+      action: PayloadAction<{
+        id: string;
+        sizeId: string;
+        extrasIds: string[];
+      }>
+    ) => {
+      const { id, sizeId, extrasIds } = action.payload;
+      const targetString = generateSizeExtrasString(sizeId, extrasIds);
+
+      state.products[id] = state.products[id].filter(
+        (p) => generateSizeExtrasString(p.sizeId, p.extrasIds) !== targetString
+      );
+
+      // Clean up empty product entries
+      if (state.products[id].length === 0) {
+        delete state.products[id];
+      }
     },
   },
 });
 function generateSizeExtrasString(sizeId: string, extrasIds: string[]) {
   return `${sizeId}-${extrasIds.toSorted().toString()}`;
 }
-export const { addToCart, incrementCartItemQty } = cartSlice.actions;
+function incrementProductQty(state: CartState, payload: AddToCartPayload) {
+  state.products[payload.id].find(
+    (p) =>
+      generateSizeExtrasString(p.sizeId, p.extrasIds) ===
+      generateSizeExtrasString(payload.sizeId, payload.extrasIds)
+  )!.qty++;
+}
+export const {
+  addToCart,
+  incrementCartItemQty,
+  decrementCartItemQty,
+  changeCartItemQty,
+  deleteCartItem,
+} = cartSlice.actions;
 export default cartSlice.reducer;

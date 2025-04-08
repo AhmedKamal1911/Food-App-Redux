@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Extra, Prisma, Size } from "@prisma/client";
 
 export type ProductWithRelations = Prisma.ProductGetPayload<{
   include: {
@@ -7,3 +7,9 @@ export type ProductWithRelations = Prisma.ProductGetPayload<{
     sizes: true;
   };
 }>;
+
+export type CartProduct = ProductWithRelations & {
+  qty: number;
+  selectedSize: Size;
+  selectedExtras: Extra[];
+};
