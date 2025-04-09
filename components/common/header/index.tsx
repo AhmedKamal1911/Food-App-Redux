@@ -9,7 +9,14 @@ import { ReactNode, useMemo, useRef } from "react";
 
 import { useInView } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   Accordion,
   AccordionContent,
@@ -90,7 +97,7 @@ export default function Header({ products }: { products: Product[] }) {
                   <PhoneCall className="text-primary size-6 sm:size-6" />
                   <span className="max-[660px]:hidden">+2151584584</span>
                 </Link>
-                <ShoppingCartMenu products={products} />
+                <ShoppingCartMenu />
               </div>
               <Button
                 className="bg-primary max-sm:p-2 p-5 rounded-4xl  text-white sm:text-[18px]"
@@ -183,6 +190,10 @@ function AsideDrawer({ products }: { products: Product[] }) {
           <Menu className="md:size-7 text-white" />
         </SheetTrigger>
         <SheetContent className="z-[9999] bg-primary/50 backdrop-blur-2xl border-l-secondary px-3 py-12 ">
+          <SheetHeader className="sr-only">
+            <SheetTitle>Aside Drawer</SheetTitle>
+            <SheetDescription>Aside Drawer with links</SheetDescription>
+          </SheetHeader>
           <Accordion
             type="single"
             collapsible
