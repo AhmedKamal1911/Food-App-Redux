@@ -2,9 +2,9 @@ import CategoriesSection from "./_components/sections/categories-section";
 import HeroSection from "./_components/sections/hero-section";
 import IntroSection from "./_components/sections/intro-section";
 import MenuSection from "./_components/sections/menu-section";
-import BookTableSection from "../components/common/sections/book-table-section";
+import BookTableSection from "../../components/common/sections/book-table-section";
 import BestChefSection from "./_components/sections/best-chef-section";
-import ReviewsSection from "../components/common/sections/reviews-section";
+import ReviewsSection from "../../components/common/sections/reviews-section";
 import AboutSection from "./_components/sections/about-section";
 
 import { Metadata } from "next";

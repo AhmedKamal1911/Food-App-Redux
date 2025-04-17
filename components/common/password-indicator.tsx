@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import clsx from "clsx";
-import { AlertCircle, CheckCircle } from "lucide-react";
+
 import { passwordRules } from "@/lib/data";
 
 type Props = {
@@ -9,9 +9,7 @@ type Props = {
 
 export default function PasswordIndicator({ password }: Props) {
   const [strength, setStrength] = useState(0);
-  const [validatedRules, setValidatedRules] = useState(
-    passwordRules.map((rule) => ({ ...rule, isPassed: false }))
-  );
+
   console.log({ password });
   useEffect(() => {
     const updatedRules = passwordRules.map(({ name, rule }) => ({
@@ -19,7 +17,6 @@ export default function PasswordIndicator({ password }: Props) {
       rule,
       isPassed: rule.test(password),
     }));
-    setValidatedRules(updatedRules);
 
     const score = updatedRules.reduce(
       (acc, curr) => acc + (curr.isPassed ? 1 : 0),

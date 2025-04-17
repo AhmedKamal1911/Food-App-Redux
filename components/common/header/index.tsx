@@ -46,21 +46,25 @@ function isAdminUser(id: number) {
 type PageLink = { label: string; href: string };
 type NavItem = PageLink & {
   submenu?: NavItem[] | ReactNode | PageLink[];
+  show: boolean;
 };
 const getNavLinks = (products: Product[], isAdmin: boolean) => {
   const NAV_LINKS: NavItem[] = [
     {
       label: "home",
       href: "/",
+      show: true,
     },
     {
       label: "menu",
       href: "/menu",
       submenu: <ProductsMenu products={products} />,
+      show: true,
     },
     {
       label: "reservation",
       href: "/reservation",
+      show: true,
     },
     {
       label: "pages",
@@ -70,30 +74,28 @@ const getNavLinks = (products: Product[], isAdmin: boolean) => {
         { href: "/contact", label: "contact us" },
         { href: "/my-account", label: "my account" },
       ],
+      show: true,
+    },
+    {
+      label: "dashboard",
+      href: "/dashboard",
+      show: isAdmin,
     },
   ];
-  return isAdmin
-    ? [
-        ...NAV_LINKS,
-        {
-          label: "dashboard",
-          href: "/dashboard",
-        },
-      ]
-    : NAV_LINKS;
+  return NAV_LINKS;
 };
 
 export default function Header({ products }: { products: Product[] }) {
   const ref = useRef<null | HTMLDivElement>(null);
   const isInView = useInView(ref);
-  const isAdmin = isAdminUser(0);
+  const isAdmin = isAdminUser(1);
   console.log({ isAdmin });
   return (
     <>
       <div ref={ref} />
       <header
         className={clsx(
-          "fixed start-0 end-0 transition-colors z-[999]",
+          "fixed  start-0 end-0 transition-colors z-[999]",
           isInView ? "bg-black/0" : "bg-secondary shadow-md shadow-gray-600/20"
         )}
       >
@@ -172,34 +174,38 @@ function NavList({
       <ul className={cn("flex items-center lg:gap-3 xl:gap-8", className)}>
         {NAV_LINKS.map((link, i) => {
           const isActive = pathname === link.href;
-          return (
-            <li className="group" key={i}>
-              <Link
-                href={link.href}
-                className={cn(
-                  "text-white group-hover:text-primary py-6 block hover:text-primary transition-colors duration-300 text-[18px] capitalize",
 
-                  isActive && "text-primary"
-                )}
-              >
-                {link.label}
-              </Link>
-              {link.submenu && (
-                <>
-                  {Array.isArray(link.submenu) ? (
-                    <SubMenuContainer
-                      className={
-                        "w-[150px]  p-0 py-3 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:translate-y-0 "
-                      }
-                    >
-                      <PagesLinks linksList={link.submenu} />
-                    </SubMenuContainer>
-                  ) : (
-                    link.submenu
+          return (
+            link.show && (
+              <li className="group" key={i}>
+                <Link
+                  href={link.href}
+                  className={cn(
+                    "text-white group-hover:text-primary py-6 block hover:text-primary transition-colors duration-300 text-[18px] capitalize",
+
+                    isActive && "text-primary"
                   )}
-                </>
-              )}
-            </li>
+                >
+                  {link.label}
+                </Link>
+
+                {link.submenu && (
+                  <>
+                    {Array.isArray(link.submenu) ? (
+                      <SubMenuContainer
+                        className={
+                          "w-[150px]  p-0 py-3 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:translate-y-0 "
+                        }
+                      >
+                        <PagesLinks linksList={link.submenu} />
+                      </SubMenuContainer>
+                    ) : (
+                      link.submenu
+                    )}
+                  </>
+                )}
+              </li>
+            )
           );
         })}
       </ul>
@@ -251,33 +257,35 @@ function AsideDrawer({
             collapsible
             className="w-full flex-col flex gap-2 font-semibold"
           >
-            {NAV_LINKS.map((link, i) =>
-              Array.isArray(link.submenu) ? (
-                <AccordionItem value="item-1" key={i}>
-                  <AccordionTrigger className="text-white text-[18px] hover:text-black font-semibold cursor-pointer capitalize">
+            {NAV_LINKS.map(
+              (link, i) =>
+                link.show &&
+                (Array.isArray(link.submenu) ? (
+                  <AccordionItem value="item-1" key={i}>
+                    <AccordionTrigger className="text-white text-[18px] hover:text-black font-semibold cursor-pointer capitalize">
+                      {link.label}
+                    </AccordionTrigger>
+                    <AccordionContent className="flex flex-col gap-1.5">
+                      {link.submenu.map((submenu, idx) => (
+                        <Link
+                          key={idx}
+                          href={submenu.href}
+                          className="text-white text-[18px] hover:text-black transition-all capitalize"
+                        >
+                          {submenu.label}
+                        </Link>
+                      ))}
+                    </AccordionContent>
+                  </AccordionItem>
+                ) : (
+                  <Link
+                    href={link.href}
+                    key={i}
+                    className="text-white text-[18px] hover:text-black transition-all capitalize"
+                  >
                     {link.label}
-                  </AccordionTrigger>
-                  <AccordionContent className="flex flex-col gap-1.5">
-                    {link.submenu.map((submenu, idx) => (
-                      <Link
-                        key={idx}
-                        href={submenu.href}
-                        className="text-white text-[18px] hover:text-black transition-all capitalize"
-                      >
-                        {submenu.label}
-                      </Link>
-                    ))}
-                  </AccordionContent>
-                </AccordionItem>
-              ) : (
-                <Link
-                  href={link.href}
-                  key={i}
-                  className="text-white text-[18px] hover:text-black transition-all capitalize"
-                >
-                  {link.label}
-                </Link>
-              )
+                  </Link>
+                ))
             )}
           </Accordion>
         </SheetContent>
