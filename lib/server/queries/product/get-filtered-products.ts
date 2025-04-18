@@ -9,7 +9,7 @@ export async function getFilteredProducts({
     include: { category: true, extras: true, sizes: true },
     where: {
       category:
-        productCategories.length > 1
+        productCategories.length >= 1
           ? {
               slug: {
                 in: productCategories,

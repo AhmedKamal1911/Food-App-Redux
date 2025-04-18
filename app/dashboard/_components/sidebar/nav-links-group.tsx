@@ -23,7 +23,7 @@ import { ProductCategory } from "@prisma/client";
 
 import { Calendar, ChevronDown, Home, ShoppingBasket } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 const items = [
@@ -89,11 +89,12 @@ function ProductsMenuItemWithFilteration({
       <SidebarMenuItem>
         <Link href="/dashboard/products">
           <SidebarMenuButton
-            className={`md:flex md:items-center md:gap-2 ju  text-xl  rounded-sm py-5 ${
+            className={`md:flex md:items-center md:gap-2 cursor-pointer  text-xl  rounded-sm py-5 ${
               isActive && "bg-primary/90! text-white!"
             }`}
           >
-            {state === "collapsed" && <ShoppingBasket />}
+            {state === "collapsed" && !isMobile && <ShoppingBasket />}
+
             {isMobile && (
               <div className="flex items-center gap-2 flex-1">
                 <ShoppingBasket />
@@ -123,35 +124,46 @@ function ProductsMenuItemWithFilteration({
     </Collapsible>
   );
 }
+
 export function CategoryFilter({
   categories,
 }: {
   categories: ProductCategory[];
 }) {
-  const router = useRouter();
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([
-    "all",
-  ]);
   const [search, setSearch] = useState("");
+  const categorySlugs = useMemo(
+    () => categories.map((c) => c.slug).sort(),
+    [categories]
+  );
+  const [allSelected, setAllSelected] = useState(false);
 
-  const allSlugs = useMemo(() => categories.map((c) => c.slug), [categories]);
-  console.log(selectedCategories);
+  const searchParams = useSearchParams();
+  const categoriesQuery = searchParams.get("cat")?.split(",").sort() ?? [];
+
+  const router = useRouter();
+
   const toggleCategory = (slug: string) => {
     if (slug === "all") {
-      const isAllSelected = selectedCategories.includes("all");
-      setSelectedCategories(isAllSelected ? [] : ["all", ...allSlugs]);
-    } else {
-      setSelectedCategories((prev) => {
-        const isSelected = prev.includes(slug);
-        const updated = isSelected
-          ? prev.filter((s) => s !== slug)
-          : [...prev, slug];
+      console.log(slug);
 
-        const hasAllSelected = allSlugs.every((slug) => updated.includes(slug));
-        return hasAllSelected
-          ? ["all", ...allSlugs]
-          : updated.filter((s) => s !== "all");
-      });
+      const isAllSelected = categoriesQuery?.length === categorySlugs.length;
+      setAllSelected(!isAllSelected);
+      console.log({ isAllSelected });
+      router.replace(isAllSelected ? "?" : `?cat=${categorySlugs.join(",")}`);
+    } else {
+      const isSlugInQuery = categoriesQuery?.includes(slug);
+      const filteredCatQuery = (
+        isSlugInQuery
+          ? categoriesQuery?.filter((s) => s !== slug)
+          : [...(categoriesQuery ?? []), slug]
+      ).sort();
+
+      router.replace(
+        !filteredCatQuery.length ? "?" : `?cat=${filteredCatQuery.join(",")}`
+      );
+      const isAllSelected = filteredCatQuery?.length === categorySlugs.length;
+      setAllSelected(isAllSelected);
+      console.log({ filteredCatQuery });
     }
   };
 
@@ -171,20 +183,10 @@ export function CategoryFilter({
   }, [categories, search]);
 
   useEffect(() => {
-    if (categories.length > 0) {
-      setSelectedCategories(["all", ...allSlugs]);
-    }
-  }, [categories, allSlugs]);
-  useEffect(() => {
-    if (selectedCategories.length > 0) {
-      const categoriesWithoutAll = selectedCategories.filter(
-        (slug) => slug !== "all"
-      );
-      router.replace(
-        `/dashboard/products?productCat=${categoriesWithoutAll.toString()}`
-      );
-    }
-  }, [selectedCategories, router]);
+    console.log({ mounted: categorySlugs });
+    router.replace(`?cat=${categorySlugs.join(",")}`);
+    setAllSelected(true);
+  }, [categorySlugs, router]);
 
   return (
     <Command className="rounded-sm border shadow-md w-full">
@@ -209,7 +211,11 @@ export function CategoryFilter({
               </label>
               <Checkbox
                 id={category.slug}
-                checked={selectedCategories.includes(category.slug)}
+                checked={
+                  category.slug === "all"
+                    ? allSelected
+                    : categoriesQuery.includes(category.slug)
+                }
                 onCheckedChange={() => toggleCategory(category.slug)}
                 className="size-5 rounded-none border-secondary/50"
               />

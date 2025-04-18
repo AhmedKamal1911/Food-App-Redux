@@ -10,6 +10,7 @@ export default async function DashboardLayout({
   children: ReactNode;
 }) {
   const categories = await getAllCategories();
+  // FIXME: right side of the layout
   return (
     <div>
       <SidebarProvider>

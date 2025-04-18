@@ -1,15 +1,20 @@
 import { getAllCategories, getFilteredProducts } from "@/lib/server/queries";
 
 type Props = {
-  params: {
-    productCat: string;
-  };
+  searchParams: Promise<{
+    cat: string;
+  }>;
 };
-export default async function ProductsPage({ params }: Props) {
+export default async function ProductsPage({ searchParams }: Props) {
   const categories = await getAllCategories();
-  const { productCat } = await params;
-  console.log(productCat);
-  const products = await getFilteredProducts({});
-  // console.log(products);
-  return <main></main>;
+  const { cat } = await searchParams;
+  const catList = cat?.split(",") ?? categories.map((c) => c.slug);
+  console.log(catList);
+  const products = await getFilteredProducts({ productCategories: catList });
+  console.log(products);
+  return (
+    <main>
+      <h3>dasdasd</h3>
+    </main>
+  );
 }
