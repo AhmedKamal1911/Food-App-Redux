@@ -1,20 +1,52 @@
 import { getAllCategories, getFilteredProducts } from "@/lib/server/queries";
+import RevenueChartBars from "./_components/revenue-chart-bars";
+
+import KPICardsContainer from "./_components/kpi-cards-container";
+import ProductsTableSection from "./_components/products-table-section";
 
 type Props = {
   searchParams: Promise<{
     cat: string;
+    page: string;
   }>;
 };
 export default async function ProductsPage({ searchParams }: Props) {
   const categories = await getAllCategories();
-  const { cat } = await searchParams;
+  const { cat, page } = await searchParams;
   const catList = cat?.split(",") ?? categories.map((c) => c.slug);
-  console.log(catList);
-  const products = await getFilteredProducts({ productCategories: catList });
-  console.log(products);
+
+  const { currentPage, totalPages, products } = await getFilteredProducts({
+    productCategories: catList,
+    page: Number(page) || 1,
+    pageSize: 5,
+  });
+
   return (
-    <main>
-      <h3>dasdasd</h3>
+    <main className="bg-gray-300/50 min-h-screen">
+      <div className=" space-y-4 p-4">
+        {/* Top Section: Chart + Cards */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
+          {/* Revenue Chart */}
+          <div className="xl:col-span-2 bg-white p-4 rounded-lg shadow">
+            {/* You can plug in a chart like Recharts or Chart.js here */}
+            <span className="text-xl font-semibold text-primary mb-3 block">
+              Revenue
+            </span>
+
+            <RevenueChartBars />
+          </div>
+
+          {/* key performance indicator Cards */}
+          <KPICardsContainer />
+        </div>
+
+        {/* Product Table Section */}
+        <ProductsTableSection
+          currentPage={currentPage}
+          totalPages={totalPages}
+          data={products}
+        />
+      </div>
     </main>
   );
 }
