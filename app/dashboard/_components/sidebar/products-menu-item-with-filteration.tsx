@@ -90,11 +90,9 @@ export function CategoryFilter({
 
   const toggleCategory = (slug: string) => {
     if (slug === "all") {
-      console.log(slug);
-
       const isAllSelected = categoriesQuery?.length === categorySlugs.length;
       setAllSelected(!isAllSelected);
-      console.log({ isAllSelected });
+
       router.replace(isAllSelected ? "?" : `?cat=${categorySlugs.join(",")}`);
     } else {
       const isSlugInQuery = categoriesQuery?.includes(slug);
@@ -109,7 +107,6 @@ export function CategoryFilter({
       );
       const isAllSelected = filteredCatQuery?.length === categorySlugs.length;
       setAllSelected(isAllSelected);
-      console.log({ filteredCatQuery });
     }
   };
 
@@ -129,7 +126,6 @@ export function CategoryFilter({
   }, [categories, search]);
 
   useEffect(() => {
-    console.log({ mounted: categorySlugs });
     router.replace(`?cat=${categorySlugs.join(",")}`);
     setAllSelected(true);
   }, [categorySlugs, router]);

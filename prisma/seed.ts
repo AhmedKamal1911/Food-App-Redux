@@ -33,6 +33,16 @@ async function main() {
     "Club Sandwich",
     "Grilled Cheese",
     "Philly Cheesesteak",
+    "Philly Cheeseak",
+    "Philly Cheeseseak",
+    "Philly Cesteak",
+    "Philly Ceeseeak",
+    "Philly Cheesesteak",
+    "Philly Chest",
+    "Philly Cheeses",
+    "Philly Cheesest",
+    "Philly Chees",
+    "Philly Ck",
   ];
 
   const productData = await Promise.all(
