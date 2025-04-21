@@ -4,7 +4,8 @@ import { ProductWithRelations } from "@/lib/types/product";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
-import DeleteProductModal from "../delete-product-modal";
+import DeleteProductModal from "../modals/delete-product-modal";
+import UpdateProductModal from "../modals/update-product-modal";
 
 export const columns: ColumnDef<ProductWithRelations>[] = [
   {
@@ -96,13 +97,7 @@ export const columns: ColumnDef<ProductWithRelations>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            className="rounded-sm text-white"
-            size={"sm"}
-          >
-            Edit
-          </Button>
+          <UpdateProductModal product={row.original} />
           <DeleteProductModal productId={row.original.id} />
         </div>
       );

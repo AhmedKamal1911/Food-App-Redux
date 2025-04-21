@@ -39,7 +39,7 @@ export default async function ProductsPage({ searchParams }: Props) {
           {/* key performance indicator Cards */}
           <KPICardsContainer />
         </div>
-
+        {/* TODO: products filteration in mobile  */}
         {/* Product Table Section */}
         <ProductsTableSection
           currentPage={currentPage}
