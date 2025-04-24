@@ -42,6 +42,7 @@ export default async function ProductsPage({ searchParams }: Props) {
         {/* TODO: products filteration in mobile  */}
         {/* Product Table Section */}
         <ProductsTableSection
+          categories={categories}
           currentPage={currentPage}
           totalPages={totalPages}
           data={products}

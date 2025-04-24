@@ -2,50 +2,57 @@
 
 import CustomInputField from "@/components/common/custom-input-field";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import DropZoneField from "../../_components/drop-zone-field";
-import ProductImgViewer from "../../_components/product-img-viewer";
+
 import { ProductWithRelations } from "@/lib/types/product";
-import { useEffect, useState } from "react";
-const formSchema = z.object({
-  username: z.string().min(2).max(50),
-  img: z
-    .instanceof(File)
-    .refine((file) => file.size <= 5 * 1024 * 1024, {
-      message: "File size must be less than 5MB",
-    })
-    .refine(
-      (file) => ["image/jpeg", "image/png", "image/jpg"].includes(file.type),
-      {
-        message: "Only JPG or PNG files are allowed",
-      }
-    )
-    .optional(),
-});
+import { useState } from "react";
+import {
+  updateProductSchema,
+  UpdateProductSchema,
+} from "@/lib/validation/update-product-schema";
+import CustomTextArea from "@/components/common/custom-text-area";
+import { useCategoriesContext } from "@/providers/categories-provider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import DropZoneViewer from "../../_components/drop-zone-viewer";
 
 export default function UpdateProductForm({
   product,
 }: {
   product: ProductWithRelations;
 }) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<UpdateProductSchema>({
+    resolver: zodResolver(updateProductSchema),
     defaultValues: {
-      username: "",
+      name: product.name || "",
+      desc: product.description || "",
+      price: product.price || 0,
+      categoryId: product?.categoryId || "",
       img: undefined,
     },
     mode: "onChange",
   });
-  const [showProductImg, setShowProductImg] = useState(true);
-  const [previewUrl, setPreviewUrl] = useState("");
-  console.log({ previewUrl });
-  const updatedImg = form.watch("img");
-  console.log({ updatedImg });
+  const categories = useCategoriesContext();
+
+  const [previewUrl, setPreviewUrl] = useState(product.image ?? "");
+
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: UpdateProductSchema) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
@@ -55,64 +62,105 @@ export default function UpdateProductForm({
     }
   }
 
-  useEffect(() => {
-    if (!updatedImg || updatedImg.size === 0) {
-      setShowProductImg(true);
-      setPreviewUrl("");
-      return;
-    }
-
-    const url = URL.createObjectURL(updatedImg);
-    setPreviewUrl(url);
-    setShowProductImg(false);
-
-    return () => {
-      URL.revokeObjectURL(url);
-    };
-  }, [updatedImg]);
+  console.log(form.formState.errors);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-        {/* Preview uploaded image */}
-        {previewUrl && (
-          <ProductImgViewer
-            onProductImgHide={() => {
-              setPreviewUrl("");
-              form.setValue("img", new File([], "")); // Reset the file input
-            }}
-            src={previewUrl}
-            alt={`${product.name} product (preview)`}
-          />
-        )}
+        <div className="space-y-2 max-h-[400px] overflow-y-scroll p-2">
+          {/* Show original product image if no preview */}
 
-        {/* Show original product image if no preview */}
-        {!previewUrl && showProductImg && (
-          <ProductImgViewer
-            onProductImgHide={() => {
-              setShowProductImg(false);
-            }}
-            src={product.image}
-            alt={`${product.name} product`}
-          />
-        )}
-
-        {/* Show DropZone if there's no preview */}
-        {!previewUrl && (
-          <DropZoneField
+          <DropZoneViewer
             control={form.control}
             name="img"
-            placeholder="Drop your new image"
-            className="hover:bg-primary/10 transition-colors"
+            onCloseImg={() => {
+              setPreviewUrl("");
+              form.setValue("img", undefined); // Reset the file input
+            }}
+            previewUrl={previewUrl}
+            setPreviewUrl={setPreviewUrl}
+            placeholder="drop your image"
           />
-        )}
 
-        <CustomInputField
-          placeholder="Username"
-          control={form.control}
-          name="username"
-          className="rounded-sm!"
-        />
-
+          <CustomInputField
+            placeholder="enter product name"
+            control={form.control}
+            name="name"
+            className="rounded-sm!"
+          />
+          <CustomInputField
+            placeholder="enter product new price"
+            control={form.control}
+            name="price"
+            className="rounded-sm!"
+            type="number"
+          />
+          <FormField
+            control={form.control}
+            name="categoryId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="sr-only">category</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full rounded-sm">
+                      <SelectValue placeholder="Select a verified email to display" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormDescription className="sr-only">
+                  Select a category for the product
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* <FormField
+  control={form.control}
+  name="sizes"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel className="sr-only">Select Size</FormLabel>
+      <Select
+        onValueChange={field.onChange}
+        defaultValue={field.value}
+      >
+        <FormControl>
+          <SelectTrigger className="w-full rounded-sm">
+            <SelectValue placeholder="Select size" />
+          </SelectTrigger>
+        </FormControl>
+        <SelectContent>
+          {product.sizes.map((size) => (
+            <SelectItem key={size.id} value={size.id}>
+              {size.name} {size.price > 0 && `(+${size.price}$)`}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <FormDescription className="sr-only">
+        Choose a size for the product
+      </FormDescription>
+      <FormMessage />
+    </FormItem>
+  )}
+/> */}
+          <CustomTextArea
+            placeholder="enter new product desc"
+            name="desc"
+            className="min-h-[100px] max-h-[150px] rounded-sm"
+            control={form.control}
+          />
+        </div>
         <Button>Submit</Button>
       </form>
     </Form>

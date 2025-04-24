@@ -5,7 +5,7 @@ import Image from "next/image";
 type Props = {
   src: string;
   alt: string;
-  onProductImgHide: () => void;
+  onProductImgHide?: () => void;
 };
 export default function ProductImgViewer({
   src,
@@ -13,16 +13,19 @@ export default function ProductImgViewer({
   onProductImgHide,
 }: Props) {
   return (
-    <div className="flex items-center justify-center relative min-h-[200px] border rounded-md">
-      <Button
-        onClick={onProductImgHide}
-        type="button"
-        variant={"destructive"}
-        size={"sm"}
-        className="absolute top-2 right-2 p-1! rounded-sm "
-      >
-        <X className="size-6" />
-      </Button>
+    <div className="flex items-center justify-center relative min-h-[120px] py-2 border rounded-md">
+      {onProductImgHide && (
+        <Button
+          onClick={onProductImgHide}
+          type="button"
+          variant={"destructive"}
+          size={"sm"}
+          className="absolute top-2 right-2 p-1! rounded-sm "
+        >
+          <X className="size-6" />
+        </Button>
+      )}
+
       <Image
         src={src}
         alt={alt}

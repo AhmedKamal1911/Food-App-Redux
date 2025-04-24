@@ -13,14 +13,19 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
+import CategoriesProvider from "@/providers/categories-provider";
+import { ProductCategory } from "@prisma/client";
+import CreateProductModal from "./modals/create-product-modal";
 
 type Props = {
   currentPage: number;
   totalPages: number;
   data: ProductWithRelations[];
+  categories: ProductCategory[];
 };
 export default function ProductsTableSection({
   data,
+  categories,
   currentPage,
   totalPages,
 }: Props) {
@@ -40,21 +45,21 @@ export default function ProductsTableSection({
 
   return (
     <section className="bg-white p-4 rounded-lg shadow">
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-2xl font-semibold">Products</span>
-        <div className="flex gap-5 items-center">
-          <ProductsFilterInput table={table} />
-          <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
-            + Add Product
-          </button>
+      <CategoriesProvider categories={categories}>
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-2xl font-semibold">Products</span>
+          <div className="flex gap-5 items-center">
+            <ProductsFilterInput table={table} />
+            <CreateProductModal />
+          </div>
         </div>
-      </div>
-      <ProductsTable
-        columns={columns}
-        table={table}
-        page={currentPage}
-        lastPage={totalPages}
-      />
+        <ProductsTable
+          columns={columns}
+          table={table}
+          page={currentPage}
+          lastPage={totalPages}
+        />
+      </CategoriesProvider>
     </section>
   );
 }

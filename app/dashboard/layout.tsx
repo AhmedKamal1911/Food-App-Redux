@@ -15,7 +15,7 @@ export default async function DashboardLayout({
     <SidebarProvider>
       <SideBar categories={categories} />
 
-      <div className="flex-1">{children}</div>
+      <div className="flex-1 min-w-0">{children}</div>
     </SidebarProvider>
   );
 }

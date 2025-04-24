@@ -84,7 +84,9 @@ model ProductOrder {
 }
 
 enum SizeEnum {
+  XSmall
   Small
   Medium
   Large
+  XLarge
 }

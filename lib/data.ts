@@ -1,4 +1,10 @@
-export const PRODUCT_SIZES = ["Small", "Medium", "Large"] as const;
+export const PRODUCT_SIZES = [
+  "XSmall",
+  "Small",
+  "Medium",
+  "Large",
+  "XLarge",
+] as const;
 
 export const numberOfPersons = 11;
 
