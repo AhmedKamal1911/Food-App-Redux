@@ -12,8 +12,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm, useFormContext } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 import CustomTextArea from "@/components/common/custom-text-area";
 import { useCategoriesContext } from "@/providers/categories-provider";
@@ -25,18 +25,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  CreateProductSchema,
   createProductSchema,
+  CreateProductInputs,
 } from "@/lib/validation/create-product-schema";
 import DropZoneViewer from "../../_components/drop-zone-viewer";
-import { Trash2 } from "lucide-react";
 
-import CustomInput from "@/components/common/custom-input";
-
-import { PRODUCT_SIZES } from "@/lib/data";
+import ProductSizesAccordion from "./product-sizes-accordion";
+import ProductExtrasAccordion from "./product-extras-accordion";
+import { createProduct } from "@/lib/server/actions/product/create-product";
+import { toast } from "react-toastify";
 
 export default function CreateProductForm() {
-  const form = useForm<CreateProductSchema>({
+  const form = useForm<CreateProductInputs>({
     resolver: zodResolver(createProductSchema),
     defaultValues: {
       name: "",
@@ -44,22 +44,23 @@ export default function CreateProductForm() {
       price: 0,
       categoryId: "",
       img: new File([], ""),
+      sizes: [],
     },
     mode: "onChange",
   });
   const categories = useCategoriesContext();
 
   const [previewUrl, setPreviewUrl] = useState("");
-
+  console.log(form.formState.errors);
   // 2. Define a submit handler.
-  function onSubmit(values: CreateProductSchema) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log({ values });
-    if (values.img) {
-      // Handle the file upload here
-      console.log("File to upload:", values.img);
-    }
+  async function onSubmit(values: CreateProductInputs) {
+    await createProduct({ ...values }).then((res) => {
+      if (res.success) {
+        toast.success("Product created successfully");
+      } else {
+        if (res.error.type === "error") toast.error(res.error.message);
+      }
+    });
   }
 
   return (
@@ -123,8 +124,8 @@ export default function CreateProductForm() {
             )}
           />
 
-          <ProductSizes />
-
+          <ProductSizesAccordion />
+          <ProductExtrasAccordion />
           <CustomTextArea
             placeholder="enter new product desc"
             name="desc"
@@ -132,116 +133,10 @@ export default function CreateProductForm() {
             control={form.control}
           />
         </div>
-        <Button>Submit</Button>
+        <Button disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? "Creating" : "Create"}
+        </Button>
       </form>
     </Form>
-  );
-}
-
-function ProductSizes() {
-  const { control, trigger, formState } = useFormContext();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "sizes",
-  });
-
-  useEffect(() => {
-    if (formState.isSubmitted && fields.length === 0) {
-      trigger("sizes");
-    }
-  }, [fields.length, formState.isSubmitted, trigger]);
-
-  return (
-    <div className="space-y-2">
-      <div className="flex justify-between items-center">
-        <span className="text-lg font-semibold">Product Sizes</span>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="rounded-sm text-white font-semibold"
-          onClick={() => {
-            append({ name: "", price: 0 });
-            trigger("sizes");
-          }}
-        >
-          Add Size
-        </Button>
-      </div>
-
-      {/* Validation Error for Sizes Array */}
-      {formState.errors.sizes?.message && (
-        <div className="text-sm text-destructive">
-          {String(formState.errors.sizes.message)}
-        </div>
-      )}
-
-      <div className="divide-y-1 space-y-1 px-2 max-h-[200px] overflow-y-scroll">
-        {fields.map((item, index) => (
-          <div key={item.id} className="flex gap-2 items-start py-2">
-            {/* Select Size */}
-            <FormField
-              control={control}
-              name={`sizes.${index}.name`}
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel className="sr-only">Size</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="w-full rounded-sm">
-                        <SelectValue placeholder="Select size" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {PRODUCT_SIZES.map((size) => (
-                        <SelectItem key={size} value={size}>
-                          {size}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="text-red-500 mt-1" />
-                </FormItem>
-              )}
-            />
-
-            {/* Price Field */}
-            <div className="flex-1">
-              <FormField
-                control={control}
-                name={`sizes.${index}.price`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="sr-only">Price</FormLabel>
-                    <CustomInput
-                      {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                      placeholder="Price"
-                      type="number"
-                      min={0}
-                      className="rounded-sm"
-                    />
-                    <FormMessage className="text-red-500 mt-1" />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            {/* Remove Button */}
-            <Button
-              type="button"
-              variant="destructive"
-              size="icon"
-              onClick={() => {
-                remove(index);
-                trigger("sizes"); // Always re-validate sizes
-              }}
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }

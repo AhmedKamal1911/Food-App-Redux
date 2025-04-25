@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 type UseProductTotalPriceArgs = {
   productPrice: number;
-  selectedSize: Size;
+  selectedSize: Size | undefined;
   selectedExtras: Extra[];
   qty?: number;
 };

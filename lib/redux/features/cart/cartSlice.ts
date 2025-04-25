@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type AddToCartPayload = {
   id: string;
-  sizeId: string;
+  sizeId: string | undefined;
   extrasIds: string[];
 }; // ✅ Define the payload type
 
@@ -12,7 +12,7 @@ type CartState = {
   products: {
     [id: string]: {
       qty: number;
-      sizeId: string;
+      sizeId: string | undefined;
       extrasIds: string[];
     }[];
   };
@@ -45,13 +45,21 @@ export const cartSlice = createSlice({
     },
     incrementCartItemQty: (
       state,
-      action: PayloadAction<{ id: string; sizeId: string; extrasIds: string[] }>
+      action: PayloadAction<{
+        id: string;
+        sizeId: string | undefined;
+        extrasIds: string[];
+      }>
     ) => {
       incrementProductQty(state, action.payload);
     },
     decrementCartItemQty: (
       state,
-      action: PayloadAction<{ id: string; sizeId: string; extrasIds: string[] }>
+      action: PayloadAction<{
+        id: string;
+        sizeId: string | undefined;
+        extrasIds: string[];
+      }>
     ) => {
       const targetProduct = state.products[action.payload.id].find(
         (p) =>
@@ -69,7 +77,7 @@ export const cartSlice = createSlice({
       state,
       action: PayloadAction<{
         id: string;
-        sizeId: string;
+        sizeId: string | undefined;
         extrasIds: string[];
         qty: number;
       }>
@@ -89,7 +97,7 @@ export const cartSlice = createSlice({
       state,
       action: PayloadAction<{
         id: string;
-        sizeId: string;
+        sizeId: string | undefined;
         extrasIds: string[];
       }>
     ) => {
@@ -107,7 +115,10 @@ export const cartSlice = createSlice({
     },
   },
 });
-function generateSizeExtrasString(sizeId: string, extrasIds: string[]) {
+function generateSizeExtrasString(
+  sizeId: string | undefined,
+  extrasIds: string[]
+) {
   return `${sizeId}-${extrasIds.toSorted().toString()}`;
 }
 function incrementProductQty(state: CartState, payload: AddToCartPayload) {

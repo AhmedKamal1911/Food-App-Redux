@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 
 import { useProductTotalPrice } from "@/hooks/use-product-total-price";
 type SelectedOptionsState = {
-  size: Size;
+  size: Size | undefined;
   extras: Extra[];
 };
 export default function AddToCartDialog({
@@ -37,10 +37,12 @@ export default function AddToCartDialog({
   const [selectedOptions, setSelectedOptions] = useState<SelectedOptionsState>(
     () => ({
       size:
-        product.sizes.find(({ name }) => name === "Medium") ?? product.sizes[0],
+        product.sizes.find(({ name }) => name === "XSmall") ??
+        product.sizes?.[0],
       extras: [],
     })
   );
+  // TODO : make the total product price without the default size price
 
   const totalProductPrice = useProductTotalPrice({
     productPrice: product.price,
@@ -55,14 +57,14 @@ export default function AddToCartDialog({
     dispatch(
       addToCart({
         id: product.id,
-        sizeId: selectedOptions.size.id,
+        sizeId: selectedOptions?.size?.id,
         extrasIds: selectedOptions.extras.map((extra) => extra.id),
       })
     );
     toast.success(`${product.name} Added To Cart`);
   }
 
-  console.log("renders", totalQty);
+  console.log("renders", product.sizes.length, product.extras.length);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -90,24 +92,26 @@ export default function AddToCartDialog({
             {product.description}
           </DialogDescription>
         </DialogHeader>
-        <div className="max-h-[400px] overflow-y-scroll p-2 space-y-3">
-          {product.sizes.length > 0 && (
-            <PickSizeRadio
-              selectedSize={selectedOptions.size}
-              onSizeChange={(size) => selectedOptionsUpdater({ size })}
-              sizesList={product.sizes}
-            />
-          )}
 
-          {product.extras.length > 0 && (
-            <PickExtraRadio
-              selectedExtras={selectedOptions.extras}
-              onExtraChange={(extras) => selectedOptionsUpdater({ extras })}
-              extrasList={product.extras}
-            />
-          )}
-        </div>
+        {product.sizes.length > 0 && product.extras.length > 0 && (
+          <div className="max-h-[400px] overflow-y-scroll p-2 space-y-3">
+            {product.sizes.length > 0 && (
+              <PickSizeRadio
+                selectedSize={selectedOptions.size}
+                onSizeChange={(size) => selectedOptionsUpdater({ size })}
+                sizesList={product.sizes}
+              />
+            )}
 
+            {product.extras.length > 0 && (
+              <PickExtraRadio
+                selectedExtras={selectedOptions.extras}
+                onExtraChange={(extras) => selectedOptionsUpdater({ extras })}
+                extrasList={product.extras}
+              />
+            )}
+          </div>
+        )}
         <DialogFooter>
           <Button
             onClick={addProductToCart}
@@ -129,8 +133,8 @@ function PickSizeRadio({
   onSizeChange,
 }: {
   sizesList: Size[];
-  selectedSize: Size;
-  onSizeChange: (size: Size) => void;
+  selectedSize: Size | undefined;
+  onSizeChange: (size: Size | undefined) => void;
 }) {
   return (
     <div>
@@ -144,14 +148,14 @@ function PickSizeRadio({
             sizesList.find((size) => size.name === sizeValue) ?? selectedSize
           )
         }
-        defaultValue={selectedSize.name}
+        defaultValue={selectedSize?.name}
         className="flex flex-col  gap-1"
       >
         {sizesList.map((size) => (
           <div
             key={size.id}
             className={`flex items-center border-1 relative rounded-sm p-2  ${
-              selectedSize.name === size.name
+              selectedSize?.name === size.name
                 ? "ring-2 ring-primary/30 border-primary/70 transition-all"
                 : ""
             }`}

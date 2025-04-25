@@ -19,11 +19,11 @@ export default function StatBox({
   return (
     <div
       className={cn(
-        "flex flex-col justify-between gap-2 text-black bg-white p-4 rounded-lg shadow ",
+        "flex flex-col  justify-between gap-2 text-black bg-white p-4 rounded-lg shadow ",
         className
       )}
     >
-      <div className="flex justify-between">
+      <div className="flex items-start justify-between gap-2">
         <span className="text-sm sm:text-xl capitalize">{title}</span>
         {icon}
       </div>

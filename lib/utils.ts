@@ -28,13 +28,13 @@ export function calcProductTotalPrice({
   qty = 1,
 }: {
   productPrice: number;
-  size: Size;
+  size: Size | undefined;
   extras: Extra[];
   qty?: number;
 }) {
   return (
     (productPrice +
-      size.price +
+      (size?.price ?? 0) +
       extras.reduce((acc, curr) => acc + curr.price, 0)) *
     qty
   );

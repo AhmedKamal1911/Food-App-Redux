@@ -21,16 +21,16 @@ export function useGetCartProducts() {
     staleTime: 10 * 60 * 1000,
   });
   const client = useQueryClient();
-  // useEffect(() => {
-  //   if (prevCartItemsLength && prevCartItemsLength < cartProductsLength) {
-  //     client.invalidateQueries({ queryKey: [TanstackQueryCacheKey.CART] });
-  //     console.log("invalidating query");
-  //   }
-  //   if (prevCartItemsLength === 0 && cartProductsLength === 0) {
-  //     client.removeQueries({ queryKey: [TanstackQueryCacheKey.CART] });
-  //     console.log("removing query");
-  //   }
-  // }, [cartProductsLength, client, prevCartItemsLength]);
+  useEffect(() => {
+    if (prevCartItemsLength && prevCartItemsLength < cartProductsLength) {
+      client.invalidateQueries({ queryKey: [TanstackQueryCacheKey.CART] });
+      console.log("invalidating query");
+    }
+    if (prevCartItemsLength === 0 && cartProductsLength === 0) {
+      client.removeQueries({ queryKey: [TanstackQueryCacheKey.CART] });
+      console.log("removing query");
+    }
+  }, [cartProductsLength, client, prevCartItemsLength]);
 
   const cartProducts = useMemo(() => {
     const list: CartProduct[] = [];

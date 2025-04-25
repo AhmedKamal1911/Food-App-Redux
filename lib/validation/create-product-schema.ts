@@ -17,19 +17,24 @@ export const createProductSchema = z.object({
     .max(500, { message: "Desc Must be at most 500 char" }),
   price: z.preprocess(
     (val) => Number(val),
-    z.number().min(0, { message: "price must be at least 0" })
+    z.number().min(1, { message: "price must be at least 0" })
   ),
   categoryId: z.string().uuid({ message: "Category Is Requierd" }),
-  sizes: z
-    .array(
-      z.object({
-        name: z.enum(PRODUCT_SIZES, {
-          message: "Size is required",
-        }),
-        price: z.number().min(0, "Price is required"),
-      })
-    )
-    .min(1, "At least one size is required"),
+  sizes: z.array(
+    z.object({
+      name: z.enum(PRODUCT_SIZES, {
+        message: "Size is required",
+      }),
+      price: z.number().min(1, "Price must be at least 1 dollar"),
+    })
+  ),
+
+  extras: z.array(
+    z.object({
+      name: z.string().min(1, "Extra is required"),
+      price: z.number().min(1, "Price must be at least 1 dollar"),
+    })
+  ),
   img: z
     .instanceof(File, { message: "File is required" })
     .refine((file) => file.size > 0, {
@@ -49,4 +54,4 @@ export const createProductSchema = z.object({
     }),
 });
 
-export type CreateProductSchema = z.infer<typeof createProductSchema>;
+export type CreateProductInputs = z.infer<typeof createProductSchema>;

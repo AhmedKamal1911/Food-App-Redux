@@ -4,7 +4,7 @@ import StatBox from "./stat-box";
 type Props = {};
 export default function KPICardsContainer({}: Props) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-2">
       <StatBox
         className="bg-cyan-700 text-white"
         title="sales today"

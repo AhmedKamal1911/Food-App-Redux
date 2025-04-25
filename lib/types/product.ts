@@ -10,6 +10,6 @@ export type ProductWithRelations = Prisma.ProductGetPayload<{
 
 export type CartProduct = ProductWithRelations & {
   qty: number;
-  selectedSize: Size;
+  selectedSize: Size | undefined;
   selectedExtras: Extra[];
 };

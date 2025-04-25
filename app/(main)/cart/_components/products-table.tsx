@@ -30,7 +30,7 @@ const MemoizedProductRow = memo(
         incrementCartItemQty({
           extrasIds: product.selectedExtras.map((e) => e.id),
           id: product.id,
-          sizeId: product.selectedSize.id,
+          sizeId: product.selectedSize?.id,
         })
       );
     }
@@ -39,7 +39,7 @@ const MemoizedProductRow = memo(
         decrementCartItemQty({
           extrasIds: product.selectedExtras.map((e) => e.id),
           id: product.id,
-          sizeId: product.selectedSize.id,
+          sizeId: product.selectedSize?.id,
         })
       );
     }
@@ -48,7 +48,7 @@ const MemoizedProductRow = memo(
         changeCartItemQty({
           extrasIds: product.selectedExtras.map((e) => e.id),
           id: product.id,
-          sizeId: product.selectedSize.id,
+          sizeId: product.selectedSize?.id,
           qty,
         })
       );
@@ -59,7 +59,7 @@ const MemoizedProductRow = memo(
         deleteCartItem({
           id: product.id,
           extrasIds: product.selectedExtras.map((ext) => ext.id),
-          sizeId: product.selectedSize.id,
+          sizeId: product.selectedSize?.id,
         })
       );
     }
@@ -165,16 +165,17 @@ function Product({
             {product.category.name}
           </span>
         )}
-
-        <div className="flex gap-3">
-          <span className="font-semibold text-gray-700">Product Size :</span>
-          <span className="text-sky-700 font-semibold">
-            {product.selectedSize.name}
-          </span>
-          <span className="text-rose-500 font-semibold">
-            ${product.selectedSize.price}
-          </span>
-        </div>
+        {product.selectedSize && (
+          <div className="flex gap-3">
+            <span className="font-semibold text-gray-700">Product Size :</span>
+            <span className="text-sky-700 font-semibold">
+              {product.selectedSize.name}
+            </span>
+            <span className="text-rose-500 font-semibold">
+              ${product.selectedSize.price}
+            </span>
+          </div>
+        )}
 
         {product.selectedExtras.length > 0 && (
           <ExtrasList selectedExtras={product.selectedExtras} />
