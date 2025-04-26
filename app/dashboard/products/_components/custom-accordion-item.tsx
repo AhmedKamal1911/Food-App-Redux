@@ -18,14 +18,14 @@ export default function CustomAccordionItem({ title, children }: Props) {
       <AccordionItem onClick={() => setOpen((prev) => !prev)} value={title}>
         <AccordionTrigger
           className={cn(
-            "bg-secondary px-4 py-2 text-white items-center ",
+            "bg-secondary px-4 py-2 text-white items-center cursor-pointer",
             open ? "rounded-b-none" : "rounded-sm "
           )}
         >
           <span className="text-lg font-semibold">{title}</span>
         </AccordionTrigger>
 
-        <AccordionContent className=" p-1 bg-gray-900 ">
+        <AccordionContent className=" p-2 bg-gray-700 ">
           <div className="max-h-[220px] overflow-y-auto space-y-1 pr-1">
             {children}
           </div>

@@ -1,5 +1,4 @@
 import CustomInput from "@/components/common/custom-input";
-
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
@@ -28,7 +27,9 @@ export default function ProductSizesAccordion() {
     control,
     name: "sizes",
   });
+
   const sizesFields = watch("sizes");
+
   function onAddSize() {
     const newSize = PRODUCT_SIZES.find(
       (size) => !sizesFields.some((f) => f.name === size)
@@ -39,6 +40,7 @@ export default function ProductSizesAccordion() {
       price: 0,
     });
   }
+
   function onRemoveSize(index: number) {
     remove(index);
   }
@@ -47,7 +49,7 @@ export default function ProductSizesAccordion() {
     PRODUCT_SIZES.filter(
       (size) => size === fieldValue || !sizesFields.some((f) => f.name === size)
     );
-
+  console.log({ fields });
   return (
     <CustomAccordionItem title="Product Sizes">
       {fields.map((item, index) => (
@@ -75,14 +77,16 @@ export default function ProductSizesAccordion() {
 
 type SizeFieldProps = {
   control: Control<CreateProductInputs>;
-
   index: number;
+
   onRemoveSize: (index: number) => void;
+
   getSizesSelectValues: (fieldValue: SizeEnum) => SizeEnum[];
 };
 
 function SizeField({
   control,
+
   getSizesSelectValues,
   index,
   onRemoveSize,
@@ -96,20 +100,21 @@ function SizeField({
         render={({ field }) => (
           <FormItem className="flex-1">
             <FormLabel className="sr-only">Size</FormLabel>
-            <Select onValueChange={field.onChange} value={field.value}>
+            <Select
+              onValueChange={(value) => field.onChange(value)}
+              value={field.value}
+            >
               <FormControl>
                 <SelectTrigger className="w-full rounded-sm bg-white">
                   <SelectValue placeholder="Select size" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {getSizesSelectValues(field.value).map((size) => {
-                  return (
-                    <SelectItem key={size} value={size}>
-                      {size}
-                    </SelectItem>
-                  );
-                })}
+                {getSizesSelectValues(field.value).map((size) => (
+                  <SelectItem key={size} value={size}>
+                    {size}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <FormMessage className="text-red-500 mt-1" />
@@ -127,7 +132,10 @@ function SizeField({
               <FormLabel className="sr-only">Price</FormLabel>
               <CustomInput
                 {...field}
-                onChange={(e) => field.onChange(Number(e.target.value))}
+                onChange={(e) => {
+                  const newPrice = Number(e.target.value);
+                  field.onChange(newPrice);
+                }}
                 placeholder="Price"
                 type="number"
                 min={0}

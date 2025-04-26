@@ -17,8 +17,8 @@ import { useForm } from "react-hook-form";
 import { ProductWithRelations } from "@/lib/types/product";
 import { useState } from "react";
 import {
+  UpdateProductInputs,
   updateProductSchema,
-  UpdateProductSchema,
 } from "@/lib/validation/update-product-schema";
 import CustomTextArea from "@/components/common/custom-text-area";
 import { useCategoriesContext } from "@/providers/categories-provider";
@@ -31,38 +31,50 @@ import {
 } from "@/components/ui/select";
 import DropZoneViewer from "../../_components/drop-zone-viewer";
 
+import ProductSizesAccordion from "./product-sizes-accordion";
+import { updateProduct } from "@/lib/server/actions/product/update-product";
+import { toast } from "react-toastify";
+import ProductExtrasAccordion from "./product-extras-accordion";
+
 export default function UpdateProductForm({
   product,
 }: {
   product: ProductWithRelations;
 }) {
-  const form = useForm<UpdateProductSchema>({
+  const form = useForm<UpdateProductInputs>({
     resolver: zodResolver(updateProductSchema),
     defaultValues: {
-      name: product.name || "",
-      desc: product.description || "",
-      price: product.price || 0,
-      categoryId: product?.categoryId || "",
-      img: undefined,
+      id: product.id,
+      name: product.name,
+      desc: product.description,
+      price: product.price,
+      categoryId: product?.categoryId ?? "",
+      sizes: product.sizes,
+      extras: product.extras,
     },
     mode: "onChange",
   });
   const categories = useCategoriesContext();
 
-  const [previewUrl, setPreviewUrl] = useState(product.image ?? "");
+  const [previewUrl, setPreviewUrl] = useState(product.image);
 
   // 2. Define a submit handler.
-  function onSubmit(values: UpdateProductSchema) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    if (values.img) {
-      // Handle the file upload here
-      console.log("File to upload:", values.img);
+  async function onSubmit(values: UpdateProductInputs) {
+    try {
+      const res = await updateProduct(values);
+      if (res.success) {
+        toast.success(res.message);
+      }
+      if (!res.success && res.error.type === "error") {
+        toast.error(res.error.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Network Error Occurred");
     }
   }
 
-  console.log(form.formState.errors);
+  console.log(form.getValues());
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
@@ -124,36 +136,8 @@ export default function UpdateProductForm({
               </FormItem>
             )}
           />
-          {/* <FormField
-  control={form.control}
-  name="sizes"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel className="sr-only">Select Size</FormLabel>
-      <Select
-        onValueChange={field.onChange}
-        defaultValue={field.value}
-      >
-        <FormControl>
-          <SelectTrigger className="w-full rounded-sm">
-            <SelectValue placeholder="Select size" />
-          </SelectTrigger>
-        </FormControl>
-        <SelectContent>
-          {product.sizes.map((size) => (
-            <SelectItem key={size.id} value={size.id}>
-              {size.name} {size.price > 0 && `(+${size.price}$)`}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <FormDescription className="sr-only">
-        Choose a size for the product
-      </FormDescription>
-      <FormMessage />
-    </FormItem>
-  )}
-/> */}
+          <ProductSizesAccordion />
+          <ProductExtrasAccordion />
           <CustomTextArea
             placeholder="enter new product desc"
             name="desc"
@@ -161,7 +145,9 @@ export default function UpdateProductForm({
             control={form.control}
           />
         </div>
-        <Button>Submit</Button>
+        <Button disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? "Updating" : "Update"}
+        </Button>
       </form>
     </Form>
   );

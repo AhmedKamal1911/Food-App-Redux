@@ -1,17 +1,35 @@
 import { z } from "zod";
+import { PRODUCT_SIZES } from "../data";
 
 export const updateProductSchema = z.object({
+  id: z.string({ message: "product id must be a string" }),
   name: z.string().min(2).max(50),
   desc: z
     .string()
     .min(10, { message: "Desc Must be at least 10 char" })
     .max(500, { message: "Desc Must be at most 500 char" }),
-  price: z.preprocess(
-    (val) => Number(val),
-    z.number().min(0, { message: "price must be at least 0" })
-  ),
+  price: z
+    .number({ coerce: true })
+    .min(0, { message: "price must be at least 0" }),
   categoryId: z.string().uuid({ message: "Invalid category ID" }),
-  // sizes: z.array(z.object({})),
+  sizes: z.array(
+    z.object({
+      id: z.string({ message: "size id must be a string" }).optional(),
+      name: z.enum(PRODUCT_SIZES, {
+        message: "Size is required",
+      }),
+      price: z.number().min(1, "Price must be at least 1 dollar"),
+    })
+  ),
+  extras: z.array(
+    z.object({
+      id: z.string({ message: "Extra id must be a string" }).optional(),
+      name: z.string({
+        message: "Extra is required",
+      }),
+      price: z.number().min(1, "Price must be at least 1 dollar"),
+    })
+  ),
   img: z
     .instanceof(File, { message: "File is required" })
     .refine(
@@ -29,4 +47,4 @@ export const updateProductSchema = z.object({
     .optional(),
 });
 
-export type UpdateProductSchema = z.infer<typeof updateProductSchema>;
+export type UpdateProductInputs = z.infer<typeof updateProductSchema>;

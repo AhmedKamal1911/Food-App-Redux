@@ -34,7 +34,7 @@ import ProductSizesAccordion from "./product-sizes-accordion";
 import ProductExtrasAccordion from "./product-extras-accordion";
 import { createProduct } from "@/lib/server/actions/product/create-product";
 import { toast } from "react-toastify";
-
+// TODO: build auth role
 export default function CreateProductForm() {
   const form = useForm<CreateProductInputs>({
     resolver: zodResolver(createProductSchema),
@@ -54,13 +54,18 @@ export default function CreateProductForm() {
   console.log(form.formState.errors);
   // 2. Define a submit handler.
   async function onSubmit(values: CreateProductInputs) {
-    await createProduct({ ...values }).then((res) => {
+    try {
+      const res = await createProduct({ ...values });
       if (res.success) {
-        toast.success("Product created successfully");
-      } else {
-        if (res.error.type === "error") toast.error(res.error.message);
+        toast.success(res.message);
       }
-    });
+      if (!res.success && res.error.type === "error") {
+        toast.error(res.error.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An Network error occured");
+    }
   }
 
   return (

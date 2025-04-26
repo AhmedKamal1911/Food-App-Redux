@@ -32,11 +32,24 @@ type SuccessResponse = {
 type CreateProductResponse = Promise<
   SuccessResponse | FailedResponse | FailedValidationResponse
 >;
+// TODO: build auth role
+
 export async function createProduct(
   inputs: CreateProductInputs
 ): CreateProductResponse {
+  const result = createProductSchema.safeParse(inputs);
+  if (!result.success) {
+    console.log("Validation error:", result.error.format());
+    return {
+      success: false,
+      error: {
+        type: "validationError",
+      },
+    };
+  }
+  const { data } = result;
   try {
-    const slug = slugify(inputs.name, { lower: true });
+    const slug = slugify(data.name, { lower: true });
     // Check if the product already exists
     const productExists = await getProductBySlug(slug);
 
@@ -50,31 +63,21 @@ export async function createProduct(
         },
       };
     }
-    const result = createProductSchema.safeParse(inputs);
-    if (!result.success) {
-      console.log("Validation error:", result.error.format());
-      return {
-        success: false,
-        error: {
-          type: "validationError",
-        },
-      };
-    }
-
+    // TODO: upload image using cloudinary and store image url in product.
     await prisma.product.create({
       data: {
         image: "/images/special-products/burger.png",
-        name: inputs.name,
-        description: inputs.desc,
-        price: inputs.price,
-        categoryId: inputs.categoryId,
+        name: data.name,
+        description: data.desc,
+        price: data.price,
+        categoryId: data.categoryId,
         slug,
         extras: {
           createMany: {
-            data: inputs.extras,
+            data: data.extras,
           },
         },
-        sizes: { createMany: { data: inputs.sizes } },
+        sizes: { createMany: { data: data.sizes } },
       },
     });
     return {
