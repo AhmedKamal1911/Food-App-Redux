@@ -7,6 +7,9 @@ import Image from "next/image";
 import DeleteProductModal from "../modals/delete-product-modal";
 import UpdateProductModal from "../modals/update-product-modal";
 
+import ExtrasPopover from "../extras-popover";
+import SizesPopover from "../sizes-popover";
+
 export const columns: ColumnDef<ProductWithRelations>[] = [
   {
     header: "No",
@@ -32,7 +35,19 @@ export const columns: ColumnDef<ProductWithRelations>[] = [
   },
   {
     accessorKey: "name",
-    header: "Product Name",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="font-bold capitalize  rounded-none p-1!"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          product name
+          <ArrowUpDown className=" size-4" />
+        </Button>
+      );
+    },
+
     cell: ({ row }) => (
       <span className="text-secondary">{row.original.name}</span>
     ),
@@ -90,6 +105,22 @@ export const columns: ColumnDef<ProductWithRelations>[] = [
       const sell = Math.floor(Math.random() * 100 + 50);
       const earning = price * sell;
       return <span>${earning.toLocaleString()}</span>;
+    },
+  },
+  {
+    accessorKey: "sizes",
+    header: "sizes",
+    cell: ({ row }) => {
+      const sizes = row.original.sizes;
+      return <SizesPopover sizes={sizes} />;
+    },
+  },
+  {
+    accessorKey: "extras",
+    header: "extras",
+    cell: ({ row }) => {
+      const extras = row.original.extras;
+      return <ExtrasPopover extras={extras} />;
     },
   },
   {

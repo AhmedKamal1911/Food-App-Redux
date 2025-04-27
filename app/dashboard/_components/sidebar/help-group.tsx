@@ -12,9 +12,10 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { ChevronDown, HelpCircle, HelpingHand, Star } from "lucide-react";
-type Props = {};
+
 const help = [
   {
     title: "Support",
@@ -27,7 +28,8 @@ const help = [
     icon: Star,
   },
 ];
-export default function HelpGroup({}: Props) {
+export default function HelpGroup() {
+  const { state, isMobile } = useSidebar();
   return (
     <SidebarGroup>
       <SidebarGroupContent>
@@ -36,8 +38,15 @@ export default function HelpGroup({}: Props) {
             <CollapsibleTrigger asChild>
               <SidebarMenuItem>
                 <SidebarMenuButton className="justify-between cursor-pointer rounded-sm py-5">
-                  <HelpCircle />
-                  <span className="font-semibold text-[18px]">Help</span>
+                  {state === "collapsed" && !isMobile ? (
+                    <HelpCircle />
+                  ) : (
+                    <div className="flex gap-2">
+                      <HelpCircle />
+                      <span className="font-semibold text-[18px]">Help</span>
+                    </div>
+                  )}
+
                   <ChevronDown className="transition-transform group-data-[state=open]:rotate-180" />
                 </SidebarMenuButton>
               </SidebarMenuItem>

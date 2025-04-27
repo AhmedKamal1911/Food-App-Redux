@@ -16,6 +16,7 @@ import { useState } from "react";
 import CategoriesProvider from "@/providers/categories-provider";
 import { ProductCategory } from "@prisma/client";
 import CreateProductModal from "./modals/create-product-modal";
+import ProductsCategoryFilter from "./products-category-filter";
 
 type Props = {
   currentPage: number;
@@ -46,10 +47,11 @@ export default function ProductsTableSection({
   return (
     <section className="bg-white p-4 rounded-lg shadow">
       <CategoriesProvider categories={categories}>
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex max-lg:flex-col gap-2 items-center justify-between mb-4">
           <span className="text-2xl font-semibold">Products</span>
-          <div className="flex gap-5 items-center">
+          <div className="flex max-sm:flex-col max-sm:items-stretch max-sm:w-full gap-2 items-center">
             <ProductsFilterInput table={table} />
+            <ProductsCategoryFilter categories={categories} />
             <CreateProductModal />
           </div>
         </div>

@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ProductCategory } from "@prisma/client";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Collapsible,
@@ -20,7 +20,9 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { ChevronDown, ShoppingBasket } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+
+import { useCategoryFilter } from "@/hooks/use-category-filter";
+import LoadingScreen from "../../products/_components/loading-screen";
 export default function ProductsMenuItemWithFilteration({
   categories,
 }: {
@@ -76,95 +78,53 @@ export function CategoryFilter({
 }: {
   categories: ProductCategory[];
 }) {
-  const [search, setSearch] = useState("");
-  const categorySlugs = useMemo(
-    () => categories.map((c) => c.slug).sort(),
-    [categories]
-  );
-  const [allSelected, setAllSelected] = useState(false);
-
-  const searchParams = useSearchParams();
-  const categoriesQuery = searchParams.get("cat")?.split(",").sort() ?? [];
-
-  const router = useRouter();
-
-  const toggleCategory = (slug: string) => {
-    if (slug === "all") {
-      const isAllSelected = categoriesQuery?.length === categorySlugs.length;
-      setAllSelected(!isAllSelected);
-
-      router.replace(isAllSelected ? "?" : `?cat=${categorySlugs.join(",")}`);
-    } else {
-      const isSlugInQuery = categoriesQuery?.includes(slug);
-      const filteredCatQuery = (
-        isSlugInQuery
-          ? categoriesQuery?.filter((s) => s !== slug)
-          : [...(categoriesQuery ?? []), slug]
-      ).sort();
-
-      router.replace(
-        !filteredCatQuery.length ? "?" : `?cat=${filteredCatQuery.join(",")}`
-      );
-      const isAllSelected = filteredCatQuery?.length === categorySlugs.length;
-      setAllSelected(isAllSelected);
-    }
-  };
-
-  const filteredCategories = useMemo(() => {
-    const filtered = categories.filter((cat) =>
-      cat.slug.toLowerCase().includes(search.toLowerCase())
-    );
-
-    return [
-      {
-        id: "all",
-        slug: "all",
-        name: "All",
-      },
-      ...filtered,
-    ];
-  }, [categories, search]);
-
-  useEffect(() => {
-    router.replace(`?cat=${categorySlugs.join(",")}`);
-    setAllSelected(true);
-  }, [categorySlugs, router]);
-
+  const {
+    allSelected,
+    filteredCategories,
+    setSearch,
+    toggleCategory,
+    search,
+    categoriesQuery,
+    isPending,
+  } = useCategoryFilter({ categories });
   return (
-    <Command className="rounded-sm border shadow-md w-full">
-      <CommandInput
-        value={search}
-        onValueChange={(val) => setSearch(val)}
-        placeholder="Filter Products..."
-      />
-      <CommandEmpty>No categories found.</CommandEmpty>
-      <CommandGroup
-        heading="Categories"
-        className="overflow-y-scroll max-h-[180px]"
-      >
-        {filteredCategories.map((category) => (
-          <CommandItem key={category.id}>
-            <div className="flex items-center justify-between gap-2 relative w-full">
-              <label
-                htmlFor={category.slug}
-                className="text-[15px] flex-1 capitalize before:absolute before:inset-0 before:cursor-pointer"
-              >
-                {category.name}
-              </label>
-              <Checkbox
-                id={category.slug}
-                checked={
-                  category.slug === "all"
-                    ? allSelected
-                    : categoriesQuery.includes(category.slug)
-                }
-                onCheckedChange={() => toggleCategory(category.slug)}
-                className="size-5 rounded-none border-secondary/50"
-              />
-            </div>
-          </CommandItem>
-        ))}
-      </CommandGroup>
-    </Command>
+    <>
+      {isPending && <LoadingScreen />}
+      <Command className="rounded-sm border shadow-md w-full">
+        <CommandInput
+          value={search}
+          onValueChange={(val) => setSearch(val)}
+          placeholder="Filter Products..."
+        />
+        <CommandEmpty>No categories found.</CommandEmpty>
+        <CommandGroup
+          heading="Categories"
+          className="overflow-y-scroll max-h-[180px]"
+        >
+          {filteredCategories.map((category) => (
+            <CommandItem key={category.id}>
+              <div className="flex items-center justify-between gap-2 relative w-full">
+                <label
+                  htmlFor={category.slug}
+                  className="text-[15px] flex-1 capitalize before:absolute before:inset-0 before:cursor-pointer"
+                >
+                  {category.name}
+                </label>
+                <Checkbox
+                  id={category.slug}
+                  checked={
+                    category.slug === "all"
+                      ? allSelected
+                      : categoriesQuery.includes(category.slug)
+                  }
+                  onCheckedChange={() => toggleCategory(category.slug)}
+                  className="size-5 rounded-none border-secondary/50"
+                />
+              </div>
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      </Command>
+    </>
   );
 }

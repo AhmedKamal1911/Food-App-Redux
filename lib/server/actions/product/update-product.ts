@@ -7,6 +7,7 @@ import {
 import slugify from "slugify";
 import { getProductById, getProductBySlug } from "../../queries";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 type FailedResponse = {
   success: false;
@@ -119,7 +120,7 @@ export async function updateProduct(
         },
       },
     });
-
+    revalidatePath("/dashboard/products");
     return {
       success: true,
       status: 200,

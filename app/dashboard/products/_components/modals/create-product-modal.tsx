@@ -18,7 +18,7 @@ export default function CreateProductModal() {
           + Add Product
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-sm:p-2 max-sm:py-6">
         <DialogHeader>
           <DialogTitle>Create Product</DialogTitle>
         </DialogHeader>

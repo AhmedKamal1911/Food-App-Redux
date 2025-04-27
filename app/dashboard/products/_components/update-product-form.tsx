@@ -64,6 +64,8 @@ export default function UpdateProductForm({
       const res = await updateProduct(values);
       if (res.success) {
         toast.success(res.message);
+        // form.reset()
+        // TODO:reset form after the response
       }
       if (!res.success && res.error.type === "error") {
         toast.error(res.error.message);

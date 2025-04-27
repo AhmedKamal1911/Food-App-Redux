@@ -92,7 +92,7 @@ function SizeField({
   onRemoveSize,
 }: SizeFieldProps) {
   return (
-    <div className="flex gap-2 items-start border p-2 rounded-md bg-muted">
+    <div className="flex max-[350px]:flex-col max-[350px]:items-stretch gap-2 items-start border p-2 rounded-md bg-muted">
       {/* Size Select */}
       <FormField
         control={control}
@@ -149,6 +149,7 @@ function SizeField({
 
       {/* Remove */}
       <Button
+        className="max-[350px]:w-full"
         type="button"
         variant="destructive"
         size="icon"

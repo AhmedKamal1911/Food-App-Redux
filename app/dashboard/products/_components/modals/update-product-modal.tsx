@@ -22,7 +22,7 @@ export default function UpdateProductModal({
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-sm:p-2 max-sm:py-6">
         <DialogHeader>
           <DialogTitle>Update Product</DialogTitle>
         </DialogHeader>
