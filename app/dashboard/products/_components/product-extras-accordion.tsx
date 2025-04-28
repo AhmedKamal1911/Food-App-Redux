@@ -8,7 +8,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { PRODUCT_SIZES } from "@/lib/data";
 import { CreateProductInputs } from "@/lib/validation/create-product-schema";
 import { Trash2 } from "lucide-react";
 import { Control, useFieldArray, useFormContext } from "react-hook-form";
@@ -41,16 +40,15 @@ export default function ProductExtrasAccordion() {
           onRemoveExtra={onRemoveExtra}
         />
       ))}
-      {fields.length !== PRODUCT_SIZES.length && (
-        <Button
-          type="button"
-          size="sm"
-          className="rounded-sm font-semibold w-full"
-          onClick={onAddExtra}
-        >
-          + Add Extras
-        </Button>
-      )}
+
+      <Button
+        type="button"
+        size="sm"
+        className="rounded-sm font-semibold w-full"
+        onClick={onAddExtra}
+      >
+        + Add Extras
+      </Button>
     </CustomAccordionItem>
   );
 }

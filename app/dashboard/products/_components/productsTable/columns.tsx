@@ -9,6 +9,7 @@ import UpdateProductModal from "../modals/update-product-modal";
 
 import ExtrasPopover from "../extras-popover";
 import SizesPopover from "../sizes-popover";
+import { format } from "date-fns";
 
 export const columns: ColumnDef<ProductWithRelations>[] = [
   {
@@ -50,6 +51,13 @@ export const columns: ColumnDef<ProductWithRelations>[] = [
 
     cell: ({ row }) => (
       <span className="text-secondary">{row.original.name}</span>
+    ),
+  },
+  {
+    accessorKey: "category",
+    header: "category",
+    cell: ({ row }) => (
+      <span className="text-secondary">{row.original.category?.name}</span>
     ),
   },
   {
@@ -121,6 +129,46 @@ export const columns: ColumnDef<ProductWithRelations>[] = [
     cell: ({ row }) => {
       const extras = row.original.extras;
       return <ExtrasPopover extras={extras} />;
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="font-bold capitalize text-[16px] rounded-none"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          CreatedAt
+          <ArrowUpDown className="size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <span>{format(new Date(row.original.createdAt), "MMMM dd, yyyy")}</span>
+      );
+    },
+  },
+  {
+    accessorKey: "updatedAt",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="font-bold capitalize text-[16px] rounded-none"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          updated at
+          <ArrowUpDown className="size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <span>{format(new Date(row.original.updatedAt), "MMMM dd, yyyy")}</span>
+      );
     },
   },
   {

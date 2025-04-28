@@ -25,10 +25,8 @@ export default function CustomAccordionItem({ title, children }: Props) {
           <span className="text-lg font-semibold">{title}</span>
         </AccordionTrigger>
 
-        <AccordionContent className=" p-2 bg-gray-700 ">
-          <div className="max-h-[220px] overflow-y-auto space-y-1 pr-1">
-            {children}
-          </div>
+        <AccordionContent className="p-2 space-y-1 bg-gray-700 ">
+          {children}
         </AccordionContent>
       </AccordionItem>
     </Accordion>

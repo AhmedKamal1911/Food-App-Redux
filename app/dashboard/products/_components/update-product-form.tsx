@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { ProductWithRelations } from "@/lib/types/product";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   UpdateProductInputs,
   updateProductSchema,
@@ -41,6 +41,7 @@ export default function UpdateProductForm({
 }: {
   product: ProductWithRelations;
 }) {
+  console.log({ product });
   const form = useForm<UpdateProductInputs>({
     resolver: zodResolver(updateProductSchema),
     defaultValues: {
@@ -54,6 +55,11 @@ export default function UpdateProductForm({
     },
     mode: "onChange",
   });
+
+  console.log({
+    defualtValues: form.formState.defaultValues,
+    valuesForm: form.getValues(),
+  });
   const categories = useCategoriesContext();
 
   const [previewUrl, setPreviewUrl] = useState(product.image);
@@ -64,8 +70,6 @@ export default function UpdateProductForm({
       const res = await updateProduct(values);
       if (res.success) {
         toast.success(res.message);
-        // form.reset()
-        // TODO:reset form after the response
       }
       if (!res.success && res.error.type === "error") {
         toast.error(res.error.message);
@@ -76,13 +80,22 @@ export default function UpdateProductForm({
     }
   }
 
-  console.log(form.getValues());
+  useEffect(() => {
+    form.reset({
+      categoryId: product?.categoryId ?? "",
+      desc: product.description,
+      extras: product.extras,
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      sizes: product.sizes,
+    });
+  }, [product, form]);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
         <div className="space-y-2 max-h-[400px] overflow-y-scroll p-2">
-          {/* Show original product image if no preview */}
-
           <DropZoneViewer
             control={form.control}
             name="img"

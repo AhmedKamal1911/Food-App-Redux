@@ -8,7 +8,7 @@ import { Extra } from "@prisma/client";
 export default function SizesPopover({ sizes }: { sizes: Extra[] }) {
   return (
     <Popover>
-      <PopoverTrigger className="cursor-pointer p-2 bg-green-600/80 hover:bg-green-700 text-white rounded-sm shadow transition">
+      <PopoverTrigger className="cursor-pointer p-1.5 bg-green-600/80 hover:bg-green-700 text-white rounded-sm shadow transition">
         Show
       </PopoverTrigger>
       <PopoverContent className="w-[150px] max-w-full p-2 rounded-lg shadow-lg border border-gray-200">
