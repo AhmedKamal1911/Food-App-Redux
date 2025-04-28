@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ProductCategory } from "@prisma/client";
 
-import { Calendar, Home } from "lucide-react";
+import { Home, LibraryBig } from "lucide-react";
 
 import { usePathname } from "next/navigation";
 
@@ -21,9 +21,9 @@ const items = [
   },
 
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
+    title: "Categories",
+    url: "/dashboard/categories",
+    icon: LibraryBig,
   },
 ];
 type Props = {

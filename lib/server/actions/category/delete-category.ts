@@ -2,57 +2,57 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { getProductById } from "../../queries";
+import { getCategoryById } from "../../queries/category/get-category-by-id";
 
-type DeleteProductSuccess = {
+type DeleteCategorySuccess = {
   success: true;
   data: {
     status: number;
     message: string;
   };
 };
-type DeleteProductFailed = {
+type DeleteCategoryFailed = {
   success: false;
   error: {
     status: number;
     message: string;
   };
 };
-type DeleteProductResponse = Promise<
-  DeleteProductSuccess | DeleteProductFailed
+type DeleteCategoryResponse = Promise<
+  DeleteCategorySuccess | DeleteCategoryFailed
 >;
 
-export async function deleteProduct({
-  productId,
+export async function deleteCategory({
+  categoryId,
 }: {
-  productId: string;
-}): DeleteProductResponse {
+  categoryId: string;
+}): DeleteCategoryResponse {
   try {
     // First check if the product exists
-    const product = await getProductById(productId);
+    const category = await getCategoryById(categoryId);
 
-    if (!product) {
+    if (!category) {
       return {
         error: {
           status: 404,
-          message: "Product not found",
+          message: "Category not found",
         },
         success: false,
       };
     }
 
-    await prisma.product.delete({
+    await prisma.productCategory.delete({
       where: {
-        id: productId,
+        id: categoryId,
       },
     });
-    // TODO : revalidate the product tags
-    revalidatePath("/dashboard/products");
+    // TODO : revalidate the category tags
+    revalidatePath("/dashboard/categories");
     return {
       success: true,
       data: {
         status: 200,
-        message: "Product deleted successfully",
+        message: "Category deleted successfully",
       },
     };
   } catch (error) {

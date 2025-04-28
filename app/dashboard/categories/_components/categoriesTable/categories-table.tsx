@@ -1,11 +1,4 @@
 "use client";
-
-import {
-  ColumnDef,
-  flexRender,
-  Table as TableType,
-} from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -14,32 +7,33 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ProductCategory } from "@prisma/client";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
 import { PackageOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { columns } from "./columns";
 
-interface ProductsTableProps<TData, TValue> {
-  table: TableType<TData>;
-  columns: ColumnDef<TData, TValue>[];
-  page: number;
-  lastPage: number;
-}
+export default function CategoriesTable({ data }: { data: ProductCategory[] }) {
+  const [sorting, setSorting] = useState<SortingState>([]);
 
-export function ProductsTable<TData, TValue>({
-  table,
-  columns,
-  lastPage,
-  page,
-}: ProductsTableProps<TData, TValue>) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const goToPage = (newPage: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", String(newPage));
-    router.push(`?${params.toString()}`);
-  };
-
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      sorting,
+    },
+    getCoreRowModel: getCoreRowModel(),
+  });
   return (
     <div className="rounded-md border shadow-md">
       <Table>
@@ -97,29 +91,29 @@ export function ProductsTable<TData, TValue>({
       </Table>
 
       {/* Pagination Controls */}
-      <div className="flex flex-col sm:flex-row items-center justify-between sm:justify-end gap-2 sm:gap-4 px-4 py-4">
-        <span className="text-sm text-gray-500">
-          Page {page} of {lastPage}
-        </span>
-        <div className="flex space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => goToPage(page - 1)}
-            disabled={page <= 1}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => goToPage(page + 1)}
-            disabled={page >= lastPage}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      {/* <div className="flex flex-col sm:flex-row items-center justify-between sm:justify-end gap-2 sm:gap-4 px-4 py-4">
+    <span className="text-sm text-gray-500">
+      Page {page} of {lastPage}
+    </span>
+    <div className="flex space-x-2">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => goToPage(page - 1)}
+        disabled={page <= 1}
+      >
+        Previous
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => goToPage(page + 1)}
+        disabled={page >= lastPage}
+      >
+        Next
+      </Button>
+    </div>
+  </div> */}
     </div>
   );
 }

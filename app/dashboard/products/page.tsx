@@ -22,32 +22,30 @@ export default async function ProductsPage({ searchParams }: Props) {
   });
 
   return (
-    <main className="bg-gray-300/50 min-h-screen">
-      <div className=" space-y-4 p-4">
-        {/* Top Section: Chart + Cards */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
-          {/* Revenue Chart */}
-          <div className="xl:col-span-2 bg-white p-4 rounded-lg shadow">
-            {/* You can plug in a chart like Recharts or Chart.js here */}
-            <span className="text-xl font-semibold text-primary mb-3 block">
-              Revenue
-            </span>
+    <div className=" space-y-4 ">
+      {/* Top Section: Chart + Cards */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
+        {/* Revenue Chart */}
+        <div className="xl:col-span-2 bg-white p-4 rounded-lg shadow">
+          {/* You can plug in a chart like Recharts or Chart.js here */}
+          <span className="text-xl font-semibold text-primary mb-3 block">
+            Revenue
+          </span>
 
-            <RevenueChartBars />
-          </div>
-
-          {/* key performance indicator Cards */}
-          <KPICardsContainer />
+          <RevenueChartBars />
         </div>
-        {/* TODO: products filteration in mobile  */}
-        {/* Product Table Section */}
-        <ProductsTableSection
-          categories={categories}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          data={products}
-        />
+
+        {/* key performance indicator Cards */}
+        <KPICardsContainer />
       </div>
-    </main>
+      {/* TODO: products filteration in mobile  */}
+      {/* Product Table Section */}
+      <ProductsTableSection
+        categories={categories}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        data={products}
+      />
+    </div>
   );
 }

@@ -17,25 +17,8 @@ export const columns: ColumnDef<ProductWithRelations>[] = [
     cell: ({ row }) => row.index + 1,
   },
   {
-    accessorKey: "image",
-    header: "Image",
-    cell: ({ row }) => {
-      const imgSrc = row.original.image;
-      return (
-        <div className="bg-gray-200/60 p-2 rounded-sm size-15 flex items-center justify-center shadow-md">
-          <Image
-            src={imgSrc}
-            alt="Product"
-            width={100}
-            height={100}
-            className="object-cover rounded-sm"
-          />
-        </div>
-      );
-    },
-  },
-  {
     accessorKey: "name",
+    enablePinning: false,
     header: ({ column }) => {
       return (
         <Button
@@ -54,11 +37,43 @@ export const columns: ColumnDef<ProductWithRelations>[] = [
     ),
   },
   {
+    accessorKey: "image",
+    header: "Image",
+    cell: ({ row }) => {
+      const imgSrc = row.original.image;
+      return (
+        <div className="bg-gray-200/60 p-2 rounded-sm size-15 inline-flex  shadow-md">
+          <Image
+            src={imgSrc}
+            alt="Product"
+            width={100}
+            height={100}
+            className="object-cover rounded-sm"
+          />
+        </div>
+      );
+    },
+  },
+
+  {
     accessorKey: "category",
     header: "category",
-    cell: ({ row }) => (
-      <span className="text-secondary">{row.original.category?.name}</span>
-    ),
+    cell: ({ row }) =>
+      row.original.category ? (
+        <div className="flex items-center gap-2">
+          <div className="rounded-sm overflow-hidden relative size-[50px]">
+            <Image
+              className="aspect-square"
+              src={row.original.category?.image ?? ""}
+              fill
+              alt="cat img"
+            />
+          </div>
+          <span className="text-secondary">{row.original.category?.name}</span>
+        </div>
+      ) : (
+        <span>No Category</span>
+      ),
   },
   {
     accessorKey: "price",

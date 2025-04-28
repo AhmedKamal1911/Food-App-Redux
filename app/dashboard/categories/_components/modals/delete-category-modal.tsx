@@ -10,17 +10,18 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { deleteProduct } from "@/lib/server/actions/product/delete-product";
+import { deleteCategory } from "@/lib/server/actions/category/delete-category";
+
 import { toast } from "react-toastify";
 
-export default function DeleteProductModal({
-  productId,
+export default function DeleteCategoryModal({
+  categoryId,
 }: {
-  productId: string;
+  categoryId: string;
 }) {
-  async function onConfirmDeleteProduct() {
+  async function onConfirmDeleteCategory() {
     try {
-      const res = await deleteProduct({ productId });
+      const res = await deleteCategory({ categoryId });
       if (!res.success) {
         toast.error(res.error.message);
       } else {
@@ -42,14 +43,14 @@ export default function DeleteProductModal({
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete your
-            Product and remove your data from our servers.
+            Category and remove your data from our servers.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel className="rounded-sm text-white">
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirmDeleteProduct} asChild>
+          <AlertDialogAction onClick={onConfirmDeleteCategory} asChild>
             <Button
               className="rounded-sm bg-destructive hover:bg-destructive/80 font-semibold"
               size={"sm"}
