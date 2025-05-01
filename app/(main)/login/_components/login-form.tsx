@@ -15,7 +15,7 @@ import { LoginSchema, loginSchema } from "@/lib/validation/login-schema";
 import { loginAction } from "@/lib/server/actions/user/login-action";
 import { toast } from "react-toastify";
 import { useState } from "react";
-
+import { signIn } from "next-auth/react";
 export default function LoginForm() {
   const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
   const form = useForm<LoginSchema>({
@@ -31,6 +31,7 @@ export default function LoginForm() {
   async function onSubmit(values: LoginSchema) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+
     const res = await loginAction(values);
     if (res.success) {
       toast.success("Login success");

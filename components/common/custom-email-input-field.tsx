@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import CustomEmailInput from "./custom-email-input";
 
 import { useCheckEmail } from "@/hooks/use-check-email";
+import { Button } from "../ui/button";
 
 type Props<
   TFieldValues extends FieldValues = FieldValues,
@@ -96,14 +97,18 @@ export default function CustomEmailInputField<
           {status === "available" ? (
             <span className="text-green-500">email is available to use</span>
           ) : status === "inavaliable" ? (
-            <span className="text-yellow-500">email is already in use</span>
-          ) : status === "error" ? (
+            <span className="text-destructive">email is already in use</span>
+          ) : "error" === "error" ? (
             <div className="flex items-center gap-2">
               <span className="text-destructive">{error}</span>
-              <button onClick={() => checkEmail(restField.value)} type="button">
-                {" "}
+              <Button
+                variant={"destructive"}
+                className="p-1.5 h-auto capitalize rounded-sm"
+                onClick={() => checkEmail(restField.value)}
+                type="button"
+              >
                 retry
-              </button>
+              </Button>
             </div>
           ) : (
             <FormMessage />

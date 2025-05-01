@@ -20,7 +20,6 @@ export default function CustomEmailInput({
   enableShowPassword?: boolean;
   status: EmailStatus;
 }) {
-  console.log(status);
   return (
     <div className="relative flex">
       <span className="absolute start-2 top-1/2 -translate-y-1/2">

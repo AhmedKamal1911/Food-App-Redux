@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const registerSchema = z
+export const registerInputs = z
   .object({
     firstName: z
       .string({
@@ -17,9 +17,16 @@ export const registerSchema = z
         message: "Username must be at least 2 characters.",
       }),
     email: z.string().email({ message: "Invalid Email" }),
-    phone: z.string({
-      message: "Phone Number is Requierd",
-    }),
+    phone: z
+      .string({
+        message: "Phone Number is Requierd",
+      })
+      .min(1, {
+        message: "Phone Number Must be more than 1 digit",
+      })
+      .max(15, {
+        message: "Phone Number Must be less than or equal 15 digit",
+      }),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters long.")
@@ -37,5 +44,4 @@ export const registerSchema = z
     path: ["confirmPassword"],
   });
 
-export type RegisterSchema = z.infer<typeof registerSchema>;
-// TODO: password valiation
+export type RegisterSchema = z.infer<typeof registerInputs>;

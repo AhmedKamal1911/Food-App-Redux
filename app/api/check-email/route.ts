@@ -1,5 +1,6 @@
 import { EmailStatus } from "@/components/common/custom-email-input";
-import { AVALIABLE_EMAILS } from "@/lib/data";
+
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -16,11 +17,17 @@ export async function POST(req: NextRequest) {
       { status: 400, statusText: "Bad Request" }
     );
   try {
-    const isEmailExist = AVALIABLE_EMAILS.find((e) => e === email);
+    // TODO: check for email in users table
+    const isEmailExist = await prisma.user.findUnique({
+      where: {
+        email: emailParseResult.data,
+      },
+    });
+
     if (isEmailExist)
       return NextResponse.json<EmailCheckResponse>(
         { message: "email is not avaliable", status: "inavaliable" },
-        { status: 403, statusText: "Conflict" }
+        { status: 409, statusText: "Conflict" }
       );
 
     return NextResponse.json<EmailCheckResponse>({

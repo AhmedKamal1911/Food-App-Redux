@@ -10,7 +10,6 @@ type Props = {
 export default function PasswordIndicator({ password }: Props) {
   const [strength, setStrength] = useState(0);
 
-  console.log({ password });
   useEffect(() => {
     const updatedRules = passwordRules.map(({ name, rule }) => ({
       name,
@@ -24,8 +23,6 @@ export default function PasswordIndicator({ password }: Props) {
     );
     setStrength(score);
   }, [password]);
-
-  console.log({ strength });
 
   return (
     <div>

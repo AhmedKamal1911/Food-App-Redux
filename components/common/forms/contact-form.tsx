@@ -6,11 +6,20 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import CustomInputField from "../custom-input-field";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { File, Mail, Phone, X } from "lucide-react";
 
 import CustomTextArea from "../custom-text-area";
 import { contactSchema, ContactSchema } from "@/lib/validation/contact-schema";
+import { PhoneInput } from "@/components/ui/phone-input";
+import { cn } from "@/lib/utils";
 
 export default function ContactForm() {
   // 1. Define your form.
@@ -47,11 +56,23 @@ export default function ContactForm() {
           name="subject"
           placeholder="subject"
         />
-        <CustomInputField
-          icon={<Phone className="text-primary size-4" />}
+        <FormField
           control={form.control}
-          name="phone"
-          placeholder="phone"
+          name={"phone"}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="sr-only">{field.name}</FormLabel>
+              <FormControl>
+                <PhoneInput
+                  className={cn("bg-white")}
+                  placeholder={"Enter phone number"}
+                  {...field}
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
         />
         <CustomTextArea
           control={form.control}

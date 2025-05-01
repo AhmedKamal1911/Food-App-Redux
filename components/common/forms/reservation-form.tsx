@@ -1,6 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import CustomInputField from "../custom-input-field";
@@ -13,6 +20,8 @@ import {
   reservationSchema,
   ReservationSchema,
 } from "@/lib/validation/reservation-table-schema";
+import { PhoneInput } from "@/components/ui/phone-input";
+import { cn } from "@/lib/utils";
 
 export default function ReservationForm() {
   // 1. Define your form.
@@ -59,11 +68,25 @@ export default function ReservationForm() {
           name="username"
           placeholder="name"
         />
-        <CustomInputField
+        <FormField
           control={form.control}
-          name="phoneNumber"
-          placeholder="phone number"
+          name={"phoneNumber"}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="sr-only">{field.name}</FormLabel>
+              <FormControl>
+                <PhoneInput
+                  className={cn("bg-white")}
+                  placeholder={"Enter phone number"}
+                  {...field}
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
         />
+
         <CustomInputField
           control={form.control}
           name="emailAddress"

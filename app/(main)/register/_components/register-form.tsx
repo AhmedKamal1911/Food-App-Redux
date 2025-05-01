@@ -1,7 +1,14 @@
 "use client";
 import CustomInputField from "@/components/common/custom-input-field";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, LockKeyhole, Mail, User } from "lucide-react";
 import Link from "next/link";
@@ -9,17 +16,22 @@ import { useForm } from "react-hook-form";
 
 import Or from "./or";
 import {
-  registerSchema,
+  registerInputs,
   RegisterSchema,
 } from "@/lib/validation/register-schema";
 import PasswordIndicator from "@/components/common/password-indicator";
 import CustomPasswordInputField from "@/components/common/custom-password-input-field";
 import CustomEmailInputField from "@/components/common/custom-email-input-field";
 import { useState } from "react";
+import { PhoneInput } from "@/components/ui/phone-input";
+import { cn } from "@/lib/utils";
+import { registerAction } from "@/lib/server/actions/user/register-action";
+import { toast } from "react-toastify";
+import { redirect } from "next/navigation";
 
 export default function RegisterForm() {
   const form = useForm<RegisterSchema>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(registerInputs),
     mode: "onBlur",
     defaultValues: {
       firstName: "",
@@ -34,10 +46,32 @@ export default function RegisterForm() {
   const password = form.watch("password");
 
   // 2. Define a submit handler.
-  function onSubmit(values: RegisterSchema) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: RegisterSchema) {
+    console.log("submitted");
+    form.trigger("email", {
+      shouldFocus: true,
+    });
+    try {
+      const res = await registerAction(values);
+      // console.log({ res });
+      if (res.success) {
+        toast.success(res.message);
+        redirect("/login");
+      }
+
+      if (!res.success && res.error.type === "error") {
+        if (res.error.status === 409) {
+          form.setError("root", {
+            message: res.error.message,
+          });
+        } else {
+          toast.error(res.error.message);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An Network Error Occurred");
+    }
   }
 
   return (
@@ -58,6 +92,12 @@ export default function RegisterForm() {
           </span>
         </div>
         <div className="space-y-6">
+          {form.formState.errors.root && (
+            <div className="border-1 rounded-sm border-destructive p-2 capitalize text-destructive text-center">
+              {form.formState.errors.root.message}
+            </div>
+          )}
+
           <div className="flex gap-3 max-md:gap-6 max-md:flex-col">
             <div className="flex-1">
               <CustomInputField
@@ -86,13 +126,26 @@ export default function RegisterForm() {
             setIsEmailStatusOk={setIsEmailOk}
             className="py-2 rounded-sm"
           />
-          <CustomInputField
-            placeholder="phone number"
+
+          <FormField
             control={form.control}
-            name="phone"
-            icon={<Mail className="size-4" />}
-            className="py-2 rounded-sm"
+            name={"phone"}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="sr-only">{field.name}</FormLabel>
+                <FormControl>
+                  <PhoneInput
+                    className={cn("bg-white")}
+                    placeholder={"Enter phone number"}
+                    {...field}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
           />
+
           <div className="flex flex-col gap-2">
             <CustomPasswordInputField
               placeholder="password"
@@ -112,8 +165,11 @@ export default function RegisterForm() {
             className="py-2 rounded-sm"
           />
 
-          <Button disabled={!isEmailOk} type="submit">
-            Submit
+          <Button
+            disabled={!isEmailOk || form.formState.isSubmitting}
+            type="submit"
+          >
+            {form.formState.isSubmitting ? "Submitting" : "Submit"}
           </Button>
         </div>
       </form>
