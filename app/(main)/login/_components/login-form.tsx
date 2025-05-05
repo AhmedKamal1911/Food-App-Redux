@@ -12,7 +12,7 @@ import Or from "./or";
 import CustomPasswordInputField from "@/components/common/custom-password-input-field";
 
 import { LoginSchema, loginSchema } from "@/lib/validation/login-schema";
-import { loginAction } from "@/lib/server/actions/user/login-action";
+
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
@@ -29,26 +29,46 @@ export default function LoginForm() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: LoginSchema) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+    try {
+      const res = await signIn("credentials", {
+        redirect: true,
+        callbackUrl: "/",
+        ...values,
+      });
 
-    const res = await loginAction(values);
-    if (res.success) {
-      toast.success("Login success");
-      setIsSubmitSuccess(true);
-    } else {
-      form.setError("root", { message: res.message });
-      toast.error("Login Faild");
-      setIsSubmitSuccess(false);
+      if (res?.ok && !res.error) {
+        toast.success("Login success");
+        setIsSubmitSuccess(true);
+      } else {
+        let errorMessage = "Login failed";
+        try {
+          const parsedError = JSON.parse(res?.error || "");
+          if (parsedError?.type === "error") {
+            errorMessage = parsedError.message;
+          }
+        } catch (err) {
+          errorMessage = res?.error || "Login failed";
+        }
+
+        toast.error(errorMessage);
+        form.setError("root", { message: errorMessage });
+        setIsSubmitSuccess(false);
+      }
+    } catch (error) {
+      toast.error("Network Error!");
+      form.setError("root", { message: "Network Error!" });
     }
-    console.log({ res });
-    console.log(values);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="space-y-6">
+          {form.formState.errors.root?.message && (
+            <div className="border-1 border-destructive p-2 rounded-sm text-destructive capitalize text-center">
+              {form.formState.errors.root.message}
+            </div>
+          )}
           <CustomInputField
             placeholder="email"
             control={form.control}
@@ -70,14 +90,9 @@ export default function LoginForm() {
             type="submit"
             className="w-full"
           >
-            Sign in
+            {form.formState.isSubmitting ? "Signing in" : "Sign in"}
           </Button>
 
-          {form.formState.errors.root?.message && (
-            <div className="border-1 border-destructive p-2 rounded-sm text-destructive capitalize">
-              {form.formState.errors.root.message}
-            </div>
-          )}
           <Link href={"/forget-password"} className="text-blue-500 capitalize">
             Forget password ?
           </Link>

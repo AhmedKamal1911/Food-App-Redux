@@ -196,7 +196,6 @@ const MemoizedCartProductBox = memo(function CartProductBox({
 }: {
   product: CartProduct;
 }) {
-  console.log("cartProduct Box renderd");
   return (
     <div className="flex items-center">
       <Image src={product.image} alt={product.name} width={80} height={80} />
@@ -224,7 +223,7 @@ function DeleteProductButton({ product }: { product: CartProduct }) {
       deleteCartItem({
         extrasIds: product.selectedExtras.map((ext) => ext.id),
         id: product.id,
-        sizeId: product.selectedSize.id,
+        sizeId: product.selectedSize?.id,
       })
     );
     toast.success(`${product.name} Deleted From Cart`);

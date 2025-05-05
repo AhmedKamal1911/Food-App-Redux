@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         className={`${ptSansNarrow.className} ${pacifico.variable}  antialiased`}
       >
         <StoreProvider>
-          <ToastContainer closeOnClick pauseOnHover />
+          <ToastContainer closeOnClick pauseOnHover position="bottom-right" />
           <ReactQueryProvider>{children}</ReactQueryProvider>
         </StoreProvider>
       </body>

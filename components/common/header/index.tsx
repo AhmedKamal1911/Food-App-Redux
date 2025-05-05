@@ -1,14 +1,14 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, PhoneCall, User } from "lucide-react";
+import { Menu, PhoneCall } from "lucide-react";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { cn } from "@/lib/utils";
 import { ReactNode, useMemo, useRef } from "react";
 
 import { useInView } from "motion/react";
-import { Button } from "@/components/ui/button";
+
 import {
   Sheet,
   SheetContent,
@@ -26,6 +26,10 @@ import {
 import ProductsMenu from "./products-menu";
 import ShoppingCartMenu from "./cart-menu";
 import { Product } from "@prisma/client";
+import UserProfile from "../user-profile";
+import { useSession } from "next-auth/react";
+import { Skeleton } from "@/components/ui/skeleton";
+
 const USERS = [
   {
     id: 1,
@@ -87,9 +91,12 @@ const getNavLinks = (products: Product[], isAdmin: boolean) => {
 
 export default function Header({ products }: { products: Product[] }) {
   const ref = useRef<null | HTMLDivElement>(null);
+  const { data: session, status } = useSession();
+  const isAdmin = session ? session.user.role !== "user" : false;
   const isInView = useInView(ref);
-  const isAdmin = isAdminUser(1);
-  console.log({ isAdmin });
+
+  console.log({ session, status });
+
   return (
     <>
       <div ref={ref} />
@@ -112,7 +119,7 @@ export default function Header({ products }: { products: Product[] }) {
                 alt="logo"
                 width={isInView ? 180 : 150}
                 height={100}
-                className={`transition-[width] duration-300  h-auto`}
+                className={`transition-[width] duration-300  h-auto max-[370px]:w-20`}
               />
             </Link>
             <div className="flex items-center gap-2 min-[420px]:gap-3 md:gap-8 lg:gap-10">
@@ -126,25 +133,15 @@ export default function Header({ products }: { products: Product[] }) {
                   <PhoneCall className="text-primary size-6 sm:size-6" />
                   <span className="max-[720px]:hidden">+2151584584</span>
                 </Link>
-                {isAdmin && (
-                  <Link
-                    href={"/dashboard"}
-                    className="flex self-center items-center gap-1.5 text-white hover:text-primary transition-colors duration-300"
-                  >
-                    <User className="text-primary size-6 sm:size-6" />
-                    <span className="max-[720px]:hidden">user</span>
-                  </Link>
-                )}
 
                 <ShoppingCartMenu />
               </div>
-
-              <Button
-                className="bg-primary max-sm:p-2 p-5 rounded-4xl  text-white sm:text-[18px]"
-                variant={"outline"}
-              >
-                Order online
-              </Button>
+              {status === "loading" ? (
+                <Skeleton className="size-10 rounded-full" />
+              ) : (
+                status === "authenticated" &&
+                session && <UserProfile user={session.user} />
+              )}
               <AsideDrawer products={products} isAdmin={isAdmin} />
             </div>
           </div>
@@ -242,9 +239,9 @@ function AsideDrawer({
     [products, isAdmin]
   );
   return (
-    <div className="min-xl:hidden">
+    <div className="min-xl:hidden flex">
       <Sheet>
-        <SheetTrigger className="cursor-pointer">
+        <SheetTrigger className="cursor-pointer ">
           <Menu className="md:size-7 text-white" />
         </SheetTrigger>
         <SheetContent className="z-[9999] bg-primary/50 backdrop-blur-2xl border-l-secondary px-3 py-12 ">

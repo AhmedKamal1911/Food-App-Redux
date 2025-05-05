@@ -98,7 +98,7 @@ export default function CustomEmailInputField<
             <span className="text-green-500">email is available to use</span>
           ) : status === "inavaliable" ? (
             <span className="text-destructive">email is already in use</span>
-          ) : "error" === "error" ? (
+          ) : status === "error" ? (
             <div className="flex items-center gap-2">
               <span className="text-destructive">{error}</span>
               <Button

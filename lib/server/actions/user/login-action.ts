@@ -1,17 +1,116 @@
 "use server";
 
+import prisma from "@/lib/prisma";
 import { loginSchema, LoginSchema } from "@/lib/validation/login-schema";
+import { UserRole } from "@prisma/client";
+import bcrypt from "bcrypt";
 
-export async function loginAction(inputs: LoginSchema) {
+type FailedResponse = {
+  success: false;
+  error: {
+    status: number;
+    message: string;
+    type: "error";
+  };
+};
+type FailedValidationResponse = {
+  success: false;
+  error: {
+    type: "validationError";
+  };
+};
+
+type SuccessResponse = {
+  success: true;
+  status: number;
+  message: string;
+  user: {
+    id: string;
+    email: string;
+    image: string | null;
+    name: string;
+    role: UserRole;
+  };
+};
+
+type LoginResponse = Promise<
+  SuccessResponse | FailedResponse | FailedValidationResponse
+>;
+
+export async function loginAction(inputs: LoginSchema): LoginResponse {
+  const result = loginSchema.safeParse(inputs);
+  if (!result.success) {
+    return {
+      error: {
+        type: "validationError",
+      },
+      success: false,
+    };
+  }
   try {
-    const result = loginSchema.safeParse(inputs);
-    if (!result.success) {
-      return { message: "invalid credentials", success: false };
+    const user = await prisma.user.findUnique({
+      where: {
+        email: result.data.email,
+      },
+    });
+    if (!user?.password) {
+      return {
+        success: false,
+        error: {
+          status: 400,
+          message: "invalid email or password!",
+          type: "error",
+        },
+      };
     }
-    await new Promise((res, rej) => setTimeout(() => res("loged in"), 3000));
-    return { message: "login success", success: true };
+    // Check if user exist
+    if (!user) {
+      return {
+        success: false,
+        error: {
+          status: 404,
+          message: "user not found",
+          type: "error",
+        },
+      };
+    }
+    // check if the password is valid
+    const isValidPassword = await bcrypt.compare(
+      result.data.password,
+      user.password
+    );
+    if (!isValidPassword) {
+      return {
+        success: false,
+        error: {
+          status: 400,
+          message: "invalid email or password!",
+          type: "error",
+        },
+      };
+    }
+
+    return {
+      success: true,
+      status: 200,
+      message: "login success",
+      user: {
+        id: user.id,
+        email: user.email,
+        image: user.image,
+        name: user.name,
+        role: user.role,
+      },
+    };
   } catch (error) {
     console.log({ error });
-    return { message: "internal server error", success: false };
+    return {
+      success: false,
+      error: {
+        type: "error",
+        status: 500,
+        message: "internal server error",
+      },
+    };
   }
 }
