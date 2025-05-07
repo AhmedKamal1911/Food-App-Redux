@@ -14,12 +14,12 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 
 import { useSignOut } from "@/hooks/use-sign-out";
-import { User as UserType } from "next-auth";
+import { Session } from "next-auth";
 
 type Props = {
-  user: UserType;
+  session: Session;
 };
-export default function UserProfile({ user }: Props) {
+export default function UserProfile({ session }: Props) {
   return (
     <div>
       <DropdownMenu>
@@ -28,24 +28,24 @@ export default function UserProfile({ user }: Props) {
             className="rounded-full cursor-pointer border-2 border-gray-300 hover:border-primary transition"
             height={40}
             width={40}
-            src={user.image ?? "/svgs/user.svg"}
+            src={session.user.image ?? "/svgs/user.svg"}
             alt="User Avatar"
           />
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent className="w-40  rounded-sm shadow-xl border">
+        <DropdownMenuContent className="w-50  rounded-sm shadow-xl border">
           <div>
             <DropdownMenuLabel className="text-lg text-center font-semibold p-0">
-              My Account {user.id}
+              My Account
             </DropdownMenuLabel>
             <div className=" ">
               <p className="font-medium text-gray-800 dark:text-gray-100">
                 <span className="capitalize font-semibold">name : </span>
-                {user.name}
+                {session.user.name}
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 <span className="capitalize font-semibold">email : </span>
-                {user.email}
+                {session.user.email}
               </p>
             </div>
           </div>

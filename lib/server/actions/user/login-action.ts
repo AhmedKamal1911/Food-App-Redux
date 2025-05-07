@@ -1,24 +1,16 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { loginSchema, LoginSchema } from "@/lib/validation/login-schema";
+import {
+  loginSchema,
+  LoginSchema,
+  reqSchema,
+} from "@/lib/validation/login-schema";
 import { UserRole } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { z } from "zod";
 
-type FailedResponse = {
-  success: false;
-  error: {
-    status: number;
-    message: string;
-    type: "error";
-  };
-};
-type FailedValidationResponse = {
-  success: false;
-  error: {
-    type: "validationError";
-  };
-};
+type FailedResponse = z.infer<typeof reqSchema>;
 
 type SuccessResponse = {
   success: true;
@@ -33,9 +25,7 @@ type SuccessResponse = {
   };
 };
 
-type LoginResponse = Promise<
-  SuccessResponse | FailedResponse | FailedValidationResponse
->;
+type LoginResponse = Promise<SuccessResponse | FailedResponse>;
 
 export async function loginAction(inputs: LoginSchema): LoginResponse {
   const result = loginSchema.safeParse(inputs);

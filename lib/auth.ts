@@ -44,14 +44,13 @@ export const authOptions: NextAuthOptions = {
     session: async ({ session, token }) => {
       if (!token || !session) return session;
 
-      session.user = {
-        id: token.sub,
-        role: token.role,
-        image: token.picture,
-        email: token.email,
-        name: token.name,
-        phone: token.phone,
-      };
+      session.user.id = token.sub;
+
+      session.user.role = token.role;
+      session.user.image = token.picture;
+      session.user.email = token.email;
+      session.user.name = token.name;
+      session.user.phone = token.phone;
 
       return session;
     },
@@ -68,16 +67,6 @@ declare module "next-auth" {
       email: string;
       name: string;
     };
-  }
-}
-declare module "next-auth" {
-  interface User {
-    id: string;
-    role: UserRole;
-    phone: string;
-    image: string | null;
-    email: string;
-    name: string;
   }
 }
 

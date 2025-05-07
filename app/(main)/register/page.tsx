@@ -1,7 +1,13 @@
 import Image from "next/image";
 import RegisterForm from "./_components/register-form";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/lib/auth";
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const session = await getServerSession(authOptions);
+  if (session) redirect("/");
+
   return (
     <main>
       <section className="pt-30 pb-10 bg-secondary min-h-[80vh] bg-[url('/images/decorations/chef-bg.png')] bg-cover">

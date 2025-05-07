@@ -16,6 +16,8 @@ import { LoginSchema, loginSchema } from "@/lib/validation/login-schema";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { reqSchema } from "@/lib/server/actions/user/login-action";
+
 export default function LoginForm() {
   const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
   const form = useForm<LoginSchema>({
@@ -31,30 +33,32 @@ export default function LoginForm() {
   async function onSubmit(values: LoginSchema) {
     try {
       const res = await signIn("credentials", {
-        redirect: true,
-        callbackUrl: "/",
+        redirect: false,
         ...values,
       });
-
-      if (res?.ok && !res.error) {
+      if (!res) {
+        form.setError("root", { message: "Failed to login.." });
+        return;
+      }
+      if (!res.error) {
         toast.success("Login success");
         setIsSubmitSuccess(true);
-      } else {
-        let errorMessage = "Login failed";
-        try {
-          const parsedError = JSON.parse(res?.error || "");
-          if (parsedError?.type === "error") {
-            errorMessage = parsedError.message;
-          }
-        } catch (err) {
-          errorMessage = res?.error || "Login failed";
-        }
-
-        toast.error(errorMessage);
-        form.setError("root", { message: errorMessage });
+        return;
+      }
+      const parseResult = reqSchema.safeParse(JSON.parse(res.error));
+      if (!parseResult.success) {
+        // any error msg to the client
+        console.error("Login form schema parseResult error");
+        return;
+      }
+      const errorObject = parseResult.data;
+      if (errorObject.error.type === "error") {
+        toast.error(errorObject.error.message);
+        form.setError("root", { message: errorObject.error.message });
         setIsSubmitSuccess(false);
       }
     } catch (error) {
+      console.log({ error });
       toast.error("Network Error!");
       form.setError("root", { message: "Network Error!" });
     }

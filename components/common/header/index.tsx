@@ -29,30 +29,14 @@ import { Product } from "@prisma/client";
 import UserProfile from "../user-profile";
 import { useSession } from "next-auth/react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Session } from "next-auth";
 
-const USERS = [
-  {
-    id: 1,
-    isAdmin: true,
-    name: "ahmed kamal",
-  },
-  {
-    id: 2,
-    isAdmin: false,
-    name: "mohamed kamal",
-  },
-];
-
-function isAdminUser(id: number) {
-  return USERS.find((user) => user.id === id)?.isAdmin as boolean;
-}
-
-type PageLink = { label: string; href: string };
+type PageLink = { label: string; href: string; show: boolean };
 type NavItem = PageLink & {
   submenu?: NavItem[] | ReactNode | PageLink[];
   show: boolean;
 };
-const getNavLinks = (products: Product[], isAdmin: boolean) => {
+const getNavLinks = (products: Product[], session: Session | null) => {
   const NAV_LINKS: NavItem[] = [
     {
       label: "home",
@@ -74,16 +58,18 @@ const getNavLinks = (products: Product[], isAdmin: boolean) => {
       label: "pages",
       href: "#",
       submenu: [
-        { href: "/about-us", label: "about us" },
-        { href: "/contact", label: "contact us" },
-        { href: "/my-account", label: "my account" },
+        { href: "/login", label: "login", show: !Boolean(session) },
+        { href: "/register", label: "register", show: !Boolean(session) },
+        { href: "/about-us", label: "about us", show: true },
+        { href: "/contact", label: "contact us", show: true },
+        { href: "/my-account", label: "my account", show: true },
       ],
       show: true,
     },
     {
       label: "dashboard",
       href: "/dashboard",
-      show: isAdmin,
+      show: Boolean(session && session.user.role !== "user"),
     },
   ];
   return NAV_LINKS;
@@ -92,7 +78,6 @@ const getNavLinks = (products: Product[], isAdmin: boolean) => {
 export default function Header({ products }: { products: Product[] }) {
   const ref = useRef<null | HTMLDivElement>(null);
   const { data: session, status } = useSession();
-  const isAdmin = session ? session.user.role !== "user" : false;
   const isInView = useInView(ref);
 
   console.log({ session, status });
@@ -123,7 +108,7 @@ export default function Header({ products }: { products: Product[] }) {
               />
             </Link>
             <div className="flex items-center gap-2 min-[420px]:gap-3 md:gap-8 lg:gap-10">
-              <NavList products={products} isAdmin={isAdmin} />
+              <NavList products={products} session={session} />
 
               <div className="flex gap-2.5 sm:gap-5">
                 <Link
@@ -140,9 +125,9 @@ export default function Header({ products }: { products: Product[] }) {
                 <Skeleton className="size-10 rounded-full" />
               ) : (
                 status === "authenticated" &&
-                session && <UserProfile user={session.user} />
+                session && <UserProfile session={session} />
               )}
-              <AsideDrawer products={products} isAdmin={isAdmin} />
+              <AsideDrawer products={products} session={session} />
             </div>
           </div>
         </div>
@@ -154,16 +139,16 @@ export default function Header({ products }: { products: Product[] }) {
 function NavList({
   className,
   products,
-  isAdmin,
+  session,
 }: {
   className?: string;
   products: Product[];
-  isAdmin: boolean;
+  session: Session | null;
 }) {
   const pathname = usePathname();
   const NAV_LINKS: NavItem[] = useMemo(
-    () => getNavLinks(products, isAdmin),
-    [products, isAdmin]
+    () => getNavLinks(products, session),
+    [products, session]
   );
 
   return (
@@ -194,7 +179,9 @@ function NavList({
                           "w-[150px]  p-0 py-3 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:translate-y-0 "
                         }
                       >
-                        <PagesLinks linksList={link.submenu} />
+                        <PagesLinks
+                          linksList={link.submenu.filter((l) => l.show)}
+                        />
                       </SubMenuContainer>
                     ) : (
                       link.submenu
@@ -229,14 +216,14 @@ function PagesLinks({ linksList }: { linksList: PageLink[] }) {
 
 function AsideDrawer({
   products,
-  isAdmin,
+  session,
 }: {
   products: Product[];
-  isAdmin: boolean;
+  session: Session | null;
 }) {
   const NAV_LINKS: NavItem[] = useMemo(
-    () => getNavLinks(products, isAdmin),
-    [products, isAdmin]
+    () => getNavLinks(products, session),
+    [products, session]
   );
   return (
     <div className="min-xl:hidden flex">
@@ -263,15 +250,17 @@ function AsideDrawer({
                       {link.label}
                     </AccordionTrigger>
                     <AccordionContent className="flex flex-col gap-1.5">
-                      {link.submenu.map((submenu, idx) => (
-                        <Link
-                          key={idx}
-                          href={submenu.href}
-                          className="text-white text-[18px] hover:text-black transition-all capitalize"
-                        >
-                          {submenu.label}
-                        </Link>
-                      ))}
+                      {link.submenu
+                        .filter((l) => l.show)
+                        .map((submenu, idx) => (
+                          <Link
+                            key={idx}
+                            href={submenu.href}
+                            className="text-white text-[18px] hover:text-black transition-all capitalize"
+                          >
+                            {submenu.label}
+                          </Link>
+                        ))}
                     </AccordionContent>
                   </AccordionItem>
                 ) : (

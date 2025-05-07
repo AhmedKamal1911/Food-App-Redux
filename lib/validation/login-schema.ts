@@ -9,3 +9,20 @@ export const loginSchema = z.object({
 });
 
 export type LoginSchema = z.infer<typeof loginSchema>;
+
+export const reqSchema = z.union([
+  z.object({
+    success: z.literal(false),
+    error: z.object({
+      status: z.number(),
+      message: z.string(),
+      type: z.literal("error"),
+    }),
+  }),
+  z.object({
+    success: z.literal(false),
+    error: z.object({
+      type: z.literal("validationError"),
+    }),
+  }),
+]);
