@@ -1,15 +1,15 @@
 import IntroBanner from "@/components/common/intro-banner";
-import CartSectionWrapper from "./_components/cart-section-wrapper";
+import CartView from "./_components/cart-view";
 
-type Props = {};
-export default function CartPage({}: Props) {
+export default async function CartPage() {
   return (
     <main>
       <IntroBanner
         title="cart"
         breadcrumbPaths={[{ name: "cart", href: "/cart/" }]}
       />
-      <CartSectionWrapper />
+
+      <CartView />
     </main>
   );
 }

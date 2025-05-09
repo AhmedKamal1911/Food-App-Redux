@@ -31,7 +31,7 @@ export default function ShoppingCart({
           {itemsCount} items
         </span>
       </div>
-      <div className="flex flex-col gap-5 py-10  mt-5 border-t-2">
+      <div className="flex flex-col items-start gap-5 py-10  mt-5 border-t-2">
         <div className="w-full overflow-x-auto">
           {isLoading || isRefetching ? (
             <span className="text-purple-600 text-2xl text-center block">
