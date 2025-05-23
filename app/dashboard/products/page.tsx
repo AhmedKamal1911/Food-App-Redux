@@ -22,7 +22,7 @@ export default async function ProductsPage({ searchParams }: Props) {
   });
 
   return (
-    <div className=" space-y-4 ">
+    <div className="space-y-4">
       {/* Top Section: Chart + Cards */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
         {/* Revenue Chart */}

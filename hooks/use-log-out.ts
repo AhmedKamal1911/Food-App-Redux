@@ -2,7 +2,7 @@
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 
-export function useSignOut() {
+export function useLogOut() {
   const [loading, setLoading] = useState(false);
   async function onLogout() {
     setLoading(true);

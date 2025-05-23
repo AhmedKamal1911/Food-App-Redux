@@ -177,14 +177,14 @@ function ShoppingCartMenuContent({
             href={"/cart"}
             className="text-white rounded-4xl border bg-secondary hover:bg-white hover:text-secondary border-secondary hover:border-secondary py-2 px-4 transition-all"
           >
-            View Cart
+            View Cart & Checkout
           </Link>
-          <Link
-            href={"/checkout"}
+          {/* <Link
+            href={"/cart"}
             className="rounded-4xl bg-primary border border-primary hover:bg-white hover:text-primary text-white py-2 px-4 transition-all"
           >
             Checkout
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>

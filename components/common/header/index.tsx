@@ -36,7 +36,10 @@ type NavItem = PageLink & {
   submenu?: NavItem[] | ReactNode | PageLink[];
   show: boolean;
 };
-const getNavLinks = (products: Product[], session: Session | null) => {
+const getNavLinks = (
+  products: Product[],
+  user: Session["user"] | undefined
+) => {
   const NAV_LINKS: NavItem[] = [
     {
       label: "home",
@@ -58,18 +61,18 @@ const getNavLinks = (products: Product[], session: Session | null) => {
       label: "pages",
       href: "#",
       submenu: [
-        { href: "/login", label: "login", show: !Boolean(session) },
-        { href: "/register", label: "register", show: !Boolean(session) },
+        { href: "/login", label: "login", show: !user },
+        { href: "/register", label: "register", show: !user },
         { href: "/about-us", label: "about us", show: true },
         { href: "/contact", label: "contact us", show: true },
-        { href: "/my-account", label: "my account", show: true },
+        { href: "/my-account", label: "my account", show: Boolean(user) },
       ],
       show: true,
     },
     {
       label: "dashboard",
       href: "/dashboard",
-      show: Boolean(session && session.user.role !== "user"),
+      show: Boolean(user && user.role !== "user"),
     },
   ];
   return NAV_LINKS;
@@ -108,7 +111,7 @@ export default function Header({ products }: { products: Product[] }) {
               />
             </Link>
             <div className="flex items-center gap-2 min-[420px]:gap-3 md:gap-8 lg:gap-10">
-              <NavList products={products} session={session} />
+              <NavList products={products} user={session?.user} />
 
               <div className="flex gap-2.5 sm:gap-5">
                 <Link
@@ -127,7 +130,7 @@ export default function Header({ products }: { products: Product[] }) {
                 status === "authenticated" &&
                 session && <UserProfile session={session} />
               )}
-              <AsideDrawer products={products} session={session} />
+              <AsideDrawer products={products} user={session?.user} />
             </div>
           </div>
         </div>
@@ -139,16 +142,16 @@ export default function Header({ products }: { products: Product[] }) {
 function NavList({
   className,
   products,
-  session,
+  user,
 }: {
   className?: string;
   products: Product[];
-  session: Session | null;
+  user: Session["user"] | undefined;
 }) {
   const pathname = usePathname();
   const NAV_LINKS: NavItem[] = useMemo(
-    () => getNavLinks(products, session),
-    [products, session]
+    () => getNavLinks(products, user),
+    [products, user]
   );
 
   return (
@@ -216,14 +219,14 @@ function PagesLinks({ linksList }: { linksList: PageLink[] }) {
 
 function AsideDrawer({
   products,
-  session,
+  user,
 }: {
   products: Product[];
-  session: Session | null;
+  user: Session["user"] | undefined;
 }) {
   const NAV_LINKS: NavItem[] = useMemo(
-    () => getNavLinks(products, session),
-    [products, session]
+    () => getNavLinks(products, user),
+    [products, user]
   );
   return (
     <div className="min-xl:hidden flex">

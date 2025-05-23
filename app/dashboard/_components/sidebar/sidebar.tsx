@@ -15,6 +15,8 @@ import Link from "next/link";
 import NavLinksGroup from "./nav-links-group";
 import HelpGroup from "./help-group";
 import { ProductCategory } from "@prisma/client";
+import { useLogOut } from "@/hooks/use-log-out";
+import { toast } from "react-toastify";
 
 // Menu items.
 
@@ -23,6 +25,12 @@ type Props = {
 };
 export default function SideBar({ categories }: Props) {
   const { state } = useSidebar();
+  const { loading, onLogout } = useLogOut();
+  async function onLogoutBtnClick() {
+    await onLogout();
+    toast.success("You Logged Out Successfully.");
+  }
+
   return (
     <div className="relative ">
       <Sidebar variant="sidebar" collapsible="icon">
@@ -50,8 +58,12 @@ export default function SideBar({ categories }: Props) {
             <HelpGroup />
           </SidebarContent>
           <SidebarFooter>
-            <SidebarMenuButton className="cursor-pointer font-semibold hover:text-destructive transition-colors">
-              <LogOut /> Logout
+            <SidebarMenuButton
+              disabled={loading}
+              onClick={onLogoutBtnClick}
+              className="cursor-pointer font-semibold hover:text-destructive transition-colors"
+            >
+              <LogOut /> {loading ? "Loading" : "Logout"}
             </SidebarMenuButton>
           </SidebarFooter>
         </div>

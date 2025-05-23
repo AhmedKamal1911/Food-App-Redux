@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import { Button } from "../ui/button";
 
-import { useSignOut } from "@/hooks/use-sign-out";
+import { useLogOut } from "@/hooks/use-log-out";
 import { Session } from "next-auth";
 
 type Props = {
@@ -77,7 +77,7 @@ export default function UserProfile({ session }: Props) {
 }
 
 function SignOutBtn() {
-  const { loading, onLogout } = useSignOut();
+  const { loading, onLogout } = useLogOut();
   return (
     <Button
       disabled={loading}

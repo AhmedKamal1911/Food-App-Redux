@@ -11,15 +11,20 @@ import Or from "./or";
 
 import CustomPasswordInputField from "@/components/common/custom-password-input-field";
 
-import { LoginSchema, loginSchema } from "@/lib/validation/login-schema";
+import {
+  LoginSchema,
+  loginSchema,
+  reqSchema,
+} from "@/lib/validation/login-schema";
 
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { reqSchema } from "@/lib/server/actions/user/login-action";
+import { getSession, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
+  const router = useRouter();
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     mode: "onBlur",
@@ -41,13 +46,22 @@ export default function LoginForm() {
         return;
       }
       if (!res.error) {
+        const session = await getSession();
         toast.success("Login success");
+
+        if (session) {
+          router.replace(
+            `${session.user.role !== "user" ? "/dashboard" : "/"}`
+          );
+        }
         setIsSubmitSuccess(true);
         return;
       }
       const parseResult = reqSchema.safeParse(JSON.parse(res.error));
       if (!parseResult.success) {
         // any error msg to the client
+        form.setError("root", { message: "invalid email or password!" });
+
         console.error("Login form schema parseResult error");
         return;
       }

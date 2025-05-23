@@ -1,3 +1,5 @@
+import { UserRole } from "@prisma/client";
+
 export const PRODUCT_SIZES = [
   "XSmall",
   "Small",
@@ -37,3 +39,5 @@ export const AVALIABLE_EMAILS = [
   "ahmed2@gmail.com",
   "ahmed3@gmail.com",
 ];
+
+export const ROLES_LIST = Object.values(UserRole);

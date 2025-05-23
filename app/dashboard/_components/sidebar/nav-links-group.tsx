@@ -15,13 +15,13 @@ import ProductsMenuItemWithFilteration from "./products-menu-item-with-filterati
 
 const items = [
   {
-    title: "Home",
+    title: "home",
     url: "/dashboard",
     icon: Home,
   },
 
   {
-    title: "Categories",
+    title: "categories",
     url: "/dashboard/categories",
     icon: LibraryBig,
   },
@@ -42,7 +42,7 @@ export default function NavLinksGroup({ categories }: Props) {
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
                   isActive={isActive}
-                  className={`text-xl  rounded-sm py-5 ${
+                  className={`text-xl capitalize rounded-sm py-5 ${
                     isActive && "bg-primary/90! text-white!"
                   }`}
                   asChild
