@@ -89,7 +89,7 @@ export const columns: ColumnDef<User>[] = [
         <div className="bg-gray-200/60 p-1 rounded-sm size-15 inline-flex  shadow-md">
           <Image
             src={imgSrc ?? "/svgs/user.svg"}
-            alt="Product"
+            alt="user"
             width={50}
             height={50}
             className="object-cover rounded-sm"

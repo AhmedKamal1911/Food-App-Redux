@@ -2,7 +2,7 @@
 
 import { ProductWithRelations } from "@/lib/types/product";
 import { columns } from "./productsTable/columns";
-import ProductsFilterInput from "./productsTable/products-filter-input";
+
 import { ProductsTable } from "./productsTable/products-table";
 
 import {
@@ -17,19 +17,30 @@ import CategoriesProvider from "@/providers/categories-provider";
 import { ProductCategory } from "@prisma/client";
 import CreateProductModal from "./modals/create-product-modal";
 import ProductsCategoryFilter from "./products-category-filter";
+import CustomTableSearchInput from "../../../../components/common/custom-table-search-input";
+import { useRouter, useSearchParams } from "next/navigation";
+import PaginationControls from "@/components/common/pagination-controls";
 
 type Props = {
-  currentPage: number;
-  totalPages: number;
+  page: number;
+  lastPage: number;
   data: ProductWithRelations[];
   categories: ProductCategory[];
 };
 export default function ProductsTableSection({
   data,
   categories,
-  currentPage,
-  totalPages,
+  page,
+  lastPage,
 }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const goToPage = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", String(newPage));
+    router.push(`?${params.toString()}`);
+  };
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
@@ -41,6 +52,7 @@ export default function ProductsTableSection({
     state: {
       sorting,
     },
+    manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -50,16 +62,20 @@ export default function ProductsTableSection({
         <div className="flex max-lg:flex-col gap-2 items-center justify-between mb-4">
           <span className="text-2xl font-semibold">Products</span>
           <div className="flex max-sm:flex-col max-sm:items-stretch max-sm:w-full gap-2 items-center">
-            <ProductsFilterInput table={table} />
+            <CustomTableSearchInput
+              columnName="name"
+              placeholder="Search A Product .."
+              table={table}
+            />
             <ProductsCategoryFilter categories={categories} />
             <CreateProductModal />
           </div>
         </div>
-        <ProductsTable
-          columns={columns}
-          table={table}
-          page={currentPage}
-          lastPage={totalPages}
+        <ProductsTable columns={columns} table={table} />
+        <PaginationControls
+          page={page}
+          lastPage={lastPage}
+          goToPage={goToPage}
         />
       </CategoriesProvider>
     </section>

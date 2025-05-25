@@ -1,5 +1,3 @@
-"use client";
-
 import {
   ColumnDef,
   flexRender,
@@ -15,31 +13,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { PackageOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useRouter, useSearchParams } from "next/navigation";
 
 interface ProductsTableProps<TData, TValue> {
   table: TableType<TData>;
   columns: ColumnDef<TData, TValue>[];
-  page: number;
-  lastPage: number;
 }
 
 export function ProductsTable<TData, TValue>({
   table,
   columns,
-  lastPage,
-  page,
 }: ProductsTableProps<TData, TValue>) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const goToPage = (newPage: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", String(newPage));
-    router.push(`?${params.toString()}`);
-  };
-
   return (
     <div className="rounded-md border shadow-md">
       <Table>
@@ -95,31 +78,6 @@ export function ProductsTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-
-      {/* Pagination Controls */}
-      <div className="flex flex-col sm:flex-row items-center justify-between sm:justify-end gap-2 sm:gap-4 px-4 py-4">
-        <span className="text-sm text-gray-500">
-          Page {page} of {lastPage}
-        </span>
-        <div className="flex space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => goToPage(page - 1)}
-            disabled={page <= 1}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => goToPage(page + 1)}
-            disabled={page >= lastPage}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
     </div>
   );
 }

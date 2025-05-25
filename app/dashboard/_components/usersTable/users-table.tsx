@@ -1,4 +1,3 @@
-"use client";
 import {
   Table,
   TableBody,
@@ -7,32 +6,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { User } from "@prisma/client";
+
 import {
+  ColumnDef,
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
+  Table as TableType,
 } from "@tanstack/react-table";
 import { PackageOpen } from "lucide-react";
-import { useState } from "react";
-import { columns } from "./columns";
-export default function UsersTable({ data }: { data: User[] }) {
-  const [sorting, setSorting] = useState<SortingState>([]);
 
-  const table = useReactTable({
-    data,
-    columns,
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-    },
-    getCoreRowModel: getCoreRowModel(),
-  });
+type Props<TData, TValue> = {
+  table: TableType<TData>;
+  columns: ColumnDef<TData, TValue>[];
+};
+export default function UsersTable<TData, TValue>({
+  columns,
+  table,
+}: Props<TData, TValue>) {
   return (
     <div className="rounded-md border shadow-md">
       <Table>
@@ -88,31 +77,6 @@ export default function UsersTable({ data }: { data: User[] }) {
           )}
         </TableBody>
       </Table>
-
-      {/* Pagination Controls */}
-      {/* <div className="flex flex-col sm:flex-row items-center justify-between sm:justify-end gap-2 sm:gap-4 px-4 py-4">
-    <span className="text-sm text-gray-500">
-      Page {page} of {lastPage}
-    </span>
-    <div className="flex space-x-2">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => goToPage(page - 1)}
-        disabled={page <= 1}
-      >
-        Previous
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => goToPage(page + 1)}
-        disabled={page >= lastPage}
-      >
-        Next
-      </Button>
-    </div>
-  </div> */}
     </div>
   );
 }

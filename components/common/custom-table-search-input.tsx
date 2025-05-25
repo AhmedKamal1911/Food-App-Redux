@@ -4,18 +4,24 @@ import { Search } from "lucide-react";
 
 type Props<TData> = {
   table: Table<TData>;
+  columnName: string;
+  placeholder: string;
 };
-export default function ProductsFilterInput<TData>({ table }: Props<TData>) {
+export default function CustomTableSearchInput<TData>({
+  table,
+  columnName,
+  placeholder,
+}: Props<TData>) {
   return (
     <div>
       <CustomInput
         className="py-1 rounded-sm"
         icon={<Search className="size-4" />}
-        value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+        value={(table.getColumn(columnName)?.getFilterValue() as string) ?? ""}
         onChange={(event) =>
-          table.getColumn("name")?.setFilterValue(event.target.value)
+          table.getColumn(columnName)?.setFilterValue(event.target.value)
         }
-        placeholder="search a product"
+        placeholder={placeholder}
       />
     </div>
   );

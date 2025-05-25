@@ -10,8 +10,6 @@ export default async function CategoriesPage({}: Props) {
       <div className="flex items-center justify-between">
         <span className="text-2xl capitalize font-semibold">categories :</span>
         <div className="flex  gap-2 items-center">
-          {/* <ProductsFilterInput table={table} /> */}
-          {/* <ProductsCategoryFilter categories={categories} /> */}
           <CreateCategoryModal />
         </div>
       </div>
