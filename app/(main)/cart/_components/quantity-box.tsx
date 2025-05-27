@@ -23,7 +23,7 @@ export default function QuantityBox({
   }, [value]);
 
   return (
-    <div className="py-5 flex justify-center items-center gap-2">
+    <div className="py-1 flex justify-center items-center gap-2">
       <Button
         variant={"ghost"}
         className="p-2! rounded-none"

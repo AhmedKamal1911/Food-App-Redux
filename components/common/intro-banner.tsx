@@ -16,7 +16,7 @@ export default function IntroBanner({
     >
       <div className="container">
         <div className="relative flex flex-col items-center gap-5">
-          <span className="text-3xl md:text-5xl font-bold text-white uppercase">
+          <span className="max-[300px]:text-xl max-md:text-center text-3xl md:text-5xl font-bold text-white uppercase">
             {title}
           </span>
           <BreadCramb pathes={breadcrumbPaths} />

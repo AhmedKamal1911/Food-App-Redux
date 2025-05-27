@@ -28,6 +28,7 @@ export async function deleteUserAction({
 }): DeleteUserResponse {
   try {
     // First check if the product exists
+
     const product = await getUserById(userId);
 
     if (!product) {
@@ -39,7 +40,7 @@ export async function deleteUserAction({
         success: false,
       };
     }
-
+    // TODO: dont forget to remove user images from storage
     await prisma.user.delete({
       where: {
         id: userId,

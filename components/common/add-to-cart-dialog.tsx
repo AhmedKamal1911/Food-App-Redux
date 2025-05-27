@@ -1,7 +1,5 @@
 "use client";
-import { useAppDispatch } from "@/lib/redux/hooks";
 import { Button } from "../ui/button";
-import { addToCart } from "@/lib/redux/features/cart/cartSlice";
 import {
   Dialog,
   DialogContent,
@@ -18,14 +16,9 @@ import { ProductWithRelations } from "@/lib/types/product";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
-import { useState } from "react";
-import { toast } from "react-toastify";
 
-import { useProductTotalPrice } from "@/hooks/use-product-total-price";
-type SelectedOptionsState = {
-  size: Size | undefined;
-  extras: Extra[];
-};
+import { useProductOptions } from "@/hooks/use-product-options";
+
 export default function AddToCartDialog({
   product,
   totalQty,
@@ -33,36 +26,12 @@ export default function AddToCartDialog({
   product: ProductWithRelations;
   totalQty: number;
 }) {
-  const dispatch = useAppDispatch();
-  const [selectedOptions, setSelectedOptions] = useState<SelectedOptionsState>(
-    () => ({
-      size:
-        product.sizes.find(({ name }) => name === "XSmall") ??
-        product.sizes?.[0],
-      extras: [],
-    })
-  );
-  // TODO : make the total product price without the default size price
-
-  const totalProductPrice = useProductTotalPrice({
-    productPrice: product.price,
-    selectedExtras: selectedOptions.extras,
-    selectedSize: selectedOptions.size,
-  });
-  const selectedOptionsUpdater = (o: Partial<SelectedOptionsState>) => {
-    setSelectedOptions((prev) => ({ ...prev, ...o }));
-  };
-
-  function addProductToCart() {
-    dispatch(
-      addToCart({
-        id: product.id,
-        sizeId: selectedOptions?.size?.id,
-        extrasIds: selectedOptions.extras.map((extra) => extra.id),
-      })
-    );
-    toast.success(`${product.name} Added To Cart`);
-  }
+  const {
+    selectedOptions,
+    selectedOptionsUpdater,
+    totalProductPrice,
+    addProductToCart,
+  } = useProductOptions(product);
 
   console.log("renders", product.sizes.length, product.extras.length);
   return (
@@ -112,6 +81,7 @@ export default function AddToCartDialog({
             )}
           </div>
         )}
+
         <DialogFooter>
           <Button
             onClick={addProductToCart}
