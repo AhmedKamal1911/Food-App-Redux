@@ -65,7 +65,11 @@ const getNavLinks = (
         { href: "/register", label: "register", show: !user },
         { href: "/about-us", label: "about us", show: true },
         { href: "/contact", label: "contact us", show: true },
-        { href: "/my-account", label: "my account", show: Boolean(user) },
+        {
+          href: "/account",
+          label: "my account",
+          show: Boolean(user),
+        },
       ],
       show: true,
     },

@@ -7,7 +7,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 type Props = {
   relatedProducts: Product[];
 };

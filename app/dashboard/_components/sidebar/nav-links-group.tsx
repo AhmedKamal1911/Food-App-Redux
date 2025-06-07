@@ -7,11 +7,12 @@ import {
 } from "@/components/ui/sidebar";
 import { ProductCategory } from "@prisma/client";
 
-import { Home, LibraryBig } from "lucide-react";
+import { CreditCard, Home, LibraryBig } from "lucide-react";
 
 import { usePathname } from "next/navigation";
 
 import ProductsMenuItemWithFilteration from "./products-menu-item-with-filteration";
+import Link from "next/link";
 
 const items = [
   {
@@ -24,6 +25,11 @@ const items = [
     title: "categories",
     url: "/dashboard/categories",
     icon: LibraryBig,
+  },
+  {
+    title: "transactions History",
+    url: "/dashboard/transactions",
+    icon: CreditCard,
   },
 ];
 type Props = {
@@ -47,10 +53,10 @@ export default function NavLinksGroup({ categories }: Props) {
                   }`}
                   asChild
                 >
-                  <a href={item.url}>
+                  <Link href={item.url}>
                     <item.icon />
                     <span>{item.title}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             );

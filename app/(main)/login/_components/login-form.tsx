@@ -108,7 +108,9 @@ export default function LoginForm() {
             type="submit"
             className="w-full"
           >
-            {form.formState.isSubmitting ? "Signing in" : "Sign in"}
+            {form.formState.isSubmitting || isSubmitSuccess
+              ? "Signing in"
+              : "Sign in"}
           </Button>
 
           <Link href={"/forget-password"} className="text-blue-500 capitalize">

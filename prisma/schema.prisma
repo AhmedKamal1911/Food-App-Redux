@@ -14,18 +14,20 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  phone         String    @unique
-  password      String?
-  accounts      Account[]
-  sessions      Session[]
-  role          UserRole  @default(user)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                       String    @id @default(cuid())
+  name                     String
+  email                    String    @unique
+  emailVerified            DateTime?
+  emailVerificationToken   String?
+  emailVerificationExpires DateTime?
+  image                    String?
+  phone                    String    @unique
+  password                 String?
+  accounts                 Account[]
+  sessions                 Session[]
+  role                     UserRole  @default(user)
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
 }
 
 model Account {

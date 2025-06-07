@@ -41,6 +41,7 @@ export default function CustomPasswordInput({
       {enableShowPassword && (
         <button
           type="button"
+          tabIndex={-1}
           onClick={() => setShowPassword((prev) => !prev)}
           className="absolute end-2 top-1/2 -translate-y-1/2 cursor-pointer"
         >

@@ -1,5 +1,6 @@
 import { EmailCheckResponse } from "@/app/api/check-email/route";
 import { EmailStatus } from "@/components/common/custom-email-input";
+import { getBaseUrl } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
 export function useCheckEmail({
@@ -15,7 +16,7 @@ export function useCheckEmail({
     setError(null);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/check-email?email=${email}`,
+        `${getBaseUrl()}/api/check-email?email=${email}`,
         { method: "POST" }
       );
 

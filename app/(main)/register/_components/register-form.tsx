@@ -56,6 +56,7 @@ export default function RegisterForm() {
       // console.log({ res });
       if (res.success) {
         toast.success(res.message);
+        toast.success("Email Verification Message Has Been Sent To Email");
         redirect("/login");
       }
 

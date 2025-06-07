@@ -15,6 +15,7 @@ import { Button } from "../ui/button";
 
 import { useLogOut } from "@/hooks/use-log-out";
 import { Session } from "next-auth";
+import Link from "next/link";
 
 type Props = {
   session: Session;
@@ -33,7 +34,7 @@ export default function UserProfile({ session }: Props) {
           />
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent className="w-50  rounded-sm shadow-xl border">
+        <DropdownMenuContent className="w-50  rounded-sm shadow-xl border z-[999]">
           <div>
             <DropdownMenuLabel className="text-lg text-center font-semibold p-0">
               My Account
@@ -52,14 +53,19 @@ export default function UserProfile({ session }: Props) {
           <DropdownMenuSeparator />
 
           <DropdownMenuGroup>
-            <DropdownMenuItem className="gap-2  hover:bg-gray-100 dark:hover:bg-gray-800">
-              <User className="w-4 h-4 text-primary" />
-              <span>Profile</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="gap-2  hover:bg-gray-100 dark:hover:bg-gray-800">
-              <Settings className="w-4 h-4 text-primary" />
-              <span>Settings</span>
-            </DropdownMenuItem>
+            <Link href={"/account?tab=personal-info"}>
+              <DropdownMenuItem className="gap-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+                <User className="w-4 h-4 text-primary" />
+                <span>Profile</span>
+              </DropdownMenuItem>
+            </Link>
+
+            <Link href={"/account?tab=general"}>
+              <DropdownMenuItem className="gap-2  hover:bg-gray-100 dark:hover:bg-gray-800">
+                <Settings className="w-4 h-4 text-primary" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+            </Link>
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />

@@ -1,5 +1,6 @@
+import CustomerReviewsSlider from "@/app/(main)/_components/customer-reviews-slider";
 import SpecialHeading from "@/components/common/special-heading";
-import CustomerReviewsSlider from "../../../app/(main)/_components/customer-reviews-slider";
+
 import Image from "next/image";
 export type Review = {
   id: number;

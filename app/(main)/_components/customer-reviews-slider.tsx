@@ -3,7 +3,9 @@ import Image from "next/image";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Review } from "../../../components/common/sections/reviews-section";
-
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 type Props = {
   reviewsList: Review[];
 };

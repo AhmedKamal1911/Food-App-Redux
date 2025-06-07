@@ -5,7 +5,9 @@ import {
   registerInputs,
   RegisterSchema,
 } from "@/lib/validation/register-schema";
-
+import { randomBytes } from "crypto";
+import { Resend } from "resend";
+import { VerificationTemplate } from "@/emails/email-verification-template";
 type FailedResponse = {
   success: false;
   error: {
@@ -32,6 +34,7 @@ type RegisterResponse = Promise<
 >;
 // TODO: make this type guard shared
 
+const resend = new Resend(process.env.RESEND_API_KEY);
 export async function registerAction(
   registerInputsValues: RegisterSchema
 ): RegisterResponse {
@@ -66,6 +69,7 @@ export async function registerAction(
 
   try {
     const hashedPassword = await bcrypt.hash(resultData.password, 10);
+    const emailToken = randomBytes(32).toString("hex");
 
     await prisma.user.create({
       data: {
@@ -73,9 +77,19 @@ export async function registerAction(
         email: resultData.email,
         phone: resultData.phone,
         password: hashedPassword,
+        emailVerificationToken: emailToken,
+        emailVerificationExpires: new Date(Date.now() + 10 * 60 * 1000), // 10 min
       },
     });
-
+    await resend.emails.send({
+      from: "Pizzon <onboarding@resend.dev>",
+      to: [resultData.email],
+      subject: "Hello world",
+      react: VerificationTemplate({
+        username: resultData.firstName,
+        emailVerificationToken: emailToken,
+      }),
+    });
     return {
       success: true,
       status: 201,
