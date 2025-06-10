@@ -4,8 +4,7 @@ import prisma from "@/lib/prisma";
 import { randomBytes } from "crypto";
 import { Resend } from "resend";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getCurrentSession } from "@/lib/dal/user";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 type SuccessResponse = {
@@ -25,16 +24,13 @@ type ResendVerificationEmailResponse = Promise<
 >;
 
 export async function resendVerificationEmailAction(): Promise<ResendVerificationEmailResponse> {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return {
-      success: false,
-      error: {
-        status: 400,
-        message: "Unauthorized error.",
-      },
-    };
+  const sessionResult = await getCurrentSession();
+
+  if (!sessionResult.success) {
+    return sessionResult;
   }
+
+  const user = sessionResult.session.user;
 
   try {
     // Generate new token and expiry
@@ -43,7 +39,7 @@ export async function resendVerificationEmailAction(): Promise<ResendVerificatio
 
     // Update user in DB
     await prisma.user.update({
-      where: { id: session.user.id },
+      where: { id: user.id },
       data: {
         emailVerificationToken: emailToken,
         emailVerificationExpires,
@@ -54,10 +50,10 @@ export async function resendVerificationEmailAction(): Promise<ResendVerificatio
 
     await resend.emails.send({
       from: "Pizzon <onboarding@resend.dev>",
-      to: [session.user.email],
+      to: [user.email],
       subject: "Verify your email address",
       react: VerificationTemplate({
-        username: session.user.name,
+        username: user.name,
         emailVerificationToken: emailToken,
       }),
     });

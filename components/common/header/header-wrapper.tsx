@@ -1,6 +1,7 @@
 import Header from "@/components/common/header";
 import { ProductWithRelations } from "@/lib/types/product";
 import { AuthSessionProvider } from "@/providers/next-auth-session-provider";
+
 type Props = {
   products: ProductWithRelations[];
 };
