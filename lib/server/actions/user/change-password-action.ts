@@ -7,6 +7,7 @@ import {
 } from "@/lib/validation/change-password-schema";
 import { getUserById } from "../../queries/user";
 import prisma from "@/lib/prisma";
+import { hashPassword } from "@/lib/server-utils";
 
 type SuccessResponse = {
   success: true;
@@ -65,13 +66,14 @@ export async function ChangePasswordAction(
     };
   }
   try {
-    const hashedPassword = await bcrypt.hash(result.data.newPassword, 10);
+    const hashedPassword = await hashPassword(result.data.newPassword);
     await prisma.user.update({
       where: {
         id: userId,
       },
       data: {
         password: hashedPassword,
+        passwordUpdatedAt: new Date(Date.now()),
       },
     });
     // Redirect to confirm reset code page

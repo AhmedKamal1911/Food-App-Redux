@@ -1,9 +1,15 @@
 "use server";
-import { VerificationSuccessTemplate } from "@/emails/email-verification-template";
+
 import prisma from "@/lib/prisma";
 
-import { z } from "zod";
 import { Resend } from "resend";
+import {
+  ResetPasswordInputs,
+  resetPasswordSchema,
+} from "@/lib/validation/reset-password-schema";
+import { ResetPasswordSuccessTemplate } from "@/emails/reset-password-success-template";
+import { hashPassword } from "@/lib/server-utils";
+
 type SuccessResponse = {
   success: true;
   status: number;
@@ -16,16 +22,12 @@ type FailedResponse = {
   };
 };
 
-type VerifyUserEmailResponse = Promise<SuccessResponse | FailedResponse>;
+type ResetPasswordAction = Promise<SuccessResponse | FailedResponse>;
 const resend = new Resend(process.env.RESEND_API_KEY);
-export async function verifyUserEmailAction(
-  token: string
-): VerifyUserEmailResponse {
-  const result = z
-    .string({
-      message: "emailVerificationToken must be string",
-    })
-    .safeParse(token);
+export async function resetPasswordAction(
+  values: ResetPasswordInputs
+): ResetPasswordAction {
+  const result = resetPasswordSchema.safeParse(values);
 
   if (!result.success) {
     const errorMsg = result.error.flatten().formErrors[0];
@@ -42,8 +44,8 @@ export async function verifyUserEmailAction(
   try {
     const user = await prisma.user.findFirst({
       where: {
-        emailVerificationToken: result.data,
-        emailVerificationExpires: { gte: new Date() },
+        passwordResetToken: result.data.token,
+        passwordTokenExpires: { gte: new Date() },
       },
     });
     if (!user) {
@@ -51,23 +53,25 @@ export async function verifyUserEmailAction(
         success: false,
         error: {
           status: 400,
-          message: "Invalid or expired verification token.",
+          message: "Invalid or expired reset token.",
         },
       };
     }
+    const hashedPassword = await hashPassword(result.data.newPassword);
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        emailVerified: new Date(),
-        emailVerificationToken: null,
-        emailVerificationExpires: null,
+        passwordUpdatedAt: new Date(Date.now()),
+        passwordResetToken: null,
+        passwordTokenExpires: null,
+        password: hashedPassword,
       },
     });
     await resend.emails.send({
       from: "Pizzon <onboarding@resend.dev>",
       to: [user.email],
-      subject: "Email Verification Success!",
-      react: VerificationSuccessTemplate({
+      subject: "Password Reset Success!",
+      react: ResetPasswordSuccessTemplate({
         username: user.name,
       }),
     });

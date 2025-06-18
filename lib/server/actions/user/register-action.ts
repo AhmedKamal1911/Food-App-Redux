@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import bcrypt from "bcrypt";
+
 import {
   registerInputs,
   RegisterSchema,
@@ -8,6 +8,8 @@ import {
 import { randomBytes } from "crypto";
 import { Resend } from "resend";
 import { VerificationTemplate } from "@/emails/email-verification-template";
+import { hashPassword } from "@/lib/server-utils";
+
 type FailedResponse = {
   success: false;
   error: {
@@ -68,7 +70,7 @@ export async function registerAction(
   }
 
   try {
-    const hashedPassword = await bcrypt.hash(resultData.password, 10);
+    const hashedPassword = await hashPassword(resultData.password);
     const emailToken = randomBytes(32).toString("hex");
 
     await prisma.user.create({

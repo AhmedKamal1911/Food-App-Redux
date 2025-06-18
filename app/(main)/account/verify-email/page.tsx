@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { authOptions } from "@/lib/auth";
-import { VerifyUserEmailAction } from "@/lib/server/actions/user/verify-user-email-action";
+import { verifyUserEmailAction } from "@/lib/server/actions/user/verify-user-email-action";
 import { Check, FileWarning } from "lucide-react";
 import { getServerSession } from "next-auth";
 
@@ -23,7 +23,7 @@ export default async function VerifyEmailPage({ searchParams }: Props) {
   const { token } = await searchParams;
   const session = await getServerSession(authOptions);
   if (session && session.user.emailVerified) return redirect("/");
-  const res = await VerifyUserEmailAction(token);
+  const res = await verifyUserEmailAction(token);
   if (!res.success) {
     return (
       <main className="bg-gray-950 flex items-center justify-center min-h-[65vh] ">

@@ -41,6 +41,7 @@ export const authOptions: NextAuthOptions = {
       token.phone = dbUser.phone;
       token.emailVerified = dbUser.emailVerified;
       token.emailVerificationExpires = dbUser.emailVerificationExpires;
+
       return token;
     },
     session: async ({ session, token }) => {
@@ -54,6 +55,7 @@ export const authOptions: NextAuthOptions = {
       session.user.name = token.name;
       session.user.phone = token.phone;
       session.user.emailVerificationExpires = token.emailVerificationExpires;
+
       return session;
     },
   },

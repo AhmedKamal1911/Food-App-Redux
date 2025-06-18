@@ -5,50 +5,39 @@ import { Button } from "@/components/ui/button";
 import { forgetPasswordAction } from "@/lib/server/actions/user/forget-password-action";
 import { Mail } from "lucide-react";
 import Link from "next/link";
-import {
-  startTransition,
-  useActionState,
-  useEffect,
-  useState,
-  useTransition,
-} from "react";
+import { useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-type Props = {};
-export default function ForgetPasswordForm({}: Props) {
-  // const [isLoading, startTransition] = useTransition();
-  const [email, setEmail] = useState("");
+export default function ForgetPasswordForm() {
   const [state, action, isPending] = useActionState(forgetPasswordAction, null);
   const isValidationError = !state?.success && state?.error.status === 400;
   const serverError =
     !state?.success &&
     (state?.error.status === 404 || state?.error.status === 500);
 
-  const forgetPasswordAct = action.bind(null, email);
-  const isSuccess = state?.success;
-
   useEffect(() => {
-    if (isSuccess) {
-      toast.success("tas");
+    if (!state) return;
+    if (state.success) {
+      toast.success(`A password reset link has been sent to your email.`);
+    } else {
+      toast.error(
+        state.error.message || "Something went wrong, please try again."
+      );
     }
-    if (serverError) {
-      toast.error(state.error.message);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess, serverError]);
+  }, [state]);
   return (
-    <form
-      // onSubmit={(e) => e.preventDefault()}
-      className="flex flex-col gap-2"
-      action={forgetPasswordAct}
-    >
+    <form className="flex flex-col gap-2" action={action}>
+      {serverError && (
+        <div className="border-1 border-destructive rounded-sm p-2 text-destructive">
+          {state.error.message}
+        </div>
+      )}
       <div className="space-y-1">
         <CustomInput
-          defaultValue={serverError || isValidationError ? state.email : ""}
+          defaultValue={state?.email ?? ""}
           className="py-2 rounded-sm"
           placeholder="enter your recovery email"
-          name="recoveryEmail"
-          onBlur={(e) => setEmail(e.target.value)}
+          name="email"
           icon={<Mail className="size-4" />}
         />
         {isValidationError && (
@@ -68,13 +57,8 @@ export default function ForgetPasswordForm({}: Props) {
         disabled={isPending}
         className="font-semibold rounded-sm px-4 py-2 h-auto"
       >
-        Send
+        {isPending ? "Sending" : "Send"}
       </Button>
-      {serverError && (
-        <div className="border-1 border-destructive rounded-sm p-2 text-destructive">
-          {state.error.message}
-        </div>
-      )}
     </form>
   );
 }
