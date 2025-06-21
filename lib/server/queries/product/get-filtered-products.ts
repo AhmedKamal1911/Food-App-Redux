@@ -1,6 +1,8 @@
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import prisma from "@/lib/prisma";
+import { unstable_cache } from "next/cache";
 
-export async function getFilteredProducts({
+async function _getFilteredProducts({
   productCategories = [],
   page,
   pageSize,
@@ -33,3 +35,11 @@ export async function getFilteredProducts({
 
   return { products, currentPage: page, totalPages, pageSize, totalCount };
 }
+
+export const getFilteredProducts = unstable_cache(
+  _getFilteredProducts,
+  undefined,
+  {
+    tags: [PRISMA_CACHE_KEY.PRODUCTS],
+  }
+);

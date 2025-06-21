@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { ProductCategory } from "@prisma/client";
-import UpdateCategoryForm from "../update-category-form";
+import UpdateCategoryForm from "../forms/update-category-form";
 
 export default function UpdateCategoryModal({
   category,

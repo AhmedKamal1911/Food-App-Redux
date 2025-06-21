@@ -8,8 +8,10 @@ import {
   CreateCategoryInputs,
   createCategorySchema,
 } from "@/lib/validation/create-category-schema";
-import { getCategoryBySlug } from "../../queries/category/get-category-by-slug";
-import { revalidatePath } from "next/cache";
+
+import { revalidateTag } from "next/cache";
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
+import { getCategoryBySlug } from "../../queries";
 
 type FailedResponse = {
   success: false;
@@ -74,7 +76,7 @@ export async function createCategory(
         slug,
       },
     });
-    revalidatePath("/dashboard/categories");
+    revalidateTag(PRISMA_CACHE_KEY.CATEGORIES);
     return {
       success: true,
       status: 201,

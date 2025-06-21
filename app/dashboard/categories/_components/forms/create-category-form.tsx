@@ -7,14 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 
-import DropZoneViewer from "../../_components/drop-zone-viewer";
-
 import { toast } from "react-toastify";
 import {
   CreateCategoryInputs,
   createCategorySchema,
 } from "@/lib/validation/create-category-schema";
 import { createCategory } from "@/lib/server/actions/category/create-category";
+import DropZoneViewer from "@/app/dashboard/_components/drop-zone-viewer";
 // TODO: build auth role
 export default function CreateCategoryForm() {
   const form = useForm<CreateCategoryInputs>({

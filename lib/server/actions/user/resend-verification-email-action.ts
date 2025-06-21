@@ -5,25 +5,10 @@ import { randomBytes } from "crypto";
 import { Resend } from "resend";
 
 import { getCurrentSession } from "@/lib/dal/user";
+import { ActionResponse } from "@/lib/types/shared";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-type SuccessResponse = {
-  success: true;
-  status: number;
-};
-type FailedResponse = {
-  success: false;
-  error: {
-    status: number;
-    message: string;
-  };
-};
-
-type ResendVerificationEmailResponse = Promise<
-  SuccessResponse | FailedResponse
->;
-
-export async function resendVerificationEmailAction(): Promise<ResendVerificationEmailResponse> {
+export async function resendVerificationEmailAction(): ActionResponse {
   const sessionResult = await getCurrentSession();
 
   if (!sessionResult.success) {
@@ -58,7 +43,10 @@ export async function resendVerificationEmailAction(): Promise<ResendVerificatio
       }),
     });
 
-    return { success: true, status: 200 };
+    return {
+      success: true,
+      data: { message: "Verification email resent successfully.", status: 200 },
+    };
   } catch (error) {
     console.error(error);
     return {

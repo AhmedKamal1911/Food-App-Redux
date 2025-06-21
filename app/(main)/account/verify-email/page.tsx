@@ -12,7 +12,7 @@ import { getServerSession } from "next-auth";
 
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import VerifyEmailForm from "../components/verify-email-form";
+import VerifyEmailForm from "../components/forms/verify-email-form";
 
 type Props = {
   searchParams: Promise<{

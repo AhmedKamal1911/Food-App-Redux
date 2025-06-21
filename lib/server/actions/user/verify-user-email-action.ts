@@ -4,23 +4,12 @@ import prisma from "@/lib/prisma";
 
 import { z } from "zod";
 import { Resend } from "resend";
-type SuccessResponse = {
-  success: true;
-  status: number;
-};
-type FailedResponse = {
-  success: false;
-  error: {
-    status: number;
-    message: string;
-  };
-};
+import { ActionResponse } from "@/lib/types/shared";
+import { revalidateTag } from "next/cache";
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 
-type VerifyUserEmailResponse = Promise<SuccessResponse | FailedResponse>;
 const resend = new Resend(process.env.RESEND_API_KEY);
-export async function verifyUserEmailAction(
-  token: string
-): VerifyUserEmailResponse {
+export async function verifyUserEmailAction(token: string): ActionResponse {
   const result = z
     .string({
       message: "emailVerificationToken must be string",
@@ -63,6 +52,7 @@ export async function verifyUserEmailAction(
         emailVerificationExpires: null,
       },
     });
+    revalidateTag(PRISMA_CACHE_KEY.USERS);
     await resend.emails.send({
       from: "Pizzon <onboarding@resend.dev>",
       to: [user.email],
@@ -71,7 +61,10 @@ export async function verifyUserEmailAction(
         username: user.name,
       }),
     });
-    return { success: true, status: 200 };
+    return {
+      success: true,
+      data: { status: 200, message: "Email Verification Success!" },
+    };
   } catch (error) {
     console.log(error);
 

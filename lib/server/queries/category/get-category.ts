@@ -1,6 +1,8 @@
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import prisma from "@/lib/prisma";
+import { unstable_cache } from "next/cache";
 
-export async function getCategory({
+async function _getCategory({
   categorySlug,
   searchQuery,
   productsOrder = "asc",
@@ -42,3 +44,7 @@ export async function getCategory({
     products: { data: category.products, page, totalPages },
   };
 }
+
+export const getCategory = unstable_cache(_getCategory, undefined, {
+  tags: [PRISMA_CACHE_KEY.CATEGORIES],
+});

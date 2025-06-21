@@ -2,8 +2,7 @@ import { getAllCategories } from "@/lib/server/queries";
 import CategoriesTable from "./_components/categoriesTable/categories-table";
 import CreateCategoryModal from "./_components/modals/create-category-modal";
 
-type Props = {};
-export default async function CategoriesPage({}: Props) {
+export default async function CategoriesPage() {
   const categories = await getAllCategories();
   return (
     <div className="bg-white rounded-sm min-h-full p-4">

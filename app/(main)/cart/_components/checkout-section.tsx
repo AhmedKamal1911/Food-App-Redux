@@ -1,6 +1,6 @@
 import { Elements } from "@stripe/react-stripe-js";
-import { CheckoutForm } from "./checkout-form";
-import { PromoCodeForm } from "./promo-code-form";
+import { CheckoutForm } from "./forms/checkout-form";
+import { PromoCodeForm } from "./forms/promo-code-form";
 import { loadStripe } from "@stripe/stripe-js";
 import { CartProduct } from "@/lib/types/product";
 import { AuthSessionProvider } from "@/providers/next-auth-session-provider";

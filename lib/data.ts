@@ -34,10 +34,4 @@ export const passwordRules: PasswordRule[] = [
   },
 ];
 
-export const AVALIABLE_EMAILS = [
-  "ahmed@gmail.com",
-  "ahmed2@gmail.com",
-  "ahmed3@gmail.com",
-];
-
 export const ROLES_LIST = Object.values(UserRole);

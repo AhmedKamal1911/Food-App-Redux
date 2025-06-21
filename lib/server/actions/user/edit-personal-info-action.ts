@@ -1,31 +1,19 @@
 "use server";
 
-import { getUserById } from "../../queries/user";
 import prisma from "@/lib/prisma";
+import { ActionResponse } from "@/lib/types/shared";
 import {
   PersonalInformationInputs,
   personalInformationSchema,
 } from "@/lib/validation/personal-information-schema";
-import { revalidatePath } from "next/cache";
-
-type SuccessResponse = {
-  success: true;
-  status: number;
-};
-type FailedResponse = {
-  success: false;
-  error: {
-    status: number;
-    message: string;
-  };
-};
-
-type EditPersonalInfoResponse = Promise<SuccessResponse | FailedResponse>;
+import { revalidateTag } from "next/cache";
+import { getUserById } from "../../queries";
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 
 export async function EditPersonalInfoAction(
   inputs: PersonalInformationInputs,
   userId: string
-): EditPersonalInfoResponse {
+): ActionResponse {
   const result = personalInformationSchema.safeParse(inputs);
 
   if (!result.success) {
@@ -79,9 +67,15 @@ export async function EditPersonalInfoAction(
         phone: result.data.phoneNumber,
       },
     });
-    // TODO: revalidate tag
-    revalidatePath("/account");
-    return { success: true, status: 200 };
+
+    revalidateTag(PRISMA_CACHE_KEY.USERS);
+    return {
+      success: true,
+      data: {
+        status: 200,
+        message: "Personal information updated successfully.",
+      },
+    };
   } catch (error) {
     console.log(error);
 

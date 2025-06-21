@@ -28,12 +28,12 @@ import {
   createProductSchema,
   CreateProductInputs,
 } from "@/lib/validation/create-product-schema";
-import DropZoneViewer from "../../_components/drop-zone-viewer";
 
-import ProductSizesAccordion from "./product-sizes-accordion";
-import ProductExtrasAccordion from "./product-extras-accordion";
 import { createProduct } from "@/lib/server/actions/product/create-product";
 import { toast } from "react-toastify";
+import DropZoneViewer from "@/app/dashboard/_components/drop-zone-viewer";
+import ProductSizesAccordion from "../product-sizes-accordion";
+import ProductExtrasAccordion from "../product-extras-accordion";
 // TODO: build auth role
 export default function CreateProductForm() {
   const form = useForm<CreateProductInputs>({

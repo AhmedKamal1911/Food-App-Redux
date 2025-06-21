@@ -1,32 +1,17 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
-import { getCategoryById } from "../../queries/category/get-category-by-id";
+import { revalidateTag } from "next/cache";
 
-type DeleteCategorySuccess = {
-  success: true;
-  data: {
-    status: number;
-    message: string;
-  };
-};
-type DeleteCategoryFailed = {
-  success: false;
-  error: {
-    status: number;
-    message: string;
-  };
-};
-type DeleteCategoryResponse = Promise<
-  DeleteCategorySuccess | DeleteCategoryFailed
->;
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
+import { ActionResponse } from "@/lib/types/shared";
+import { getCategoryById } from "../../queries";
 
 export async function deleteCategory({
   categoryId,
 }: {
   categoryId: string;
-}): DeleteCategoryResponse {
+}): ActionResponse {
   try {
     // First check if the product exists
     const category = await getCategoryById(categoryId);
@@ -47,7 +32,7 @@ export async function deleteCategory({
       },
     });
     // TODO : revalidate the category tags
-    revalidatePath("/dashboard/categories");
+    revalidateTag(PRISMA_CACHE_KEY.CATEGORIES);
     return {
       success: true,
       data: {

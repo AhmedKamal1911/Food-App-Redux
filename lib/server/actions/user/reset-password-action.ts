@@ -9,24 +9,12 @@ import {
 } from "@/lib/validation/reset-password-schema";
 import { ResetPasswordSuccessTemplate } from "@/emails/reset-password-success-template";
 import { hashPassword } from "@/lib/server-utils";
+import { ActionResponse } from "@/lib/types/shared";
 
-type SuccessResponse = {
-  success: true;
-  status: number;
-};
-type FailedResponse = {
-  success: false;
-  error: {
-    status: number;
-    message: string;
-  };
-};
-
-type ResetPasswordAction = Promise<SuccessResponse | FailedResponse>;
 const resend = new Resend(process.env.RESEND_API_KEY);
 export async function resetPasswordAction(
   values: ResetPasswordInputs
-): ResetPasswordAction {
+): ActionResponse {
   const result = resetPasswordSchema.safeParse(values);
 
   if (!result.success) {
@@ -75,7 +63,10 @@ export async function resetPasswordAction(
         username: user.name,
       }),
     });
-    return { success: true, status: 200 };
+    return {
+      success: true,
+      data: { status: 200, message: "Password Changed Successfully." },
+    };
   } catch (error) {
     console.log(error);
 

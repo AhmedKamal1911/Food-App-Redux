@@ -45,7 +45,7 @@ export default function ChangePasswordForm({ userId }: Props) {
     try {
       const res = await ChangePasswordAction(values, userId);
       if (res.success) {
-        toast.success("Password Changed Successfully.");
+        toast.success(res.data.message);
         closeBtnRef.current?.click();
         return;
       }

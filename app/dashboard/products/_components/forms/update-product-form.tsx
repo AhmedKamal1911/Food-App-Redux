@@ -29,12 +29,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import DropZoneViewer from "../../_components/drop-zone-viewer";
 
-import ProductSizesAccordion from "./product-sizes-accordion";
 import { updateProduct } from "@/lib/server/actions/product/update-product";
 import { toast } from "react-toastify";
-import ProductExtrasAccordion from "./product-extras-accordion";
+import DropZoneViewer from "@/app/dashboard/_components/drop-zone-viewer";
+import ProductSizesAccordion from "../product-sizes-accordion";
+import ProductExtrasAccordion from "../product-extras-accordion";
 
 export default function UpdateProductForm({
   product,

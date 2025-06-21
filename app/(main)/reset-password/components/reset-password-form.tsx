@@ -36,7 +36,7 @@ export default function ResetPasswordForm({ token }: Props) {
     try {
       const res = await resetPasswordAction(values);
       if (res.success) {
-        toast.success("Password Changed Successfully.");
+        toast.success(res.data.message);
         setIsSendSuccess(true);
         return router.push("/login");
       }

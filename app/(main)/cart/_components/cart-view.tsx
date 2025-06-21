@@ -9,7 +9,6 @@ import { useCartProductsCount } from "@/hooks/use-cart-products-count";
 import CheckoutSection from "./checkout-section";
 
 export default function CartView() {
-  // TODO:create hook to get cart products and another one to get subtotal
   const { cartProducts, error, isRefetching, isLoading, refetch } =
     useGetCartProducts();
   const itemsCount = useCartProductsCount();

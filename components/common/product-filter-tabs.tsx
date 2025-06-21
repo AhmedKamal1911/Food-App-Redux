@@ -12,7 +12,8 @@ import { CategoriesNameList } from "@/lib/types/category";
 import ProductCard from "./product-card";
 import { useAppSelector } from "@/lib/redux/hooks";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getProductsByPage } from "@/lib/server/actions/product/get-products-by-page";
+
+import { getProductsByPage } from "@/lib/queries/product/get-products-by-page";
 export default function ProductFilterTabs({
   categories,
   className,
@@ -20,12 +21,10 @@ export default function ProductFilterTabs({
   categories: ProductCategory[];
   className?: string;
 }) {
-  // TODO: change server action getProductsByPage to route
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["products"],
-      queryFn: ({ pageParam = 1 }) =>
-        getProductsByPage({ page: pageParam, pageSize: 5 }), // Dynamically use pageParam
+      queryFn: async ({ pageParam = 1 }) => await getProductsByPage(pageParam),
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
         return lastPage.page >= lastPage.totalPages
@@ -66,6 +65,12 @@ export default function ProductFilterTabs({
         categories={categoriesNameList}
         setCategory={setSelectedCategory}
       />
+
+      {error && (
+        <span className="text-center block text-red-600 font-bold text-xl">
+          {error.message}
+        </span>
+      )}
       {filteredData && filteredData.length < 1 ? (
         <span className="text-center block text-red-600 font-bold text-xl">
           No Any Products In This Category

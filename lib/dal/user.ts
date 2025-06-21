@@ -1,7 +1,6 @@
 import "server-only";
 import { getServerSession, Session } from "next-auth";
 import { authOptions } from "../auth";
-import { cache } from "react";
 
 type SessionError = {
   success: false;
@@ -17,7 +16,7 @@ type SessionSuccess = {
 };
 export type SessionResponse = SessionError | SessionSuccess;
 
-export const getCurrentSession = cache(async (): Promise<SessionResponse> => {
+export const getCurrentSession = async (): Promise<SessionResponse> => {
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -34,5 +33,4 @@ export const getCurrentSession = cache(async (): Promise<SessionResponse> => {
     success: true,
     session: session,
   };
-});
-// TODO: متنساش انك تتأكد هتستخدم ال LAYER دي فين
+};

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 
-import ChangePasswordForm from "./change-password-form";
+import ChangePasswordForm from "./forms/change-password-form";
 
 type Props = {
   hasPassword: boolean;

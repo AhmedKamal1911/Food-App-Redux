@@ -1,13 +1,16 @@
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import prisma from "@/lib/prisma";
+import { unstable_cache } from "next/cache";
 
-export async function getProductBySlug(slug: string) {
+async function _getProductBySlug(slug: string) {
   return await prisma.product.findUnique({
     where: {
       slug,
     },
   });
 }
-export async function getProductFullInfoBySlug(slug: string) {
+
+async function _getProductFullInfoBySlug(slug: string) {
   return await prisma.product.findUnique({
     where: {
       slug,
@@ -19,3 +22,14 @@ export async function getProductFullInfoBySlug(slug: string) {
     },
   });
 }
+
+export const getProductBySlug = unstable_cache(_getProductBySlug, undefined, {
+  tags: [PRISMA_CACHE_KEY.PRODUCTS],
+});
+export const getProductFullInfoBySlug = unstable_cache(
+  _getProductFullInfoBySlug,
+  undefined,
+  {
+    tags: [PRISMA_CACHE_KEY.PRODUCTS],
+  }
+);

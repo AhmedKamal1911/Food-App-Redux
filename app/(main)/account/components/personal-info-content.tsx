@@ -1,7 +1,7 @@
 import { UserInfo } from "./settings-tabs";
 
-import EditPersonalInformationForm from "./edit-personal-information-form";
-import VerifyEmailForm from "./verify-email-form";
+import VerifyEmailForm from "./forms/verify-email-form";
+import EditPersonalInformationForm from "./forms/edit-personal-information-form";
 
 type Props = {
   user: UserInfo;

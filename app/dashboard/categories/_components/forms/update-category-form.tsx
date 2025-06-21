@@ -8,8 +8,6 @@ import { useForm } from "react-hook-form";
 
 import { useEffect, useState } from "react";
 
-import DropZoneViewer from "../../_components/drop-zone-viewer";
-
 import { toast } from "react-toastify";
 
 import { ProductCategory } from "@prisma/client";
@@ -18,6 +16,7 @@ import {
   updateCategorySchema,
 } from "@/lib/validation/update-category-schema";
 import { updateCategory } from "@/lib/server/actions/category/update-category";
+import DropZoneViewer from "@/app/dashboard/_components/drop-zone-viewer";
 
 export default function UpdateCategoryForm({
   category,

@@ -1,13 +1,15 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 import {
   UpdateUserInputs,
   updateUserSchema,
 } from "@/lib/validation/update-user-schema";
-import { getUserById } from "../../queries/user";
+
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
+import { getUserById } from "../../queries";
 
 type ErrorType = "error" | "validationError";
 
@@ -80,8 +82,7 @@ export async function updateUserAction(
       },
     });
 
-    // TODO: by tag Revalidate the cache for the user page
-    revalidatePath("/dashboard");
+    revalidateTag(PRISMA_CACHE_KEY.USERS);
 
     return {
       success: true,

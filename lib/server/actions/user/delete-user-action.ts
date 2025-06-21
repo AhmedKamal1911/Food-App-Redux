@@ -1,31 +1,17 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 
-import { getUserById } from "../../queries/user";
-
-type DeleteUserSuccess = {
-  success: true;
-  data: {
-    status: number;
-    message: string;
-  };
-};
-type DeleteUserFailed = {
-  success: false;
-  error: {
-    status: number;
-    message: string;
-  };
-};
-type DeleteUserResponse = Promise<DeleteUserSuccess | DeleteUserFailed>;
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
+import { ActionResponse } from "@/lib/types/shared";
+import { getUserById } from "../../queries";
 
 export async function deleteUserAction({
   userId,
 }: {
   userId: string;
-}): DeleteUserResponse {
+}): ActionResponse {
   try {
     // First check if the product exists
 
@@ -46,8 +32,8 @@ export async function deleteUserAction({
         id: userId,
       },
     });
-    // TODO : revalidate the USER tags
-    revalidatePath("/dashboard");
+
+    revalidateTag(PRISMA_CACHE_KEY.USERS);
     return {
       success: true,
       data: {

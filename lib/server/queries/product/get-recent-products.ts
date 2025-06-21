@@ -1,6 +1,8 @@
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import prisma from "@/lib/prisma";
+import { unstable_cache } from "next/cache";
 
-export async function getRecentProducts({
+async function _getRecentProducts({
   order = "desc",
   limit = 3,
 }: {
@@ -15,3 +17,7 @@ export async function getRecentProducts({
 
   return recentProducts;
 }
+
+export const getRecentProducts = unstable_cache(_getRecentProducts, undefined, {
+  tags: [PRISMA_CACHE_KEY.PRODUCTS],
+});

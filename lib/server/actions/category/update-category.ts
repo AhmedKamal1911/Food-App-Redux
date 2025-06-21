@@ -2,13 +2,14 @@
 
 import slugify from "slugify";
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import {
   UpdateCategoryInputs,
   updateCategorySchema,
 } from "@/lib/validation/update-category-schema";
-import { getCategoryBySlug } from "../../queries/category/get-category-by-slug";
-import { getCategoryById } from "../../queries/category/get-category-by-id";
+
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
+import { getCategoryById, getCategoryBySlug } from "../../queries";
 
 type ErrorType = "error" | "validationError";
 
@@ -90,8 +91,7 @@ export async function updateCategory(
       },
     });
 
-    // TODO: by tag Revalidate the cache for the categories page
-    revalidatePath("/dashboard/categories");
+    revalidateTag(PRISMA_CACHE_KEY.CATEGORIES);
 
     return {
       success: true,

@@ -1,9 +1,9 @@
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import prisma from "@/lib/prisma";
 import { Product } from "@prisma/client";
+import { unstable_cache } from "next/cache";
 
-export async function getRelatedProducts(
-  categoryId: string
-): Promise<Product[]> {
+async function _getRelatedProducts(categoryId: string): Promise<Product[]> {
   const res = await prisma.productCategory.findUnique({
     where: {
       id: categoryId,
@@ -19,3 +19,11 @@ export async function getRelatedProducts(
 
   return res.products;
 }
+
+export const getRelatedProducts = unstable_cache(
+  _getRelatedProducts,
+  undefined,
+  {
+    tags: [PRISMA_CACHE_KEY.PRODUCTS],
+  }
+);

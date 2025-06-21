@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent } from "react";
 import {
   PaymentElement,
   useStripe,
@@ -12,6 +12,7 @@ import { LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetPaymentIntent } from "@/hooks/use-get-payment-intent";
 import { useSession } from "next-auth/react";
+import { useStripePayment } from "@/hooks/use-stripe-payment";
 
 export function CheckoutForm({
   cartProducts,
@@ -34,41 +35,22 @@ export function CheckoutForm({
       }))
     ),
   };
-  const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+
   const { data, paymentIntentError, paymentIntentSecretLoading, refetch } =
     useGetPaymentIntent({ subtotal, metadata: metadata });
 
-  console.log({ data, session });
-  // TODO: put this logic in hook to separation of concerns
+  const { confirmPayment, isLoading, message } = useStripePayment();
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     if (!stripe || !elements || !data?.clientSecret) {
       return;
     }
-
-    const { error: validationErrors } = await elements.submit();
-    if (validationErrors) return;
-    setIsLoading(true);
-    console.log(data.clientSecret);
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000/success",
-      },
-      clientSecret: data.clientSecret,
-    });
-
-    // Use type guard to ensure error is of type StripeError
-    if (error) {
-      setMessage(error.message!);
-    } else {
-      setMessage("An unexpected error occurred.");
-    }
-
-    setIsLoading(false);
+    const success = await confirmPayment(
+      data.clientSecret,
+      "http://localhost:3000/success"
+    );
+    if (!success) return;
   };
   if (paymentIntentSecretLoading || paymentIntentError) {
     return (

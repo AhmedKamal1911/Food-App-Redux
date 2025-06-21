@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { User } from "@prisma/client";
 import { Pen } from "lucide-react";
-import UpdateUserForm from "../update-user-form";
+import UpdateUserForm from "../forms/update-user-form";
 
 type Props = {
   user: User;

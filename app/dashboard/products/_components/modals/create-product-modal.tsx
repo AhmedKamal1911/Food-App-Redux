@@ -7,8 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-import CreateProductForm from "../create-product-form";
+import CreateProductForm from "../forms/create-product-form";
 
 export default function CreateProductModal() {
   return (

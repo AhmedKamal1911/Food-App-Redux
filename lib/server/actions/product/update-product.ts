@@ -7,7 +7,8 @@ import {
 import slugify from "slugify";
 import { getProductById, getProductBySlug } from "../../queries";
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 
 type FailedResponse = {
   success: false;
@@ -120,7 +121,7 @@ export async function updateProduct(
         },
       },
     });
-    revalidatePath("/dashboard/products");
+    revalidateTag(PRISMA_CACHE_KEY.PRODUCTS);
     return {
       success: true,
       status: 200,

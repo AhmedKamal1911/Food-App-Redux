@@ -35,8 +35,9 @@ import { useEffect, useRef, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { UserInfo } from "./settings-tabs";
+
 import { EditPersonalInfoAction } from "@/lib/server/actions/user/edit-personal-info-action";
+import { UserInfo } from "../settings-tabs";
 
 type Props = {
   user: UserInfo;
@@ -57,7 +58,7 @@ export default function EditPersonalInformationForm({ user }: Props) {
     const isNotValuesChanged =
       values.fullName === user.name && values.phoneNumber === user.phone;
     if (isNotValuesChanged) {
-      toast.success("Personal Info Changed Successfully.");
+      toast.success("Personal information updated successfully.");
       closeBtnRef.current?.click();
       return;
     }
@@ -65,7 +66,7 @@ export default function EditPersonalInformationForm({ user }: Props) {
       const res = await EditPersonalInfoAction(values, user.id);
 
       if (res.success) {
-        toast.success("Personal Info Changed Successfully.");
+        toast.success(res.data.message);
         closeBtnRef.current?.click();
         return;
       }

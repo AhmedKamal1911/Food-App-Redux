@@ -19,10 +19,7 @@ export default function VerifyEmailForm({
     undefined
   );
   useEffect(() => {
-    if (state?.success)
-      return void toast.success(
-        "Verification email sent! Please check your inbox."
-      );
+    if (state?.success) return void toast.success(state.data.message);
 
     if (state?.error) toast.error(state.error.message);
   }, [state]);

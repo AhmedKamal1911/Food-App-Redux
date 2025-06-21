@@ -10,7 +10,7 @@ import AboutSection from "./_components/sections/about-section";
 import { Metadata } from "next";
 import { getAllCategories } from "@/lib/server/queries";
 import { getQueryClient } from "@/providers/react-query-provider/get-query-client";
-import { getProductsByPage } from "@/lib/server/actions/product/get-products-by-page";
+import { getProductsByPage } from "@/lib/queries/product/get-products-by-page";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -22,7 +22,7 @@ export default async function Home() {
 
   void queryClient.prefetchQuery({
     queryKey: ["products"],
-    queryFn: () => getProductsByPage({ page: 1, pageSize: 5 }),
+    queryFn: async () => await getProductsByPage(),
   });
 
   return (

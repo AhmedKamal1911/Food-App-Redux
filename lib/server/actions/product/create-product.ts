@@ -6,8 +6,10 @@ import {
   createProductSchema,
 } from "@/lib/validation/create-product-schema";
 import slugify from "slugify";
+
+import { revalidateTag } from "next/cache";
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getProductBySlug } from "../../queries";
-import { revalidatePath } from "next/cache";
 
 type FailedResponse = {
   success: false;
@@ -81,7 +83,7 @@ export async function createProduct(
         sizes: { createMany: { data: data.sizes } },
       },
     });
-    revalidatePath("/dashboard/products");
+    revalidateTag(PRISMA_CACHE_KEY.PRODUCTS);
     return {
       success: true,
       status: 201,

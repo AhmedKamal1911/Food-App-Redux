@@ -1,6 +1,5 @@
 import Footer from "@/components/common/footer";
 import HeaderWrapper from "@/components/common/header/header-wrapper";
-
 import { getAllProducts } from "@/lib/server/queries";
 
 export default async function MainLayout({

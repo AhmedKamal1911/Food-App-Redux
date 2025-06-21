@@ -1,32 +1,16 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { getProductById } from "../../queries";
-
-type DeleteProductSuccess = {
-  success: true;
-  data: {
-    status: number;
-    message: string;
-  };
-};
-type DeleteProductFailed = {
-  success: false;
-  error: {
-    status: number;
-    message: string;
-  };
-};
-type DeleteProductResponse = Promise<
-  DeleteProductSuccess | DeleteProductFailed
->;
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
+import { ActionResponse } from "@/lib/types/shared";
 
 export async function deleteProduct({
   productId,
 }: {
   productId: string;
-}): DeleteProductResponse {
+}): ActionResponse {
   try {
     // First check if the product exists
     const product = await getProductById(productId);
@@ -47,7 +31,7 @@ export async function deleteProduct({
       },
     });
     // TODO : revalidate the product tags
-    revalidatePath("/dashboard/products");
+    revalidateTag(PRISMA_CACHE_KEY.PRODUCTS);
     return {
       success: true,
       data: {

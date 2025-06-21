@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
       { status: 400, statusText: "Bad Request" }
     );
   try {
-    // TODO: check for email in users table
     const isEmailExist = await prisma.user.findUnique({
       where: {
         email: emailParseResult.data,

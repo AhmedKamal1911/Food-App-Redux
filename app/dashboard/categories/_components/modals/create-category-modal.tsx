@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import CreateCategoryForm from "../create-category-form";
+import CreateCategoryForm from "../forms/create-category-form";
 
 export default function CreateCategoryModal() {
   return (

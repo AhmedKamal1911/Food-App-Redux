@@ -5,28 +5,16 @@ import {
   ChangePasswordInputs,
   changePasswordSchema,
 } from "@/lib/validation/change-password-schema";
-import { getUserById } from "../../queries/user";
+
 import prisma from "@/lib/prisma";
 import { hashPassword } from "@/lib/server-utils";
-
-type SuccessResponse = {
-  success: true;
-  status: number;
-};
-type FailedResponse = {
-  success: false;
-  error: {
-    status: number;
-    message: string;
-  };
-};
-
-type ForgetPasswordResponse = Promise<SuccessResponse | FailedResponse>;
+import { ActionResponse } from "@/lib/types/shared";
+import { getUserById } from "../../queries";
 
 export async function ChangePasswordAction(
   inputs: ChangePasswordInputs,
   userId: string
-): ForgetPasswordResponse {
+): ActionResponse {
   const result = changePasswordSchema.safeParse(inputs);
 
   if (!result.success) {
@@ -77,7 +65,10 @@ export async function ChangePasswordAction(
       },
     });
     // Redirect to confirm reset code page
-    return { success: true, status: 200 };
+    return {
+      success: true,
+      data: { status: 200, message: "Password Changed Successfully." },
+    };
   } catch (error) {
     console.log(error);
 
