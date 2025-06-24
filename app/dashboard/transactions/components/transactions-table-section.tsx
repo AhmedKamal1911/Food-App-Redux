@@ -1,6 +1,7 @@
 "use client";
-import { User } from "@prisma/client";
-import UsersTable from "./usersTable/users-table";
+
+import CustomTableSearchInput from "@/components/common/custom-table-search-input";
+import PaginationControls from "@/components/common/pagination-controls";
 import {
   getCoreRowModel,
   getFilteredRowModel,
@@ -9,16 +10,19 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { columns } from "./usersTable/columns";
 import { useState } from "react";
-
-import CustomTableSearchInput from "../../../components/common/custom-table-search-input";
-import PaginationControls from "@/components/common/pagination-controls";
-
+import { columns } from "./transactionsTable/columns";
+import TransactionsTable from "./transactionsTable/transactions-table";
 type Props = {
-  data: User[];
+  data: {
+    id: string;
+    name: string;
+    createdAt: string;
+    status: string;
+    amount: number;
+  }[];
 };
-export default function UsersTableSection({ data }: Props) {
+export default function TransactionTableSection({ data }: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
@@ -28,6 +32,7 @@ export default function UsersTableSection({ data }: Props) {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+
     initialState: {
       pagination: {
         pageIndex: 0,
@@ -46,19 +51,21 @@ export default function UsersTableSection({ data }: Props) {
     if (newPage < 0 || newPage >= lastPage) return;
     table.setPageIndex(newPage);
   };
+
   return (
     <div>
       <div className="flex items-center justify-between max-sm:flex-col max-sm:gap-3">
-        <span className="text-2xl capitalize font-semibold">users :</span>
+        <span className="text-2xl capitalize font-semibold">
+          Transactions :
+        </span>
         <CustomTableSearchInput
           columnName="name"
-          placeholder="search a user..."
+          placeholder="search a Transaction..."
           table={table}
         />
       </div>
-
       <div className="mt-4">
-        <UsersTable columns={columns} table={table} />
+        <TransactionsTable columns={columns} table={table} />
         <PaginationControls
           page={page + 1}
           lastPage={lastPage}
