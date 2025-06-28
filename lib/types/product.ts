@@ -7,6 +7,17 @@ export type ProductWithRelations = Prisma.ProductGetPayload<{
     sizes: true;
   };
 }>;
+export type TransactionOrder = Prisma.OrderGetPayload<{
+  include: {
+    items: {
+      include: {
+        product: true;
+        selectedSize: true;
+        selectedExtras: true;
+      };
+    };
+  };
+}>;
 
 export type CartProduct = ProductWithRelations & {
   qty: number;

@@ -106,42 +106,61 @@ model Size {
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
 
+  selectedByProductOrders ProductOrder[] @relation("ProductOrderToSelectedSize")
+
   @@unique([name, productId]) // Ensures a product has only one price per size
 }
 
 model Extra {
-  id        String   @id @default(uuid())
-  name      String
-  price     Float
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String
+  id             String        @id @default(uuid())
+  name           String
+  price          Float
+  updatedAt      DateTime      @updatedAt
+  createdAt      DateTime      @default(now())
+  product        Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId      String
+  productOrder   ProductOrder? @relation(fields: [productOrderId], references: [id])
+  productOrderId String?
 
   @@unique([name, productId]) // Ensures a product has only one price per extra
 }
 
 model Order {
-  id        String         @id @default(uuid())
+  id        String            @id @default(uuid())
   total     Float
   items     ProductOrder[] // Orders now reference ProductOrder, not Product
-  updatedAt DateTime       @updatedAt
-  createdAt DateTime       @default(now())
+  status    TransactionStatus @default(pending)
+  updatedAt DateTime          @updatedAt
+  createdAt DateTime          @default(now())
 }
 
 model ProductOrder {
-  id        String   @id @default(uuid())
-  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId   String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String
-  quantity  Int
-  unitPrice Float // Adding this to capture the price at order time
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
+  id             String   @id @default(uuid())
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId        String
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId      String
+  qty            Int
+  selectedSize   Size?    @relation("ProductOrderToSelectedSize", fields: [selectedSizeId], references: [id])
+  selectedSizeId String?
+  selectedExtras Extra[]
+  updatedAt      DateTime @updatedAt
+  createdAt      DateTime @default(now())
 
-  @@unique([orderId, productId]) // Ensures a product appears only once per order
+  @@unique([orderId, productId])
 }
+
+// model ProductOrderExtra {
+//   id             String       @id @default(uuid())
+//   productOrder   ProductOrder @relation(fields: [productOrderId], references: [id], onDelete: Cascade)
+//   productOrderId String
+//   extra          Extra        @relation(fields: [extraId], references: [id], onDelete: Cascade)
+//   extraId        String
+//   // يمكنك إضافة السعر هنا لو تريد حفظ السعر وقت الطلب
+//   price          Float
+
+//   createdAt DateTime @default(now())
+// }
 
 enum SizeEnum {
   XSmall
@@ -155,4 +174,10 @@ enum UserRole {
   superAdmin
   admin
   user
+}
+
+enum TransactionStatus {
+  delevered
+  canceled
+  pending
 }

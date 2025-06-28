@@ -1,31 +1,153 @@
 import TransactionTableSection from "./components/transactions-table-section";
+import { getUserTransactions } from "@/lib/server/queries/transaction";
+import { getCurrentSession } from "@/lib/dal/user";
+import { redirect, RedirectType } from "next/navigation";
+import { TransactionOrder } from "@/lib/types/product";
 
 type Props = {};
-const transactions = [
+const transactions: (TransactionOrder & { user: { name: string } })[] = [
   {
-    id: "1",
-    name: "Ahmed Ali",
-    createdAt: "2024-06-24",
-    status: "paid",
-    amount: 250,
+    id: "order-1",
+    user: { name: "Ahmed Ali" },
+    status: "delevered",
+    total: 150,
+    createdAt: new Date("2024-06-25T10:00:00Z"),
+    updatedAt: new Date("2024-06-25T10:00:00Z"),
+    items: [
+      {
+        id: "product-1",
+        qty: 2,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        orderId: "order-1",
+        productId: "product-1",
+        selectedSizeId: "size-1",
+        product: {
+          id: "product-1",
+          name: "Pizza",
+          price: 30,
+          image: "/images/categories-section/burger.jpg",
+          updatedAt: new Date(),
+          createdAt: new Date(),
+          slug: "pizza",
+          description: "Delicious pizza",
+          categoryId: null,
+        },
+        selectedSize: {
+          name: "Medium",
+          id: "size-1",
+          price: 5,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          productId: "product-1",
+        },
+        selectedExtras: [
+          {
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            id: "extra-1",
+            name: "Extra Cheese",
+            price: 2,
+            productId: "product-1",
+            productOrderId: "order-1",
+          },
+        ],
+      },
+    ],
   },
   {
-    id: "2",
-    name: "Sara Mohamed",
-    createdAt: "2024-06-22",
-    status: "unpaid",
-    amount: 120,
+    id: "order-2",
+    user: { name: "Sara Mohamed" },
+    status: "pending",
+    total: 90,
+    createdAt: new Date("2024-06-24T15:30:00Z"),
+    updatedAt: new Date("2024-06-24T15:30:00Z"),
+    items: [
+      {
+        id: "product-2",
+        qty: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        orderId: "order-2",
+        productId: "product-2",
+        selectedSizeId: "size-2",
+        product: {
+          id: "product-2",
+          name: "Chicken Burger",
+          price: 40,
+          image: "/images/categories-section/burger.jpg",
+          updatedAt: new Date(),
+          createdAt: new Date(),
+          slug: "chicken-burger",
+          description: "Juicy chicken burger",
+          categoryId: null,
+        },
+        selectedSize: {
+          name: "Large",
+          id: "size-2",
+          price: 10,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          productId: "product-2",
+        },
+        selectedExtras: [
+          {
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            id: "extra-2",
+            name: "Fries",
+            price: 5,
+            productId: "product-2",
+            productOrderId: "order-2",
+          },
+        ],
+      },
+    ],
   },
   {
-    id: "3",
-    name: "Mohamed Samir",
-    createdAt: "2024-06-20",
-    status: "paid",
-    amount: 400,
+    id: "order-3",
+    user: { name: "Mohamed Samir" },
+    status: "canceled",
+    total: 60,
+    createdAt: new Date("2024-06-23T12:45:00Z"),
+    updatedAt: new Date("2024-06-23T12:45:00Z"),
+    items: [
+      {
+        id: "product-3",
+        qty: 3,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        orderId: "order-3",
+        productId: "product-3",
+        selectedSizeId: "size-3",
+        product: {
+          id: "product-3",
+          name: "Veggie Pizza",
+          price: 20,
+          image: "/images/categories-section/burger.jpg",
+          updatedAt: new Date(),
+          createdAt: new Date(),
+          slug: "veggie-pizza",
+          description: "Fresh veggie pizza",
+          categoryId: null,
+        },
+        selectedSize: {
+          name: "Small",
+          id: "size-3",
+          price: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          productId: "product-3",
+        },
+        selectedExtras: [],
+      },
+    ],
   },
-  // ... أضف المزيد حسب الحاجة
 ];
-export default function TransactionsPage({}: Props) {
+export default async function TransactionsPage({}: Props) {
+  const session = await getCurrentSession();
+  if (!session.success) redirect("/login", RedirectType.replace);
+  // const transactions = await getUserTransactions();
   return (
     <div className="bg-white rounded-sm min-h-full p-4">
       <TransactionTableSection data={transactions} />

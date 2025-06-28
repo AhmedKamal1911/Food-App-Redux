@@ -1,4 +1,5 @@
 "use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -8,32 +9,31 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { TransactionStatus } from "@prisma/client";
 
 import { ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
-import { ArrowUpDown, Calendar1, ChevronDown, Coins } from "lucide-react";
+import { format } from "date-fns";
+import {
+  ArrowUpDown,
+  Calendar1,
+  ChevronDown,
+  CirclePower,
+  Coins,
+} from "lucide-react";
+import CancelTransactionModal from "../modals/cancel-transaction-modal";
 
-export const columns: ColumnDef<{
-  id: string;
-  name: string;
-  createdAt: string;
-  status: string;
-  amount: number;
-}>[] = [
+import ViewTransactionDetailsModal from "../modals/view-transaction-details-modal";
+import { TransactionOrder } from "@/lib/types/product";
+
+export const columns: ColumnDef<
+  TransactionOrder & { user: { name: string } }
+>[] = [
   {
     accessorKey: "id",
     enablePinning: false,
-    header: ({ column }) => {
-      return (
-        <Button
-          className="font-bold capitalize  rounded-none p-1! focus-visible:ring-primary/50"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          invoice id
-          <ArrowUpDown className=" size-4" />
-        </Button>
-      );
+    header: () => {
+      return <span>invoice_id</span>;
     },
 
     cell: ({ row }) => (
@@ -41,7 +41,7 @@ export const columns: ColumnDef<{
     ),
   },
   {
-    accessorKey: "name",
+    accessorKey: "user",
     enablePinning: false,
     header: ({ column }) => {
       return (
@@ -50,18 +50,19 @@ export const columns: ColumnDef<{
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          name
+          customer
           <ArrowUpDown className=" size-4" />
         </Button>
       );
     },
 
     cell: ({ row }) => (
-      <span className="text-secondary">{row.original.name}</span>
+      <span className="text-secondary">{row.original.user.name}</span>
     ),
   },
+
   {
-    accessorKey: "date",
+    accessorKey: "createdAt",
 
     header: ({ column }) => {
       return (
@@ -71,18 +72,20 @@ export const columns: ColumnDef<{
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           <Calendar1 className=" size-4" />
-          <span>date</span>
+          <span>createdAt</span>
           <ArrowUpDown className=" size-4" />
         </Button>
       );
     },
 
-    cell: ({ row }) => (
-      <span className="text-secondary">{row.original.createdAt}</span>
+    cell: ({ getValue }) => (
+      <span className="text-secondary">
+        {format(getValue<Date>(), "MMMM dd, yyyy")}
+      </span>
     ),
   },
   {
-    accessorKey: "amount",
+    accessorKey: "total",
     header: ({ column }) => (
       <div>
         <Button
@@ -91,13 +94,13 @@ export const columns: ColumnDef<{
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           <Coins className=" size-4" />
-          <span>amount</span>
+          <span>total</span>
           <ArrowUpDown className=" size-4" />
         </Button>
       </div>
     ),
-    cell: ({ row }) => (
-      <span className="text-secondary">${row.original.amount}</span>
+    cell: ({ getValue }) => (
+      <span className="text-secondary">${getValue<number>()}</span>
     ),
   },
 
@@ -127,7 +130,7 @@ export const columns: ColumnDef<{
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {["paid", "unpaid"].map((status) => (
+              {Object.values(TransactionStatus).map((status) => (
                 <DropdownMenuCheckboxItem
                   key={status}
                   className="capitalize"
@@ -147,39 +150,38 @@ export const columns: ColumnDef<{
       <Badge
         className={clsx(
           {
-            "bg-green-100 text-green-800": row.original.status === "paid",
-            "bg-red-100 text-red-800": row.original.status === "unpaid",
+            "bg-green-200 text-green-800": row.original.status === "delevered",
+            "bg-red-200 text-red-800": row.original.status === "canceled",
+            "bg-yellow-200 text-yellow-800": row.original.status === "pending",
           },
-          "text-secondary capitalize"
+          "capitalize font-semibold"
         )}
       >
         {row.original.status}
       </Badge>
     ),
 
-    filterFn: (row, columnId, filterValue: string[]) => {
-      if (!filterValue?.length) return true;
-      return filterValue.includes(row.getValue(columnId));
-    },
+    filterFn: "arrIncludesSome",
   },
 
-  // {
-  //   id: "actions",
-  //   header: () => {
-  //     return (
-  //       <div className="inline-flex items-center gap-2">
-  //         <CirclePower className=" size-4" />
-  //         actions
-  //       </div>
-  //     );
-  //   },
-  //   cell: ({ row }) => {
-  //     return (
-  //       <div className="flex items-center justify-center gap-2">
-  //         <UpdateUserModal user={row.original} />
-  //         <DeleteUserModal userId={row.original.id} />
-  //       </div>
-  //     );
-  //   },
-  // },
+  {
+    id: "actions",
+    header: () => {
+      return (
+        <div className="inline-flex items-center gap-2">
+          <CirclePower className=" size-4" />
+          actions
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-center gap-2">
+          {row.original.status === "pending" && <CancelTransactionModal />}
+
+          <ViewTransactionDetailsModal transaction={row.original} />
+        </div>
+      );
+    },
+  },
 ];
