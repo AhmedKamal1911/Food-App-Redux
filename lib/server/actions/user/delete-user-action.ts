@@ -8,12 +8,12 @@ import { ActionResponse } from "@/lib/types/shared";
 import { getUserById } from "../../queries";
 import { requirePermission } from "@/lib/server-utils";
 import { getCurrentSession } from "@/lib/dal/user";
+import { z } from "zod";
 
-export async function deleteUserAction({
-  userId,
-}: {
-  userId: string;
-}): ActionResponse {
+export async function deleteUserAction(
+  _: unknown,
+  formData: FormData
+): ActionResponse {
   if (!requirePermission(["superAdmin"])) {
     return {
       success: false,
@@ -23,10 +23,19 @@ export async function deleteUserAction({
       },
     };
   }
-  try {
-    const sessionRes = await getCurrentSession();
+  const result = z.string().safeParse(formData.get("userId"));
+  if (!result.success)
+    return {
+      success: false,
+      error: { message: "Invalid Order ID", status: 400 },
+    };
+  const userId = result.data;
+  console.log("from action", { userId });
 
-    if (!sessionRes.success) {
+  try {
+    const currentUserRes = await getCurrentSession();
+
+    if (!currentUserRes.success) {
       return {
         success: false,
         error: {
@@ -47,7 +56,8 @@ export async function deleteUserAction({
         success: false,
       };
     }
-    if (userId === sessionRes.session.user.id) {
+
+    if (userId === currentUserRes.session.user.id) {
       return {
         success: false,
         error: {
@@ -56,6 +66,19 @@ export async function deleteUserAction({
         },
       };
     }
+    if (
+      currentUserRes.session.user.role === "superAdmin" &&
+      user.role === "superAdmin"
+    ) {
+      return {
+        success: false,
+        error: {
+          status: 401,
+          message: "Superadmin can't delete another superadmin",
+        },
+      };
+    }
+
     // TODO: dont forget to remove user images from storage
     await prisma.user.delete({
       where: {
@@ -64,6 +87,7 @@ export async function deleteUserAction({
     });
 
     revalidateTag(PRISMA_CACHE_KEY.USERS);
+    console.log("deleteddasdassssssssssssssss");
     return {
       success: true,
       data: {

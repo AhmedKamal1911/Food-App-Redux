@@ -29,8 +29,15 @@ import {
   updateUserSchema,
 } from "@/lib/validation/update-user-schema";
 import { updateUserRoleAction } from "@/lib/server/actions/user/update-user-role-action";
+import { Dispatch, SetStateAction } from "react";
 
-export default function UpdateUserForm({ user }: { user: User }) {
+export default function UpdateUserForm({
+  user,
+  setOpenDialog,
+}: {
+  user: User;
+  setOpenDialog: Dispatch<SetStateAction<boolean>>;
+}) {
   const form = useForm<UpdateUserInputs>({
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
@@ -51,6 +58,7 @@ export default function UpdateUserForm({ user }: { user: User }) {
       const res = await updateUserRoleAction(values);
       if (res.success) {
         toast.success(res.message);
+        setOpenDialog(false);
       }
       if (!res.success && res.error.type === "error") {
         toast.error(res.error.message);

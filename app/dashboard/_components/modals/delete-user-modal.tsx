@@ -13,22 +13,22 @@ import { Button } from "@/components/ui/button";
 import { deleteUserAction } from "@/lib/server/actions/user/delete-user-action";
 
 import { Trash } from "lucide-react";
+import { useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 export default function DeleteUserModal({ userId }: { userId: string }) {
-  async function onConfirmDeleteUser() {
-    // TODO: Make it by using useActionState
-    try {
-      const res = await deleteUserAction({ userId });
-      if (!res.success) {
-        toast.error(res.error.message);
-      } else {
-        toast.success(res.data.message);
-      }
-    } catch (error) {
-      toast.error("An Network Error Occured");
-    }
-  }
+  const [state, formAction, isPending] = useActionState(
+    deleteUserAction,
+    undefined,
+    userId
+  );
+
+  useEffect(() => {
+    if (state?.success) return void toast.success(state.data.message);
+
+    if (state?.error) toast.error(state.error.message);
+    // FIXME: error toast not workng
+  }, [state]);
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -49,14 +49,20 @@ export default function DeleteUserModal({ userId }: { userId: string }) {
           <AlertDialogCancel className="rounded-sm text-white">
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirmDeleteUser} asChild>
-            <Button
-              className="rounded-sm bg-destructive hover:bg-destructive/80 font-semibold"
-              size={"sm"}
-            >
-              Confirm
-            </Button>
-          </AlertDialogAction>
+          <form action={formAction}>
+            <input type="hidden" name="userId" value={userId} />
+
+            <AlertDialogAction asChild>
+              <Button
+                disabled={isPending}
+                className="rounded-sm bg-destructive hover:bg-destructive/80 font-semibold"
+                size={"sm"}
+                type="submit"
+              >
+                {isPending ? "Confirming..." : "Confirm"}
+              </Button>
+            </AlertDialogAction>
+          </form>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

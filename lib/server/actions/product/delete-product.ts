@@ -40,7 +40,7 @@ export async function deleteProduct({
         id: productId,
       },
     });
-    // TODO : revalidate the product tags
+
     revalidateTag(PRISMA_CACHE_KEY.PRODUCTS);
     return {
       success: true,

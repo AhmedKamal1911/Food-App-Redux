@@ -10,6 +10,7 @@ import {
 
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getUserById } from "../../queries";
+import { getCurrentSession } from "@/lib/dal/user";
 
 type ErrorType = "error" | "validationError";
 
@@ -72,6 +73,40 @@ export async function updateUserRoleAction(
   }
 
   try {
+    const currentUserRes = await getCurrentSession();
+    if (!currentUserRes.success) {
+      return {
+        success: false,
+        error: {
+          type: "error",
+          message: "Unauthorized action",
+          status: 401,
+        },
+      };
+    }
+    const loggedInUserRole = currentUserRes.session.user.role;
+    console.log({ loggedIn: loggedInUserRole, target: userFromDb.role });
+    if (loggedInUserRole && userFromDb.role === "superAdmin") {
+      return {
+        success: false,
+        error: {
+          type: "error",
+          status: 401,
+          message: "Superadmin can't updated superadmin!",
+        },
+      };
+    }
+    if (loggedInUserRole === "admin") {
+      return {
+        success: false,
+        error: {
+          type: "error",
+          status: 401,
+          message: "Admin can't update anyone!",
+        },
+      };
+    }
+
     // Update user
     await prisma.user.update({
       where: {

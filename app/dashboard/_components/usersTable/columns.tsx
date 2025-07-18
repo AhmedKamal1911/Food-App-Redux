@@ -26,6 +26,7 @@ import {
 import { ROLES_LIST } from "@/lib/data";
 import DeleteUserModal from "../modals/delete-user-modal";
 import UpdateUserModal from "../modals/update-user-modal";
+import { useSession } from "next-auth/react";
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -164,15 +165,32 @@ export const columns: ColumnDef<User>[] = [
       );
     },
     cell: ({ row }) => {
-      return (
-        <div className="flex items-center justify-center gap-2">
-          <UpdateUserModal user={row.original} />
-          <DeleteUserModal userId={row.original.id} />
-        </div>
-      );
+      return <UserRowActions user={row.original} />;
     },
   },
 ];
+function UserRowActions({ user }: { user: User }) {
+  const { data: session } = useSession();
+  const currentUserId = session?.user.id;
+  const currentUserRole = session?.user.role;
+
+  const isTargetSelf = currentUserId === user.id;
+  const isTargetSuperAdmin = user.role === "superAdmin";
+  const isCurrentSuperAdmin = currentUserRole === "superAdmin";
+
+  const canUpdate = isCurrentSuperAdmin && !isTargetSelf && !isTargetSuperAdmin;
+  const canDelete =
+    (isCurrentSuperAdmin || currentUserRole === "admin") &&
+    !isTargetSelf &&
+    !isTargetSuperAdmin;
+
+  return (
+    <div className="flex items-center justify-center gap-2">
+      {canUpdate && <UpdateUserModal user={user} />}
+      {canDelete && <DeleteUserModal userId={user.id} />}
+    </div>
+  );
+}
 
 function RoleHeader({ column }: { column: Column<User> }) {
   const selectedRoles = column.getFilterValue() as UserRole[] | undefined;

@@ -2,9 +2,6 @@ import TransactionTableSection from "./components/transactions-table-section";
 import { getUserTransactions } from "@/lib/server/queries/transaction";
 import { getCurrentSession } from "@/lib/dal/user";
 import { redirect, RedirectType } from "next/navigation";
-import { TransactionOrder } from "@/lib/types/product";
-
-type Props = {};
 
 // const transactions: TransactionOrder[] = [
 //   {
@@ -148,7 +145,7 @@ type Props = {};
 //     ],
 //   },
 // ];
-export default async function TransactionsPage({}: Props) {
+export default async function TransactionsPage() {
   const session = await getCurrentSession();
   if (!session.success) redirect("/login", RedirectType.replace);
   const transactions = await getUserTransactions();

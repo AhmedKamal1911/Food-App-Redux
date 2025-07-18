@@ -10,13 +10,15 @@ import {
 import { User } from "@prisma/client";
 import { Pen } from "lucide-react";
 import UpdateUserForm from "../forms/update-user-form";
+import { useState } from "react";
 
 type Props = {
   user: User;
 };
 export default function UpdateUserModal({ user }: Props) {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="rounded-sm text-white" size={"sm"}>
           <Pen />
@@ -27,7 +29,7 @@ export default function UpdateUserModal({ user }: Props) {
         <DialogHeader>
           <DialogTitle>Update User</DialogTitle>
         </DialogHeader>
-        <UpdateUserForm user={user} />
+        <UpdateUserForm setOpenDialog={setOpen} user={user} />
         <DialogDescription className="sr-only">
           Update your user details here.
         </DialogDescription>
