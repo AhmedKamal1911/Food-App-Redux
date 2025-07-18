@@ -6,24 +6,54 @@ import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { ActionResponse } from "@/lib/types/shared";
 import { getUserById } from "../../queries";
+import { requirePermission } from "@/lib/server-utils";
+import { getCurrentSession } from "@/lib/dal/user";
 
 export async function deleteUserAction({
   userId,
 }: {
   userId: string;
 }): ActionResponse {
+  if (!requirePermission(["superAdmin"])) {
+    return {
+      success: false,
+      error: {
+        message: "Unauthorized action",
+        status: 401,
+      },
+    };
+  }
   try {
-    // First check if the product exists
+    const sessionRes = await getCurrentSession();
 
-    const product = await getUserById(userId);
+    if (!sessionRes.success) {
+      return {
+        success: false,
+        error: {
+          message: "Unauthorized action",
+          status: 401,
+        },
+      };
+    }
 
-    if (!product) {
+    const user = await getUserById(userId);
+
+    if (!user) {
       return {
         error: {
           status: 404,
           message: "user not found",
         },
         success: false,
+      };
+    }
+    if (userId === sessionRes.session.user.id) {
+      return {
+        success: false,
+        error: {
+          status: 401,
+          message: "This user can't be removed",
+        },
       };
     }
     // TODO: dont forget to remove user images from storage

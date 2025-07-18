@@ -9,6 +9,12 @@ export type ProductWithRelations = Prisma.ProductGetPayload<{
 }>;
 export type TransactionOrder = Prisma.OrderGetPayload<{
   include: {
+    user: {
+      select: {
+        name: true;
+        email: true;
+      };
+    };
     items: {
       include: {
         product: true;

@@ -6,14 +6,25 @@ import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { ActionResponse } from "@/lib/types/shared";
 import { getCategoryById } from "../../queries";
+import { requirePermission } from "@/lib/server-utils";
 
 export async function deleteCategory({
   categoryId,
 }: {
   categoryId: string;
 }): ActionResponse {
+  if (!requirePermission(["admin", "superAdmin"])) {
+    return {
+      success: false,
+      error: {
+        message: "Unauthorized action",
+        status: 401,
+      },
+    };
+  }
   try {
     // First check if the product exists
+
     const category = await getCategoryById(categoryId);
 
     if (!category) {
@@ -31,7 +42,7 @@ export async function deleteCategory({
         id: categoryId,
       },
     });
-    // TODO : revalidate the category tags
+
     revalidateTag(PRISMA_CACHE_KEY.CATEGORIES);
     return {
       success: true,

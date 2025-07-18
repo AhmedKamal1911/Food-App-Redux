@@ -5,15 +5,27 @@ import {
   PaymentElement,
   useStripe,
   useElements,
+  AddressElement,
+  LinkAuthenticationElement,
 } from "@stripe/react-stripe-js";
 import { CartProduct } from "@/lib/types/product";
 
 import { LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetPaymentIntent } from "@/hooks/use-get-payment-intent";
-import { useSession } from "next-auth/react";
-import { useStripePayment } from "@/hooks/use-stripe-payment";
 
+import { useStripePayment } from "@/hooks/use-stripe-payment";
+import { getBaseUrl } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+export type PaymentMetadata = {
+  userId: string;
+  products: {
+    id: string;
+    qty: number;
+    sizeId: string | undefined;
+    extras: { id: string }[];
+  }[];
+}; // JSON string of products
 export function CheckoutForm({
   cartProducts,
   subtotal,
@@ -23,9 +35,10 @@ export function CheckoutForm({
 }) {
   const stripe = useStripe();
   const elements = useElements();
-  const { data: session } = useSession();
+  const session = useSession();
+
   const metadata = {
-    userId: session?.user.id || "guest",
+    userId: session.data?.user.id ?? null,
     products: JSON.stringify(
       cartProducts.map((p) => ({
         id: p.id,
@@ -37,7 +50,10 @@ export function CheckoutForm({
   };
 
   const { data, paymentIntentError, paymentIntentSecretLoading, refetch } =
-    useGetPaymentIntent({ subtotal, metadata: metadata });
+    useGetPaymentIntent(
+      { subtotal, metadata: metadata },
+      session.status !== "loading"
+    );
 
   const { confirmPayment, isLoading, message } = useStripePayment();
 
@@ -48,7 +64,7 @@ export function CheckoutForm({
     }
     const success = await confirmPayment(
       data.clientSecret,
-      "http://localhost:3000/success"
+      `${getBaseUrl()}/success`
     );
     if (!success) return;
   };
@@ -79,7 +95,28 @@ export function CheckoutForm({
       <PaymentElement
         id="payment-element"
         options={{
-          layout: "auto",
+          layout: "tabs",
+        }}
+      />
+      <LinkAuthenticationElement
+        options={{
+          defaultValues: {
+            email: session.data?.user.email || "",
+          },
+        }}
+      />
+      <AddressElement
+        options={{
+          mode: "shipping",
+          fields: {
+            phone: "always",
+          },
+          validation: {
+            phone: { required: "always" },
+          },
+          defaultValues: {
+            name: session.data?.user.name || "",
+          },
         }}
       />
       <Button
@@ -87,7 +124,7 @@ export function CheckoutForm({
         disabled={isLoading || !stripe || !elements}
       >
         {isLoading ? (
-          <LoaderCircle className="animate-spin text-primary size-8" />
+          <LoaderCircle className="animate-spin  size-8 text-white" />
         ) : (
           "pay"
         )}

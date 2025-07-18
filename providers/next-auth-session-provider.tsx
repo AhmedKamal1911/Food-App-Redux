@@ -9,5 +9,9 @@ type Props = {
 };
 
 export const AuthSessionProvider = ({ children, session }: Props) => {
-  return <NextAuthSessionProvider>{children}</NextAuthSessionProvider>;
+  return (
+    <NextAuthSessionProvider session={session} refetchOnWindowFocus={false}>
+      {children}
+    </NextAuthSessionProvider>
+  );
 };

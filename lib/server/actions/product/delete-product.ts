@@ -5,12 +5,22 @@ import { revalidateTag } from "next/cache";
 import { getProductById } from "../../queries";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { ActionResponse } from "@/lib/types/shared";
+import { requirePermission } from "@/lib/server-utils";
 
 export async function deleteProduct({
   productId,
 }: {
   productId: string;
 }): ActionResponse {
+  if (!requirePermission(["admin", "superAdmin"])) {
+    return {
+      success: false,
+      error: {
+        message: "Unauthorized action",
+        status: 401,
+      },
+    };
+  }
   try {
     // First check if the product exists
     const product = await getProductById(productId);

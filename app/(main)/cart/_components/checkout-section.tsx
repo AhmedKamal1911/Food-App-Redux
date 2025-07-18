@@ -3,11 +3,11 @@ import { CheckoutForm } from "./forms/checkout-form";
 import { PromoCodeForm } from "./forms/promo-code-form";
 import { loadStripe } from "@stripe/stripe-js";
 import { CartProduct } from "@/lib/types/product";
-import { AuthSessionProvider } from "@/providers/next-auth-session-provider";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
+console.log("knijuyiuyiugkg", { stripePromise });
 export default function CheckoutSection({
   subtotal,
   itemsCount,
@@ -38,9 +38,7 @@ export default function CheckoutSection({
             currency: "eur",
           }}
         >
-          <AuthSessionProvider>
-            <CheckoutForm cartProducts={cartProducts} subtotal={subtotal} />
-          </AuthSessionProvider>
+          <CheckoutForm cartProducts={cartProducts} subtotal={subtotal} />
         </Elements>
       </div>
     </div>

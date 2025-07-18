@@ -10,13 +10,23 @@ import prisma from "@/lib/prisma";
 import { hashPassword } from "@/lib/server-utils";
 import { ActionResponse } from "@/lib/types/shared";
 import { getUserById } from "../../queries";
+import { getCurrentSession } from "@/lib/dal/user";
 
-export async function ChangePasswordAction(
-  inputs: ChangePasswordInputs,
-  userId: string
+export async function changePasswordAction(
+  inputs: ChangePasswordInputs
 ): ActionResponse {
+  const sessionRes = await getCurrentSession();
+  if (!sessionRes.success) {
+    return {
+      success: false,
+      error: {
+        status: 401,
+        message: "Unauthorized action",
+      },
+    };
+  }
   const result = changePasswordSchema.safeParse(inputs);
-
+  const userId = sessionRes.session.user.id;
   if (!result.success) {
     const errorMsg = result.error.flatten().formErrors[0];
     console.log(result.error.flatten());
@@ -29,31 +39,32 @@ export async function ChangePasswordAction(
     };
   }
   // check first if the current password correct
-  const user = await getUserById(userId);
-  if (!user) {
-    return {
-      success: false,
-      error: {
-        status: 404,
-        message: "user not found!",
-      },
-    };
-  }
-  const isPasswordCorrect = await bcrypt.compare(
-    inputs.currentPassword,
-    user.password!
-  );
 
-  if (!isPasswordCorrect) {
-    return {
-      success: false,
-      error: {
-        status: 401,
-        message: "Current password is incorrect.",
-      },
-    };
-  }
   try {
+    const user = await getUserById(userId);
+    if (!user) {
+      return {
+        success: false,
+        error: {
+          status: 404,
+          message: "user not found!",
+        },
+      };
+    }
+    const isPasswordCorrect = await bcrypt.compare(
+      inputs.currentPassword,
+      user.password!
+    );
+
+    if (!isPasswordCorrect) {
+      return {
+        success: false,
+        error: {
+          status: 401,
+          message: "Current password is incorrect.",
+        },
+      };
+    }
     const hashedPassword = await hashPassword(result.data.newPassword);
     await prisma.user.update({
       where: {

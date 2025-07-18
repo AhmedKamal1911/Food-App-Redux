@@ -5,24 +5,17 @@ import ChangePasswordForm from "./forms/change-password-form";
 
 type Props = {
   hasPassword: boolean;
-  userId: string;
 };
-export default function GeneralSettingsContent({ hasPassword, userId }: Props) {
+export default function GeneralSettingsContent({ hasPassword }: Props) {
   return (
     <div>
       <span className="text-xl font-semibold mb-2 block">General Settings</span>
-      <PasswordBox hasPassword={hasPassword} userId={userId} />
+      <PasswordBox hasPassword={hasPassword} />
     </div>
   );
 }
 
-function PasswordBox({
-  hasPassword,
-  userId,
-}: {
-  hasPassword: boolean;
-  userId: string;
-}) {
+function PasswordBox({ hasPassword }: { hasPassword: boolean }) {
   return (
     <div className="divide-y-2 flex flex-col gap-4 mb-4">
       <div className="flex flex-col items-start gap-1 pb-2 w-full">
@@ -30,7 +23,7 @@ function PasswordBox({
           Password
         </span>
         {hasPassword ? (
-          <ChangePasswordForm userId={userId} />
+          <ChangePasswordForm />
         ) : (
           <Button
             variant="default"

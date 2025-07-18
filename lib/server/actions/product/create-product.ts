@@ -10,6 +10,7 @@ import slugify from "slugify";
 import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getProductBySlug } from "../../queries";
+import { requirePermission } from "@/lib/server-utils";
 
 type FailedResponse = {
   success: false;
@@ -35,11 +36,20 @@ type SuccessResponse = {
 type CreateProductResponse = Promise<
   SuccessResponse | FailedResponse | FailedValidationResponse
 >;
-// TODO: build auth role
 
 export async function createProduct(
   inputs: CreateProductInputs
 ): CreateProductResponse {
+  if (!requirePermission(["admin", "superAdmin"])) {
+    return {
+      success: false,
+      error: {
+        message: "Unauthorized action",
+        status: 401,
+        type: "error",
+      },
+    };
+  }
   const result = createProductSchema.safeParse(inputs);
   if (!result.success) {
     console.log("Validation error:", result.error.format());
@@ -51,8 +61,8 @@ export async function createProduct(
     };
   }
   const { data } = result;
+  const slug = slugify(data.name, { lower: true });
   try {
-    const slug = slugify(data.name, { lower: true });
     // Check if the product already exists
     const productExists = await getProductBySlug(slug);
 

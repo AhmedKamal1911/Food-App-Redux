@@ -4,8 +4,14 @@ import { unstable_cache } from "next/cache";
 
 async function _getUserTransactions() {
   const transactions = await prisma.order.findMany({
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: "asc" },
     include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
       items: {
         include: {
           selectedExtras: true,

@@ -12,6 +12,7 @@ import {
 import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCategoryBySlug } from "../../queries";
+import { requirePermission } from "@/lib/server-utils";
 
 type FailedResponse = {
   success: false;
@@ -37,11 +38,20 @@ type SuccessResponse = {
 type CreateCategoryResponse = Promise<
   SuccessResponse | FailedResponse | FailedValidationResponse
 >;
-// TODO: build auth role
 
 export async function createCategory(
   inputs: CreateCategoryInputs
 ): CreateCategoryResponse {
+  if (!requirePermission(["admin", "superAdmin"])) {
+    return {
+      success: false,
+      error: {
+        message: "Unauthorized action",
+        status: 401,
+        type: "error",
+      },
+    };
+  }
   const result = createCategorySchema.safeParse(inputs);
   if (!result.success) {
     console.log("Validation error:", result.error.format());

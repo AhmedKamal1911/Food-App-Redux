@@ -1,5 +1,6 @@
 import Footer from "@/components/common/footer";
-import HeaderWrapper from "@/components/common/header/header-wrapper";
+import Header from "@/components/common/header";
+
 import { getAllProducts } from "@/lib/server/queries";
 
 export default async function MainLayout({
@@ -11,7 +12,7 @@ export default async function MainLayout({
 
   return (
     <div>
-      <HeaderWrapper products={products} />
+      <Header products={products} />
       {children}
       <Footer />
     </div>

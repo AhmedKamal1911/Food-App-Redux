@@ -41,7 +41,7 @@ export const authOptions: NextAuthOptions = {
       token.phone = dbUser.phone;
       token.emailVerified = dbUser.emailVerified;
       token.emailVerificationExpires = dbUser.emailVerificationExpires;
-
+      token.country = dbUser.country;
       return token;
     },
     session: async ({ session, token }) => {
@@ -55,7 +55,7 @@ export const authOptions: NextAuthOptions = {
       session.user.name = token.name;
       session.user.phone = token.phone;
       session.user.emailVerificationExpires = token.emailVerificationExpires;
-
+      session.user.country = token.country;
       return session;
     },
   },
@@ -72,6 +72,7 @@ declare module "next-auth" {
       name: string;
       emailVerified: User["emailVerified"];
       emailVerificationExpires: User["emailVerificationExpires"];
+      country: User["country"];
     };
   }
 }
@@ -86,5 +87,6 @@ declare module "next-auth/jwt" {
     name: string;
     emailVerified: User["emailVerified"];
     emailVerificationExpires: User["emailVerificationExpires"];
+    country: User["country"];
   }
 }

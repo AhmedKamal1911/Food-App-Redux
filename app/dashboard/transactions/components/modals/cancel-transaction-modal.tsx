@@ -1,3 +1,4 @@
+"use client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,23 +11,26 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-
+import { cancelTransactionAction } from "@/lib/server/actions/order/cancel-transaction-action";
 import { AlertCircle } from "lucide-react";
+import { useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-export default function CancelTransactionModal() {
-  async function onConfirmCancelTransaction() {
-    try {
-      // const res = await deleteUserAction({ userId });
-      // if (!res.success) {
-      //   toast.error(res.error.message);
-      // } else {
-      //   toast.success(res.data.message);
-      // }
-    } catch (error) {
-      toast.error("An Network Error Occured");
-    }
-  }
+export default function CancelTransactionModal({
+  orderId,
+}: {
+  orderId: string;
+}) {
+  const [state, formAction, isPending] = useActionState(
+    cancelTransactionAction,
+    undefined,
+    orderId
+  );
+  useEffect(() => {
+    if (state?.success) return void toast.success(state.data.message);
+
+    if (state?.error) toast.error(state.error.message);
+  }, [state]);
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -47,14 +51,19 @@ export default function CancelTransactionModal() {
           <AlertDialogCancel className="rounded-sm text-white">
             Back
           </AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirmCancelTransaction} asChild>
-            <Button
-              className="rounded-sm bg-destructive hover:bg-destructive/80 font-semibold"
-              size={"sm"}
-            >
-              Confirm
-            </Button>
-          </AlertDialogAction>
+          <form action={formAction}>
+            <input type="hidden" name="orderId" value={orderId} />
+            <AlertDialogAction asChild>
+              <Button
+                className="rounded-sm bg-destructive hover:bg-destructive/80 font-semibold"
+                size={"sm"}
+                type="submit"
+                disabled={isPending}
+              >
+                {isPending ? "Cancelling..." : "Confirm"}
+              </Button>
+            </AlertDialogAction>
+          </form>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

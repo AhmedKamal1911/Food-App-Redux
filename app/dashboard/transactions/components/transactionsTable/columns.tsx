@@ -21,14 +21,12 @@ import {
   CirclePower,
   Coins,
 } from "lucide-react";
-import CancelTransactionModal from "../modals/cancel-transaction-modal";
 
 import ViewTransactionDetailsModal from "../modals/view-transaction-details-modal";
 import { TransactionOrder } from "@/lib/types/product";
+import CancelTransactionModal from "../modals/cancel-transaction-modal";
 
-export const columns: ColumnDef<
-  TransactionOrder & { user: { name: string } }
->[] = [
+export const columns: ColumnDef<TransactionOrder>[] = [
   {
     accessorKey: "id",
     enablePinning: false,
@@ -57,7 +55,9 @@ export const columns: ColumnDef<
     },
 
     cell: ({ row }) => (
-      <span className="text-secondary">{row.original.user.name}</span>
+      <span className="text-secondary">
+        {row.original.user?.name ?? "Guest"}
+      </span>
     ),
   },
 
@@ -150,7 +150,7 @@ export const columns: ColumnDef<
       <Badge
         className={clsx(
           {
-            "bg-green-200 text-green-800": row.original.status === "delevered",
+            "bg-green-200 text-green-800": row.original.status === "delivered",
             "bg-red-200 text-red-800": row.original.status === "canceled",
             "bg-yellow-200 text-yellow-800": row.original.status === "pending",
           },
@@ -177,7 +177,9 @@ export const columns: ColumnDef<
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-center gap-2">
-          {row.original.status === "pending" && <CancelTransactionModal />}
+          {row.original.status === "pending" && (
+            <CancelTransactionModal orderId={row.original.id} />
+          )}
 
           <ViewTransactionDetailsModal transaction={row.original} />
         </div>

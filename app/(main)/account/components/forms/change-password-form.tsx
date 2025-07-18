@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { ChangePasswordAction } from "@/lib/server/actions/user/change-password-action";
+import { changePasswordAction } from "@/lib/server/actions/user/change-password-action";
 import {
   ChangePasswordInputs,
   changePasswordSchema,
@@ -25,10 +25,7 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-type Props = {
-  userId: string;
-};
-export default function ChangePasswordForm({ userId }: Props) {
+export default function ChangePasswordForm() {
   const [open, setOpen] = useState(false);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const form = useForm<ChangePasswordInputs>({
@@ -43,7 +40,7 @@ export default function ChangePasswordForm({ userId }: Props) {
   // 2. Define a submit handler.
   async function onSubmit(values: ChangePasswordInputs) {
     try {
-      const res = await ChangePasswordAction(values, userId);
+      const res = await changePasswordAction(values);
       if (res.success) {
         toast.success(res.data.message);
         closeBtnRef.current?.click();

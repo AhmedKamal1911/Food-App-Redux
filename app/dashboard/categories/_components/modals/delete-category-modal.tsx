@@ -19,6 +19,7 @@ export default function DeleteCategoryModal({
 }: {
   categoryId: string;
 }) {
+  // TODO: Make it by using useActionState
   async function onConfirmDeleteCategory() {
     try {
       const res = await deleteCategory({ categoryId });

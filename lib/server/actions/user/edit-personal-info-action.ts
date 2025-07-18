@@ -7,13 +7,25 @@ import {
   personalInformationSchema,
 } from "@/lib/validation/personal-information-schema";
 import { revalidateTag } from "next/cache";
-import { getUserById } from "../../queries";
-import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 
-export async function EditPersonalInfoAction(
-  inputs: PersonalInformationInputs,
-  userId: string
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
+import { getCurrentSession } from "@/lib/dal/user";
+
+export async function editPersonalInfoAction(
+  inputs: PersonalInformationInputs
 ): ActionResponse {
+  const sessionRes = await getCurrentSession();
+  if (!sessionRes.success) {
+    return {
+      success: false,
+      error: {
+        message: "Unauthorized action",
+        status: 401,
+      },
+    };
+  }
+  const userId = sessionRes.session.user.id;
+
   const result = personalInformationSchema.safeParse(inputs);
 
   if (!result.success) {
@@ -24,17 +36,6 @@ export async function EditPersonalInfoAction(
       error: {
         message: errorMsg,
         status: 400,
-      },
-    };
-  }
-  // check first if the user exist
-  const user = await getUserById(userId);
-  if (!user) {
-    return {
-      success: false,
-      error: {
-        status: 404,
-        message: "user not found!",
       },
     };
   }

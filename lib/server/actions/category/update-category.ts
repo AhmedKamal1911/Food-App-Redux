@@ -10,6 +10,7 @@ import {
 
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCategoryById, getCategoryBySlug } from "../../queries";
+import { requirePermission } from "@/lib/server-utils";
 
 type ErrorType = "error" | "validationError";
 
@@ -33,6 +34,16 @@ type UpdateCategoryResponse = Promise<SuccessResponse | FailedResponse>;
 export async function updateCategory(
   inputs: UpdateCategoryInputs
 ): UpdateCategoryResponse {
+  if (!requirePermission(["admin", "superAdmin"])) {
+    return {
+      success: false,
+      error: {
+        message: "Unauthorized action",
+        status: 401,
+        type: "error",
+      },
+    };
+  }
   // Validate Inputs
   const result = updateCategorySchema.safeParse(inputs);
   if (!result.success) {
@@ -46,39 +57,38 @@ export async function updateCategory(
 
   const { data } = result;
 
-  // Check if the category exists
-  const categoryFromDb = await getCategoryById(data.id);
-  if (!categoryFromDb) {
-    return {
-      success: false,
-      error: {
-        status: 404,
-        message: "Category doesn't exist.",
-        type: "error",
-      },
-    };
-  }
-
-  let newCategorySlug = categoryFromDb.slug;
-
-  // If the name has changed, generate new slug and check for uniqueness
-  if (categoryFromDb.name !== data.name) {
-    newCategorySlug = slugify(data.name, { lower: true });
-
-    const existingCategory = await getCategoryBySlug(newCategorySlug);
-    if (existingCategory) {
+  try {
+    // Check if the category exists
+    const categoryFromDb = await getCategoryById(data.id);
+    if (!categoryFromDb) {
       return {
         success: false,
         error: {
-          status: 409,
-          message: `Category "${existingCategory.name}" already exists.`,
+          status: 404,
+          message: "Category doesn't exist.",
           type: "error",
         },
       };
     }
-  }
 
-  try {
+    let newCategorySlug = categoryFromDb.slug;
+
+    // If the name has changed, generate new slug and check for uniqueness
+    if (categoryFromDb.name !== data.name) {
+      newCategorySlug = slugify(data.name, { lower: true });
+
+      const existingCategory = await getCategoryBySlug(newCategorySlug);
+      if (existingCategory) {
+        return {
+          success: false,
+          error: {
+            status: 409,
+            message: `Category "${existingCategory.name}" already exists.`,
+            type: "error",
+          },
+        };
+      }
+    }
     // Update Category
     await prisma.productCategory.update({
       where: {

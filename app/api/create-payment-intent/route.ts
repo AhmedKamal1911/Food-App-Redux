@@ -7,7 +7,7 @@ const reqBodySchema = z.object({
   amount: z
     .number({ coerce: true })
     .positive({ message: "Amount number must be positive number!" }),
-  metadata: z.string({ message: "metadata must be sended as string" }),
+  metadata: z.record(z.any()),
 });
 
 type Response = z.infer<typeof createPaymentIntentResponseSchema>;
@@ -22,11 +22,12 @@ export async function POST(req: NextRequest) {
         { status: 400, statusText: "Bad Request" }
       );
     }
-    console.log({ amount: result.data.amount });
+    console.log({ meta: result.data.metadata });
     const paymentIntent = await stripe.paymentIntents.create({
       amount: result.data.amount,
+
       currency: "eur",
-      metadata: JSON.parse(result.data.metadata),
+      metadata: result.data.metadata,
     });
 
     return NextResponse.json<Response>({

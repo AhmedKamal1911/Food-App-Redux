@@ -9,6 +9,7 @@ import { getProductById, getProductBySlug } from "../../queries";
 import prisma from "@/lib/prisma";
 import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
+import { requirePermission } from "@/lib/server-utils";
 
 type FailedResponse = {
   success: false;
@@ -38,6 +39,16 @@ type UpdateProductResponse = Promise<
 export async function updateProduct(
   inputs: UpdateProductInputs
 ): UpdateProductResponse {
+  if (!requirePermission(["admin", "superAdmin"])) {
+    return {
+      success: false,
+      error: {
+        message: "Unauthorized action",
+        status: 401,
+        type: "error",
+      },
+    };
+  }
   const result = updateProductSchema.safeParse(inputs);
   if (!result.success) {
     return {
@@ -48,40 +59,40 @@ export async function updateProduct(
     };
   }
   const { data } = result;
-  const productFromDb = await getProductById(data.id);
-  if (!productFromDb) {
-    return {
-      success: false,
-
-      error: {
-        status: 404,
-        message: "Product Doesn't Exist!",
-        type: "error",
-      },
-    };
-  }
-
-  const newProductSlug = slugify(data.name, { lower: true }); // create product slug
-  if (productFromDb.name !== data.name) {
-    const existingProduct = await getProductBySlug(newProductSlug);
-    if (existingProduct) {
+  try {
+    const productFromDb = await getProductById(data.id);
+    if (!productFromDb) {
       return {
         success: false,
+
         error: {
-          message: `${existingProduct.name} Product is already exist!`,
-          status: 409,
+          status: 404,
+          message: "Product Doesn't Exist!",
           type: "error",
         },
       };
     }
-  }
-  // TODO: upload image using cloudinary and store image url in product.
 
-  // DB SIZES : [{id:1,},{id:2}]
-  // Client Sizes: [{id:2},{..},{..}]
-  // Client Sizes: [{..},{..}]
-  // Client Sizes: []
-  try {
+    const newProductSlug = slugify(data.name, { lower: true }); // create product slug
+    if (productFromDb.name !== data.name) {
+      const existingProduct = await getProductBySlug(newProductSlug);
+      if (existingProduct) {
+        return {
+          success: false,
+          error: {
+            message: `${existingProduct.name} Product is already exist!`,
+            status: 409,
+            type: "error",
+          },
+        };
+      }
+    }
+    // TODO: upload image using cloudinary and store image url in product.
+
+    // DB SIZES : [{id:1,},{id:2}]
+    // Client Sizes: [{id:2},{..},{..}]
+    // Client Sizes: [{..},{..}]
+    // Client Sizes: []
     const deletedSizes = productFromDb.sizes.filter(
       (dbSize) => !data.sizes.find((s) => dbSize.id === s.id)
     );

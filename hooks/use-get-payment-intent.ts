@@ -10,6 +10,7 @@ async function fetchPaymentIntent({
   subtotal: number;
   metadata: Record<string, unknown>;
 }) {
+  console.log({ fromFetch: metadata });
   const res = await fetch(`/api/create-payment-intent`, {
     method: "POST",
     body: JSON.stringify({
@@ -17,7 +18,7 @@ async function fetchPaymentIntent({
       headers: {
         "Content-Type": "application/json",
       },
-      metadata: JSON.stringify(metadata),
+      metadata,
     }),
   });
   const data = await res.json();
@@ -26,13 +27,16 @@ async function fetchPaymentIntent({
   return parsedData;
 }
 
-export function useGetPaymentIntent({
-  subtotal,
-  metadata,
-}: {
-  subtotal: number;
-  metadata: Record<string, unknown>;
-}) {
+export function useGetPaymentIntent(
+  {
+    subtotal,
+    metadata,
+  }: {
+    subtotal: number;
+    metadata: Record<string, unknown>;
+  },
+  enableFetch: boolean
+) {
   const {
     data,
     error: paymentIntentError,
@@ -41,6 +45,7 @@ export function useGetPaymentIntent({
   } = useQuery({
     queryFn: async () => fetchPaymentIntent({ subtotal, metadata }),
     queryKey: ["paymentIntent", subtotal],
+    enabled: enableFetch,
     refetchOnWindowFocus: false,
   });
   return { data, paymentIntentError, paymentIntentSecretLoading, refetch };

@@ -24,14 +24,15 @@ model User {
   phone                    String    @unique
   password                 String?
   passwordResetToken       String?
-
-  passwordTokenExpires DateTime?
-  passwordUpdatedAt    DateTime?
-  accounts             Account[]
-  sessions             Session[]
-  role                 UserRole  @default(user)
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
+  country                  String?
+  passwordTokenExpires     DateTime?
+  passwordUpdatedAt        DateTime?
+  accounts                 Account[]
+  sessions                 Session[]
+  role                     UserRole  @default(user)
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+  Order                    Order[]
 }
 
 model Account {
@@ -127,9 +128,12 @@ model Extra {
 
 model Order {
   id        String            @id @default(uuid())
+  paymentId String            @unique
   total     Float
   items     ProductOrder[] // Orders now reference ProductOrder, not Product
   status    TransactionStatus @default(pending)
+  user      User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId    String?
   updatedAt DateTime          @updatedAt
   createdAt DateTime          @default(now())
 }
@@ -177,7 +181,7 @@ enum UserRole {
 }
 
 enum TransactionStatus {
-  delevered
+  delivered
   canceled
   pending
 }

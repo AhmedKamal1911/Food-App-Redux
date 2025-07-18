@@ -14,12 +14,7 @@ const getTabsContent = (userInfo: UserInfo) => {
       value: "general",
       label: "General",
       icon: <User className="w-5 h-5" />,
-      content: (
-        <GeneralSettingsContent
-          hasPassword={userInfo.hasPassword}
-          userId={userInfo.id}
-        />
-      ),
+      content: <GeneralSettingsContent hasPassword={userInfo.hasPassword} />,
     },
     {
       value: "personal-info",

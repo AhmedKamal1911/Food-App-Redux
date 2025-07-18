@@ -6,6 +6,7 @@ import ReactQueryProvider from "@/providers/react-query-provider";
 import { Pacifico, PT_Sans_Narrow } from "next/font/google";
 import { Metadata } from "next";
 import "./globals.css";
+import { AuthSessionProvider } from "@/providers/next-auth-session-provider";
 
 export const ptSansNarrow = PT_Sans_Narrow({
   subsets: ["latin"],
@@ -30,10 +31,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={`${ptSansNarrow.className} ${pacifico.variable}  antialiased`}
       >
-        <StoreProvider>
-          <ToastContainer closeOnClick pauseOnHover position="bottom-right" />
-          <ReactQueryProvider>{children}</ReactQueryProvider>
-        </StoreProvider>
+        <ToastContainer closeOnClick pauseOnHover position="bottom-right" />
+        <AuthSessionProvider>
+          <StoreProvider>
+            <ReactQueryProvider>{children}</ReactQueryProvider>
+          </StoreProvider>
+        </AuthSessionProvider>
       </body>
     </html>
   );

@@ -16,7 +16,7 @@ import TransactionsTable from "./transactionsTable/transactions-table";
 import { TransactionOrder } from "@/lib/types/product";
 
 type Props = {
-  data: (TransactionOrder & { user: { name: string } })[];
+  data: TransactionOrder[];
 };
 export default function TransactionTableSection({ data }: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -55,7 +55,7 @@ export default function TransactionTableSection({ data }: Props) {
           Transactions :
         </span>
         <CustomTableSearchInput
-          columnName="user"
+          columnName="id"
           placeholder="search a Transaction..."
           table={table}
         />

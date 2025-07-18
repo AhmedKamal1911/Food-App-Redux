@@ -10,6 +10,7 @@ import { Resend } from "resend";
 import { VerificationTemplate } from "@/emails/email-verification-template";
 import { hashPassword } from "@/lib/server-utils";
 
+import parsePhoneNumber from "libphonenumber-js";
 type FailedResponse = {
   success: false;
   error: {
@@ -78,6 +79,7 @@ export async function registerAction(
         name: `${resultData.firstName} ${resultData.lastName}`,
         email: resultData.email,
         phone: resultData.phone,
+        country: parsePhoneNumber(resultData.phone)?.country,
         password: hashedPassword,
         emailVerificationToken: emailToken,
         emailVerificationExpires: new Date(Date.now() + 10 * 60 * 1000), // 10 min

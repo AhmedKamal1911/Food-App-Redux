@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -13,11 +14,12 @@ import { format } from "date-fns";
 
 import { View } from "lucide-react";
 import Image from "next/image";
+import MarkDeliveredActionForm from "../forms/mark-delivered-action-form";
 
 export default function ViewTransactionDetailsModal({
   transaction,
 }: {
-  transaction: TransactionOrder & { user: { name: string } };
+  transaction: TransactionOrder;
 }) {
   return (
     <Dialog>
@@ -36,6 +38,7 @@ export default function ViewTransactionDetailsModal({
             Transaction ID: #{transaction.id}
           </span>
           <span className="font-semibold">Total: ${transaction.total}</span>
+          <span className="font-semibold">Status: {transaction.status}</span>
           <span className="font-semibold">
             Date: {format(transaction.createdAt, "MMMM dd, yyyy, HH:mm  a")}
           </span>
@@ -46,11 +49,8 @@ export default function ViewTransactionDetailsModal({
               </span>
               <ScrollArea className="max-h-60">
                 <div className="flex flex-col gap-1">
-                  {transaction.items.map((transactionItem) => (
-                    <TransactionItem
-                      transactionItem={transactionItem}
-                      key={transactionItem.id}
-                    />
+                  {transaction.items.map((item) => (
+                    <TransactionItem item={item} key={item.id} />
                   ))}
                 </div>
               </ScrollArea>
@@ -60,46 +60,47 @@ export default function ViewTransactionDetailsModal({
         <DialogDescription className="sr-only">
           show transaction details here
         </DialogDescription>
+        {transaction.status === "pending" && (
+          <DialogFooter>
+            <MarkDeliveredActionForm orderId={transaction.id} />
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );
 }
 
 function TransactionItem({
-  transactionItem,
+  item,
 }: {
-  transactionItem: TransactionOrder["items"][number];
+  item: TransactionOrder["items"][number];
 }) {
   return (
     <div
-      key={transactionItem.id}
+      key={item.id}
       className="flex flex-col items-start  gap-1 p-2 border rounded-md"
     >
       <div className="flex items-center gap-2">
         <div>
           <Image
-            src={transactionItem.product.image}
-            alt={transactionItem.product.name}
+            src={item.product.image}
+            alt={item.product.name}
             width={40}
             height={40}
             className="rounded object-cover"
           />
         </div>
-        <span className="font-bold text-xl">
-          {transactionItem.product.name}
-        </span>
+        <span className="font-bold text-xl">{item.product.name}</span>
       </div>
       <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-        <span className="text-[16px]">Qty: x{transactionItem.qty}</span>
-        <span className="text-[16px]">
-          Price: ${transactionItem.product.price}
-        </span>
+        <span className="text-[16px]">Qty: x{item.qty}</span>
+        <span className="text-[16px]">Price: ${item.product.price}</span>
       </div>
-      {transactionItem.selectedExtras.length > 0 && (
+      {item.selectedExtras.length > 0 && (
         <div className="flex flex-col gap-1">
           <span className="font-semibold capitalize">extras :</span>
           <div className="flex flex-col gap-1">
-            {transactionItem.selectedExtras.map((ex) => (
+            {item.selectedExtras.map((ex) => (
               <span
                 key={ex.id}
                 className="text-xs  text-rose-500"

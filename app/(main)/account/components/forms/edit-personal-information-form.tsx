@@ -36,7 +36,7 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import { EditPersonalInfoAction } from "@/lib/server/actions/user/edit-personal-info-action";
+import { editPersonalInfoAction } from "@/lib/server/actions/user/edit-personal-info-action";
 import { UserInfo } from "../settings-tabs";
 
 type Props = {
@@ -63,7 +63,7 @@ export default function EditPersonalInformationForm({ user }: Props) {
       return;
     }
     try {
-      const res = await EditPersonalInfoAction(values, user.id);
+      const res = await editPersonalInfoAction(values);
 
       if (res.success) {
         toast.success(res.data.message);

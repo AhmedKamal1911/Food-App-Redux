@@ -30,7 +30,7 @@ type SuccessResponse = {
 
 type UpdateUserResponse = Promise<SuccessResponse | FailedResponse>;
 
-export async function updateUserAction(
+export async function updateUserRoleAction(
   inputs: UpdateUserInputs
 ): UpdateUserResponse {
   // Validate Inputs

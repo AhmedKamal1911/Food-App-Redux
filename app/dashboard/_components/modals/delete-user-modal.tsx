@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 
 export default function DeleteUserModal({ userId }: { userId: string }) {
   async function onConfirmDeleteUser() {
+    // TODO: Make it by using useActionState
     try {
       const res = await deleteUserAction({ userId });
       if (!res.success) {

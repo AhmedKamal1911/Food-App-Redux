@@ -28,7 +28,7 @@ import {
   UpdateUserInputs,
   updateUserSchema,
 } from "@/lib/validation/update-user-schema";
-import { updateUserAction } from "@/lib/server/actions/user/update-user-action";
+import { updateUserRoleAction } from "@/lib/server/actions/user/update-user-role-action";
 
 export default function UpdateUserForm({ user }: { user: User }) {
   const form = useForm<UpdateUserInputs>({
@@ -48,7 +48,7 @@ export default function UpdateUserForm({ user }: { user: User }) {
   // 2. Define a submit handler.
   async function onSubmit(values: UpdateUserInputs) {
     try {
-      const res = await updateUserAction(values);
+      const res = await updateUserRoleAction(values);
       if (res.success) {
         toast.success(res.message);
       }

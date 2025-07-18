@@ -87,8 +87,6 @@ export default function Header({ products }: { products: Product[] }) {
   const { data: session, status } = useSession();
   const isInView = useInView(ref);
 
-  console.log({ session, status });
-
   return (
     <>
       <div ref={ref} />

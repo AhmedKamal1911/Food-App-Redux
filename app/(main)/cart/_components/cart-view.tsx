@@ -15,7 +15,6 @@ export default function CartView() {
 
   const cartProductsSubtotal = useCartProductsSubtotal(cartProducts);
 
-  console.log({ itemsCount });
   return (
     <section className="flex max-lg:flex-col min-h-screen">
       <ShoppingCart
