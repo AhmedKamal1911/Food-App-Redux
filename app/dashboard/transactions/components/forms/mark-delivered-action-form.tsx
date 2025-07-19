@@ -4,20 +4,16 @@ import { Button } from "@/components/ui/button";
 import { markTransactionDeliveredAction } from "@/lib/server/actions/order/mark-transaction-delivered-action";
 import { useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
-
-export default function MarkDeliveredActionForm({
-  orderId,
-}: {
+type Props = {
   orderId: string;
-}) {
+};
+export default function MarkDeliveredActionForm({ orderId }: Props) {
   const [state, formAction, isPending] = useActionState(
     markTransactionDeliveredAction,
-    undefined,
-    orderId
+    undefined
   );
   useEffect(() => {
     if (state?.success) return void toast.success(state.data.message);
-
     if (state?.error) toast.error(state.error.message);
   }, [state]);
   return (

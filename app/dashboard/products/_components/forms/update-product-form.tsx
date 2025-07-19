@@ -30,7 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { updateProduct } from "@/lib/server/actions/product/update-product";
+import { updateProductAction } from "@/lib/server/actions/product/update-product-action";
 import { toast } from "react-toastify";
 import DropZoneViewer from "@/app/dashboard/_components/drop-zone-viewer";
 import ProductSizesAccordion from "../product-sizes-accordion";
@@ -67,7 +67,7 @@ export default function UpdateProductForm({
   // 2. Define a submit handler.
   async function onSubmit(values: UpdateProductInputs) {
     try {
-      const res = await updateProduct(values);
+      const res = await updateProductAction(values);
       if (res.success) {
         toast.success(res.message);
       }

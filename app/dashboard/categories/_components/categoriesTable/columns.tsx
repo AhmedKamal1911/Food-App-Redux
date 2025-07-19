@@ -6,8 +6,9 @@ import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
 
 import { ProductCategory } from "@prisma/client";
-import DeleteCategoryModal from "../modals/delete-category-modal";
+
 import UpdateCategoryModal from "../modals/update-category-modal";
+import DeleteCategoryModal from "../modals/delete-category-modal";
 
 export const columns: ColumnDef<ProductCategory>[] = [
   {

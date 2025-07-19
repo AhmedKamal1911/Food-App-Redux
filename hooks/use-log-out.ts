@@ -1,12 +1,19 @@
 "use client";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export function useLogOut() {
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   async function onLogout() {
-    setLoading(true);
-    await signOut().finally(() => setLoading(false));
+    setIsLoading(true);
+    try {
+      await signOut();
+    } catch (e) {
+      console.error({ error: e });
+      toast.error("Failed to logout due to network error");
+      setIsLoading(false);
+    }
   }
-  return { onLogout, loading };
+  return { onLogout, isLoading };
 }

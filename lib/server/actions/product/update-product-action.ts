@@ -36,7 +36,7 @@ type UpdateProductResponse = Promise<
   SuccessResponse | FailedResponse | FailedValidationResponse
 >;
 
-export async function updateProduct(
+export async function updateProductAction(
   inputs: UpdateProductInputs
 ): UpdateProductResponse {
   if (!requirePermission(["admin", "superAdmin"])) {

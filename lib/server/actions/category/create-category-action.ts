@@ -1,15 +1,17 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import {
-  CreateProductInputs,
-  createProductSchema,
-} from "@/lib/validation/create-product-schema";
+
 import slugify from "slugify";
+
+import {
+  CreateCategoryInputs,
+  createCategorySchema,
+} from "@/lib/validation/create-category-schema";
 
 import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
-import { getProductBySlug } from "../../queries";
+import { getCategoryBySlug } from "../../queries";
 import { requirePermission } from "@/lib/server-utils";
 
 type FailedResponse = {
@@ -33,13 +35,13 @@ type SuccessResponse = {
   message: string;
 };
 
-type CreateProductResponse = Promise<
+type CreateCategoryResponse = Promise<
   SuccessResponse | FailedResponse | FailedValidationResponse
 >;
 
-export async function createProduct(
-  inputs: CreateProductInputs
-): CreateProductResponse {
+export async function createCategoryAction(
+  inputs: CreateCategoryInputs
+): CreateCategoryResponse {
   if (!requirePermission(["admin", "superAdmin"])) {
     return {
       success: false,
@@ -50,7 +52,7 @@ export async function createProduct(
       },
     };
   }
-  const result = createProductSchema.safeParse(inputs);
+  const result = createCategorySchema.safeParse(inputs);
   if (!result.success) {
     console.log("Validation error:", result.error.format());
     return {
@@ -61,43 +63,34 @@ export async function createProduct(
     };
   }
   const { data } = result;
-  const slug = slugify(data.name, { lower: true });
   try {
-    // Check if the product already exists
-    const productExists = await getProductBySlug(slug);
+    const slug = slugify(data.name, { lower: true });
+    // Check if the Category already exists
+    const categoryExist = await getCategoryBySlug(slug);
 
-    if (productExists) {
+    if (categoryExist) {
       return {
         success: false,
         error: {
           status: 409,
           type: "error",
-          message: `(${productExists.name}) Product already exists`,
+          message: `(${categoryExist.name}) Category already exists`,
         },
       };
     }
     // TODO: upload image using cloudinary and store image url in product.
-    await prisma.product.create({
+    await prisma.productCategory.create({
       data: {
         image: "/images/special-products/burger.png",
         name: data.name,
-        description: data.desc,
-        price: data.price,
-        categoryId: data.categoryId,
         slug,
-        extras: {
-          createMany: {
-            data: data.extras,
-          },
-        },
-        sizes: { createMany: { data: data.sizes } },
       },
     });
-    revalidateTag(PRISMA_CACHE_KEY.PRODUCTS);
+    revalidateTag(PRISMA_CACHE_KEY.CATEGORIES);
     return {
       success: true,
       status: 201,
-      message: "Product created successfully",
+      message: "Category created successfully",
     };
   } catch (error) {
     console.error("Error creating product:", error);

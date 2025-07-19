@@ -10,7 +10,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { deleteProduct } from "@/lib/server/actions/product/delete-product";
+import { deleteProductAction } from "@/lib/server/actions/product/delete-product-action";
 import { toast } from "react-toastify";
 
 export default function DeleteProductModal({
@@ -20,7 +20,7 @@ export default function DeleteProductModal({
 }) {
   async function onConfirmDeleteProduct() {
     try {
-      const res = await deleteProduct({ productId });
+      const res = await deleteProductAction({ productId });
       if (!res.success) {
         toast.error(res.error.message);
       } else {

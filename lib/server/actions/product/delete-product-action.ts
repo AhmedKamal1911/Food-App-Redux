@@ -2,16 +2,15 @@
 
 import prisma from "@/lib/prisma";
 import { revalidateTag } from "next/cache";
-
+import { getProductById } from "../../queries";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { ActionResponse } from "@/lib/types/shared";
-import { getCategoryById } from "../../queries";
 import { requirePermission } from "@/lib/server-utils";
 
-export async function deleteCategory({
-  categoryId,
+export async function deleteProductAction({
+  productId,
 }: {
-  categoryId: string;
+  productId: string;
 }): ActionResponse {
   if (!requirePermission(["admin", "superAdmin"])) {
     return {
@@ -24,31 +23,30 @@ export async function deleteCategory({
   }
   try {
     // First check if the product exists
+    const product = await getProductById(productId);
 
-    const category = await getCategoryById(categoryId);
-
-    if (!category) {
+    if (!product) {
       return {
         error: {
           status: 404,
-          message: "Category not found",
+          message: "Product not found",
         },
         success: false,
       };
     }
 
-    await prisma.productCategory.delete({
+    await prisma.product.delete({
       where: {
-        id: categoryId,
+        id: productId,
       },
     });
 
-    revalidateTag(PRISMA_CACHE_KEY.CATEGORIES);
+    revalidateTag(PRISMA_CACHE_KEY.PRODUCTS);
     return {
       success: true,
       data: {
         status: 200,
-        message: "Category deleted successfully",
+        message: "Product deleted successfully",
       },
     };
   } catch (error) {

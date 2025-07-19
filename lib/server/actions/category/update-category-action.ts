@@ -31,7 +31,7 @@ type SuccessResponse = {
 
 type UpdateCategoryResponse = Promise<SuccessResponse | FailedResponse>;
 
-export async function updateCategory(
+export async function updateCategoryAction(
   inputs: UpdateCategoryInputs
 ): UpdateCategoryResponse {
   if (!requirePermission(["admin", "superAdmin"])) {

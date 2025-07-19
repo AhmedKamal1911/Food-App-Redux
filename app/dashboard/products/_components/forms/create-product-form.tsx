@@ -29,7 +29,7 @@ import {
   CreateProductInputs,
 } from "@/lib/validation/create-product-schema";
 
-import { createProduct } from "@/lib/server/actions/product/create-product";
+import { createProductAction } from "@/lib/server/actions/product/create-product-action";
 import { toast } from "react-toastify";
 import DropZoneViewer from "@/app/dashboard/_components/drop-zone-viewer";
 import ProductSizesAccordion from "../product-sizes-accordion";
@@ -55,7 +55,7 @@ export default function CreateProductForm() {
   // 2. Define a submit handler.
   async function onSubmit(values: CreateProductInputs) {
     try {
-      const res = await createProduct({ ...values });
+      const res = await createProductAction({ ...values });
       if (res.success) {
         toast.success(res.message);
       }

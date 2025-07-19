@@ -25,7 +25,7 @@ type Props = {
 };
 export default function SideBar({ categories }: Props) {
   const { state } = useSidebar();
-  const { loading, onLogout } = useLogOut();
+  const { isLoading, onLogout } = useLogOut();
   async function onLogoutBtnClick() {
     await onLogout();
     toast.success("You Logged Out Successfully.");
@@ -59,11 +59,11 @@ export default function SideBar({ categories }: Props) {
           </SidebarContent>
           <SidebarFooter>
             <SidebarMenuButton
-              disabled={loading}
+              disabled={isLoading}
               onClick={onLogoutBtnClick}
               className="cursor-pointer font-semibold hover:text-destructive transition-colors"
             >
-              <LogOut /> {loading ? "Loading" : "Logout"}
+              <LogOut /> {isLoading ? "Loading" : "Logout"}
             </SidebarMenuButton>
           </SidebarFooter>
         </div>

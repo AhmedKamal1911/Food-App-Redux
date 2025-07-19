@@ -15,7 +15,7 @@ import {
   UpdateCategoryInputs,
   updateCategorySchema,
 } from "@/lib/validation/update-category-schema";
-import { updateCategory } from "@/lib/server/actions/category/update-category";
+import { updateCategoryAction } from "@/lib/server/actions/category/update-category-action";
 import DropZoneViewer from "@/app/dashboard/_components/drop-zone-viewer";
 
 export default function UpdateCategoryForm({
@@ -43,7 +43,7 @@ export default function UpdateCategoryForm({
   // 2. Define a submit handler.
   async function onSubmit(values: UpdateCategoryInputs) {
     try {
-      const res = await updateCategory(values);
+      const res = await updateCategoryAction(values);
       if (res.success) {
         toast.success(res.message);
       }

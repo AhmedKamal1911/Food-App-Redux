@@ -10,10 +10,7 @@ import { requirePermission } from "@/lib/server-utils";
 import { getCurrentSession } from "@/lib/dal/user";
 import { z } from "zod";
 
-export async function deleteUserAction(
-  _: unknown,
-  formData: FormData
-): ActionResponse {
+export async function deleteUserAction(userIdInput: string): ActionResponse {
   if (!requirePermission(["superAdmin"])) {
     return {
       success: false,
@@ -23,7 +20,7 @@ export async function deleteUserAction(
       },
     };
   }
-  const result = z.string().safeParse(formData.get("userId"));
+  const result = z.string().safeParse(userIdInput);
   if (!result.success)
     return {
       success: false,

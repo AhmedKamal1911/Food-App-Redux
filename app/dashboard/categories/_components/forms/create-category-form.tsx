@@ -12,7 +12,7 @@ import {
   CreateCategoryInputs,
   createCategorySchema,
 } from "@/lib/validation/create-category-schema";
-import { createCategory } from "@/lib/server/actions/category/create-category";
+import { createCategoryAction } from "@/lib/server/actions/category/create-category-action";
 import DropZoneViewer from "@/app/dashboard/_components/drop-zone-viewer";
 
 export default function CreateCategoryForm() {
@@ -30,7 +30,7 @@ export default function CreateCategoryForm() {
   // 2. Define a submit handler.
   async function onSubmit(values: CreateCategoryInputs) {
     try {
-      const res = await createCategory({ ...values });
+      const res = await createCategoryAction({ ...values });
       if (res.success) {
         toast.success(res.message);
       }

@@ -13,22 +13,28 @@ import { Button } from "@/components/ui/button";
 import { deleteUserAction } from "@/lib/server/actions/user/delete-user-action";
 
 import { Trash } from "lucide-react";
-import { useActionState, useEffect } from "react";
+import { useRef, useTransition } from "react";
 import { toast } from "react-toastify";
+type Props = {
+  userId: string;
+};
+export default function DeleteUserModal({ userId }: Props) {
+  const [isPending, startTransition] = useTransition();
+  const actionBtnRef = useRef<HTMLButtonElement>(null);
+  function handleDeleteUserClick() {
+    startTransition(async () => {
+      try {
+        const response = await deleteUserAction(userId);
+        if (!response.success) return void toast.error(response.error.message);
+        toast.success(response.data.message);
+        actionBtnRef.current?.click();
+      } catch (e) {
+        console.error({ e });
+        toast.error("Network Error");
+      }
+    });
+  }
 
-export default function DeleteUserModal({ userId }: { userId: string }) {
-  const [state, formAction, isPending] = useActionState(
-    deleteUserAction,
-    undefined,
-    userId
-  );
-
-  useEffect(() => {
-    if (state?.success) return void toast.success(state.data.message);
-
-    if (state?.error) toast.error(state.error.message);
-    // FIXME: error toast not workng
-  }, [state]);
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -49,20 +55,16 @@ export default function DeleteUserModal({ userId }: { userId: string }) {
           <AlertDialogCancel className="rounded-sm text-white">
             Cancel
           </AlertDialogCancel>
-          <form action={formAction}>
-            <input type="hidden" name="userId" value={userId} />
-
-            <AlertDialogAction asChild>
-              <Button
-                disabled={isPending}
-                className="rounded-sm bg-destructive hover:bg-destructive/80 font-semibold"
-                size={"sm"}
-                type="submit"
-              >
-                {isPending ? "Confirming..." : "Confirm"}
-              </Button>
-            </AlertDialogAction>
-          </form>
+          <AlertDialogAction className="hidden" ref={actionBtnRef} />
+          <Button
+            onClick={() => handleDeleteUserClick()}
+            disabled={isPending}
+            className="rounded-sm bg-destructive hover:bg-destructive/80 font-semibold h-auto"
+            size={"sm"}
+            type="submit"
+          >
+            {isPending ? "Confirming..." : "Confirm"}
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

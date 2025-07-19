@@ -83,16 +83,16 @@ export default function UserProfile({ session }: Props) {
 }
 
 function SignOutBtn() {
-  const { loading, onLogout } = useLogOut();
+  const { isLoading, onLogout } = useLogOut();
   return (
     <Button
-      disabled={loading}
+      disabled={isLoading}
       onClick={onLogout}
       variant={"ghost"}
       className="flex p-1.5! justify-start w-full hover:text-destructive"
     >
       <LogOut className="size-4" />
-      <span>{loading ? "Loading..." : "Logout"} </span>
+      <span>{isLoading ? "Loading..." : "Logout"} </span>
     </Button>
   );
 }
