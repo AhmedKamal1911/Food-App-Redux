@@ -4,7 +4,7 @@ import { redirect, RedirectType } from "next/navigation";
 
 export default async function ForgetPasswordPage() {
   const session = await getCurrentSession();
-  if (session.success) return redirect("/", RedirectType.replace);
+  if (session) return redirect("/", RedirectType.replace);
   return (
     <main>
       <section className="pt-35 md:pt-50 pb-10 bg-secondary h-[50vh] md:min-h-[80vh] bg-[url('/images/decorations/chef-bg.png')] bg-cover">

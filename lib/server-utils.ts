@@ -7,9 +7,9 @@ export async function hashPassword(password: string) {
 }
 
 export async function requirePermission(roles: UserRole[]) {
-  const result = await getCurrentSession();
-  if (!result.success) {
+  const session = await getCurrentSession();
+  if (!session) {
     return false;
   }
-  return roles.includes(result.session.user.role);
+  return roles.includes(session.user.role);
 }

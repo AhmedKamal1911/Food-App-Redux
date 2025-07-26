@@ -14,8 +14,8 @@ import { getCurrentSession } from "@/lib/dal/user";
 export async function editPersonalInfoAction(
   inputs: PersonalInformationInputs
 ): ActionResponse {
-  const sessionRes = await getCurrentSession();
-  if (!sessionRes.success) {
+  const session = await getCurrentSession();
+  if (!session) {
     return {
       success: false,
       error: {
@@ -24,7 +24,7 @@ export async function editPersonalInfoAction(
       },
     };
   }
-  const userId = sessionRes.session.user.id;
+  const userId = session.user.id;
 
   const result = personalInformationSchema.safeParse(inputs);
 

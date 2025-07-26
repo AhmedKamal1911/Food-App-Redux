@@ -4,15 +4,15 @@ import { redirect, RedirectType } from "next/navigation";
 
 import IntroBanner from "@/components/common/intro-banner";
 import { getUserById } from "@/lib/server/queries/user";
-import { getCurrentUserTransactions } from "@/lib/server/queries/transaction/get-user-transactions";
 import { getCurrentSession } from "@/lib/dal/user";
+import { getCurrentUserTransactions } from "@/lib/server/queries/transaction";
 
 export default async function AccountPage() {
-  const sessionResponse = await getCurrentSession();
+  const session = await getCurrentSession();
 
-  if (!sessionResponse.success) redirect("/", RedirectType.replace);
+  if (!session) redirect("/", RedirectType.replace);
 
-  const user = await getUserById(sessionResponse.session.user.id);
+  const user = await getUserById(session.user.id);
   if (!user) redirect("/", RedirectType.replace);
   const userTransactions = await getCurrentUserTransactions();
   console.log({ userTransactions });

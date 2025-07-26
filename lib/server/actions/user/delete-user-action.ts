@@ -30,9 +30,9 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
   console.log("from action", { userId });
 
   try {
-    const currentUserRes = await getCurrentSession();
+    const session = await getCurrentSession();
 
-    if (!currentUserRes.success) {
+    if (!session) {
       return {
         success: false,
         error: {
@@ -54,7 +54,7 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
       };
     }
 
-    if (userId === currentUserRes.session.user.id) {
+    if (userId === session.user.id) {
       return {
         success: false,
         error: {
@@ -63,10 +63,7 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
         },
       };
     }
-    if (
-      currentUserRes.session.user.role === "superAdmin" &&
-      user.role === "superAdmin"
-    ) {
+    if (session.user.role === "superAdmin" && user.role === "superAdmin") {
       return {
         success: false,
         error: {

@@ -148,7 +148,7 @@ import { redirect, RedirectType } from "next/navigation";
 // ];
 export default async function TransactionsPage() {
   const session = await getCurrentSession();
-  if (!session.success) redirect("/login", RedirectType.replace);
+  if (!session) redirect("/login", RedirectType.replace);
   const transactions = await getUsersTransactions();
   console.log("Transactions:", transactions);
   return (

@@ -65,7 +65,7 @@ export default function SettingsTabs({ user, userTransactions }: Props) {
 
                 window.history.replaceState(null, "", url.toString());
               }}
-              className="flex items-center gap-2 px-5 py-4 rounded-sm font-semibold text-gray-600 data-[state=active]:bg-primary data-[state=active]:text-white text-[18px]"
+              className="flex items-center cursor-pointer gap-2 px-5 py-4 rounded-sm font-semibold text-gray-600 data-[state=active]:bg-primary data-[state=active]:text-white text-[18px]"
             >
               {tab.icon}
               {tab.label}

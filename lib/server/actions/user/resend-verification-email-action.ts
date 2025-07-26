@@ -9,13 +9,19 @@ import { ActionResponse } from "@/lib/types/shared";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function resendVerificationEmailAction(): ActionResponse {
-  const sessionResult = await getCurrentSession();
+  const session = await getCurrentSession();
 
-  if (!sessionResult.success) {
-    return sessionResult;
+  if (!session) {
+    return {
+      success: false,
+      error: {
+        message: "Unauthorized action",
+        status: 401,
+      },
+    };
   }
 
-  const user = sessionResult.session.user;
+  const user = session.user;
 
   try {
     // Generate new token and expiry

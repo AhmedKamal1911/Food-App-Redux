@@ -73,8 +73,8 @@ export async function updateUserRoleAction(
   }
 
   try {
-    const currentUserRes = await getCurrentSession();
-    if (!currentUserRes.success) {
+    const session = await getCurrentSession();
+    if (!session) {
       return {
         success: false,
         error: {
@@ -84,7 +84,7 @@ export async function updateUserRoleAction(
         },
       };
     }
-    const loggedInUserRole = currentUserRes.session.user.role;
+    const loggedInUserRole = session.user.role;
     console.log({ loggedIn: loggedInUserRole, target: userFromDb.role });
     if (loggedInUserRole && userFromDb.role === "superAdmin") {
       return {
