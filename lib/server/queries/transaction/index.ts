@@ -1,1 +1,1 @@
-export * from "./get-user-transactions";
+export * from "./get-users-transactions";

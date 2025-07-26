@@ -2,13 +2,20 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { User, Bell, Info } from "lucide-react";
+import { User, Info, CreditCard } from "lucide-react";
 import GeneralSettingsContent from "./general-settings-content";
 import PersonalInfoContent from "./personal-info-content";
 import { User as UserType } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
+
+import TransactionsTableSection from "./transactions-table-section";
+import { TransactionOrder } from "@/lib/types/product";
+
 export type UserInfo = Omit<UserType, "password"> & { hasPassword: boolean };
-const getTabsContent = (userInfo: UserInfo) => {
+const getTabsContent = (
+  userInfo: UserInfo,
+  userTransactions: TransactionOrder[]
+) => {
   const tabs = [
     {
       value: "general",
@@ -23,19 +30,10 @@ const getTabsContent = (userInfo: UserInfo) => {
       content: <PersonalInfoContent user={userInfo} />,
     },
     {
-      value: "notifications",
-      label: "Notifications",
-      icon: <Bell className="w-5 h-5" />,
-      content: (
-        <>
-          <span className="text-xl font-semibold mb-2 block">
-            Notifications
-          </span>
-          <span className="text-gray-600 block">
-            Manage your notification preferences here.
-          </span>
-        </>
-      ),
+      value: "transactions",
+      label: "Transactions",
+      icon: <CreditCard className="w-5 h-5" />,
+      content: <TransactionsTableSection data={userTransactions} />,
     },
   ];
 
@@ -43,10 +41,11 @@ const getTabsContent = (userInfo: UserInfo) => {
 };
 type Props = {
   user: UserInfo;
+  userTransactions: TransactionOrder[];
 };
-export default function SettingsTabs({ user }: Props) {
+export default function SettingsTabs({ user, userTransactions }: Props) {
   const tab = useSearchParams().get("tab");
-  const tabs = getTabsContent(user);
+  const tabs = getTabsContent(user, userTransactions);
   console.log({ pass: user.hasPassword });
   return (
     <Tabs

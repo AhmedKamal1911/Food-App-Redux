@@ -1,19 +1,21 @@
-import { getServerSession } from "next-auth";
 import SettingsTabs from "./components/settings-tabs";
-import { authOptions } from "@/lib/auth";
+
 import { redirect, RedirectType } from "next/navigation";
 
 import IntroBanner from "@/components/common/intro-banner";
 import { getUserById } from "@/lib/server/queries/user";
+import { getCurrentUserTransactions } from "@/lib/server/queries/transaction/get-user-transactions";
+import { getCurrentSession } from "@/lib/dal/user";
 
 export default async function AccountPage() {
-  const session = await getServerSession(authOptions);
-  if (!session) redirect("/", RedirectType.replace);
+  const sessionResponse = await getCurrentSession();
 
-  const user = await getUserById(session.user.id);
+  if (!sessionResponse.success) redirect("/", RedirectType.replace);
 
+  const user = await getUserById(sessionResponse.session.user.id);
   if (!user) redirect("/", RedirectType.replace);
-
+  const userTransactions = await getCurrentUserTransactions();
+  console.log({ userTransactions });
   const { password, ...userInfo } = user;
   const userInfoWithFlag = {
     ...userInfo,
@@ -27,7 +29,10 @@ export default async function AccountPage() {
         breadcrumbPaths={[{ name: "account", href: "/account" }]}
       />
       <div className="container py-4">
-        <SettingsTabs user={userInfoWithFlag} />
+        <SettingsTabs
+          user={userInfoWithFlag}
+          userTransactions={userTransactions}
+        />
       </div>
     </main>
   );

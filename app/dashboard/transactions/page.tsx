@@ -1,6 +1,7 @@
 import TransactionTableSection from "./components/transactions-table-section";
-import { getUserTransactions } from "@/lib/server/queries/transaction";
+
 import { getCurrentSession } from "@/lib/dal/user";
+import { getUsersTransactions } from "@/lib/server/queries/transaction";
 import { redirect, RedirectType } from "next/navigation";
 
 // const transactions: TransactionOrder[] = [
@@ -148,7 +149,7 @@ import { redirect, RedirectType } from "next/navigation";
 export default async function TransactionsPage() {
   const session = await getCurrentSession();
   if (!session.success) redirect("/login", RedirectType.replace);
-  const transactions = await getUserTransactions();
+  const transactions = await getUsersTransactions();
   console.log("Transactions:", transactions);
   return (
     <div className="bg-white rounded-sm min-h-full p-4">

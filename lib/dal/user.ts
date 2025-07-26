@@ -1,6 +1,7 @@
 import "server-only";
 import { getServerSession, Session } from "next-auth";
 import { authOptions } from "../auth";
+import { cache } from "react";
 
 type SessionError = {
   success: false;
@@ -16,7 +17,7 @@ type SessionSuccess = {
 };
 export type SessionResponse = SessionError | SessionSuccess;
 
-export const getCurrentSession = async (): Promise<SessionResponse> => {
+export const getCurrentSession = cache(async (): Promise<SessionResponse> => {
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -33,4 +34,4 @@ export const getCurrentSession = async (): Promise<SessionResponse> => {
     success: true,
     session: session,
   };
-};
+});
