@@ -79,7 +79,7 @@ model Product {
   slug        String           @unique
   name        String
   description String
-  image       String
+  image       String?
   price       Float
   sizes       Size[]
   extras      Extra[]
@@ -94,7 +94,7 @@ model ProductCategory {
   id       String    @id @default(uuid())
   slug     String    @unique
   name     String    @unique
-  image    String
+  image    String?
   products Product[]
 }
 

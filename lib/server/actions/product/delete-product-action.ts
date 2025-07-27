@@ -6,6 +6,7 @@ import { getProductById } from "../../queries";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { ActionResponse } from "@/lib/types/shared";
 import { requirePermission } from "@/lib/server-utils";
+import cloudinary from "@/lib/cloudinary";
 
 export async function deleteProductAction({
   productId,
@@ -35,6 +36,18 @@ export async function deleteProductAction({
       };
     }
 
+    if (product.image) {
+      const url = product.image;
+      const matches = url.match(
+        /\/upload\/(?:v\d+\/)?(.+)\.(jpg|jpeg|png|webp|gif)$/
+      );
+
+      const publicId = matches ? matches[1] : null;
+
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
+      }
+    }
     await prisma.product.delete({
       where: {
         id: productId,

@@ -38,7 +38,9 @@ export default function UpdateCategoryForm({
     valuesForm: form.getValues(),
   });
 
-  const [previewUrl, setPreviewUrl] = useState(category.image);
+  const [previewUrl, setPreviewUrl] = useState(
+    category.image ?? "https://placehold.co/600x400/png"
+  );
 
   // 2. Define a submit handler.
   async function onSubmit(values: UpdateCategoryInputs) {

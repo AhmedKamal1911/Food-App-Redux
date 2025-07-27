@@ -62,8 +62,10 @@ export default function UpdateProductForm({
   });
   const categories = useCategoriesContext();
 
-  const [previewUrl, setPreviewUrl] = useState(product.image);
-
+  const [previewUrl, setPreviewUrl] = useState(
+    product.image ?? "https://placehold.co/600x400.png"
+  );
+  // TODO: close the modal after successful update
   // 2. Define a submit handler.
   async function onSubmit(values: UpdateProductInputs) {
     try {

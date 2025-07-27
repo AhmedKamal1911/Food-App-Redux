@@ -8,6 +8,7 @@ import { ActionResponse } from "@/lib/types/shared";
 import { getCategoryById } from "../../queries";
 import { requirePermission } from "@/lib/server-utils";
 import { z } from "zod";
+import cloudinary from "@/lib/cloudinary";
 
 export async function deleteCategoryAction(
   categoryIdInput: string
@@ -41,7 +42,18 @@ export async function deleteCategoryAction(
         success: false,
       };
     }
+    if (category.image) {
+      const url = category.image;
+      const matches = url.match(
+        /\/upload\/(?:v\d+\/)?(.+)\.(jpg|jpeg|png|webp|gif)$/
+      );
 
+      const publicId = matches ? matches[1] : null;
+
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
+      }
+    }
     await prisma.productCategory.delete({
       where: {
         id: categoryId,

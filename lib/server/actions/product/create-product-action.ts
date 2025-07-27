@@ -11,6 +11,7 @@ import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getProductBySlug } from "../../queries";
 import { requirePermission } from "@/lib/server-utils";
+import { uploadImage } from "@/lib/queries/upload/upload-image";
 
 type FailedResponse = {
   success: false;
@@ -76,10 +77,9 @@ export async function createProductAction(
         },
       };
     }
-    // TODO: upload image using cloudinary and store image url in product.
-    await prisma.product.create({
+
+    const createdProduct = await prisma.product.create({
       data: {
-        image: "/images/special-products/burger.png",
         name: data.name,
         description: data.desc,
         price: data.price,
@@ -92,6 +92,14 @@ export async function createProductAction(
         },
         sizes: { createMany: { data: data.sizes } },
       },
+    });
+    const imageUrl = await uploadImage({
+      imageFile: data.img,
+      pathname: `product_images/${createdProduct.id}`,
+    });
+    await prisma.product.update({
+      where: { id: createdProduct.id },
+      data: { image: imageUrl },
     });
     revalidateTag(PRISMA_CACHE_KEY.PRODUCTS);
     return {

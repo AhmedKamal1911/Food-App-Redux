@@ -13,6 +13,7 @@ import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCategoryBySlug } from "../../queries";
 import { requirePermission } from "@/lib/server-utils";
+import { uploadImage } from "@/lib/queries/upload/upload-image";
 
 type FailedResponse = {
   success: false;
@@ -78,13 +79,20 @@ export async function createCategoryAction(
         },
       };
     }
-    // TODO: upload image using cloudinary and store image url in product.
-    await prisma.productCategory.create({
+
+    const createdCategory = await prisma.productCategory.create({
       data: {
-        image: "/images/special-products/burger.png",
         name: data.name,
         slug,
       },
+    });
+    const imageUrl = await uploadImage({
+      imageFile: data.img,
+      pathname: `category_images/${createdCategory.id}`,
+    });
+    await prisma.productCategory.update({
+      where: { id: createdCategory.id },
+      data: { image: imageUrl },
     });
     revalidateTag(PRISMA_CACHE_KEY.CATEGORIES);
     return {

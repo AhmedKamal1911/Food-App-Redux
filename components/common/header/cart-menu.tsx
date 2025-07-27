@@ -198,7 +198,12 @@ const MemoizedCartProductBox = memo(function CartProductBox({
 }) {
   return (
     <div className="flex items-center">
-      <Image src={product.image} alt={product.name} width={80} height={80} />
+      <Image
+        src={product.image ?? "https://placehold.co/600x400.png"}
+        alt={product.name}
+        width={80}
+        height={80}
+      />
       <div className="flex flex-col gap-1 flex-1 px-4">
         <Link
           href={`/products/${product.slug}`}

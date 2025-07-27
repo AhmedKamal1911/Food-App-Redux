@@ -45,7 +45,7 @@ export default function AddToCartDialog({
         <DialogHeader className="text-center">
           <div className="self-center relative">
             <Image
-              src={product.image}
+              src={product.image ?? "https://placehold.co/600x400.png"}
               height={100}
               width={100}
               alt={product.name}

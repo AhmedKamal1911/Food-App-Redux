@@ -76,7 +76,7 @@ function TransactionItem({
       <div className="flex items-center gap-2">
         <div>
           <Image
-            src={item.product.image}
+            src={item.product.image ?? "https://placehold.co/600x400.png"}
             alt={item.product.name}
             width={40}
             height={40}

@@ -33,7 +33,7 @@ export default async function ProductPage({ params }: Props) {
           <div className="flex items-center justify-center gap-5 max-md:flex-col">
             <div className="flex flex-col items-center justify-center flex-1 size-[300px] max-w-full max-h-full">
               <Image
-                src={product.image}
+                src={product.image ?? "https://placehold.co/600x400.png"}
                 alt={product.name}
                 height={200}
                 width={200}

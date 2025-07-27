@@ -25,7 +25,7 @@ function MenuProduct({ product }: { product: Product }) {
     <div className="text-black hover:bg-primary/10 transition-colors relative flex items-center px-5 p-1">
       <div className="shrink-0">
         <Image
-          src={product.image}
+          src={product.image ?? "https://placehold.co/600x400.png"}
           alt={product.name}
           height={100}
           width={100}

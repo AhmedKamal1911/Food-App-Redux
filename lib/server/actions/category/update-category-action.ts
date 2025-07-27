@@ -11,6 +11,7 @@ import {
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCategoryById, getCategoryBySlug } from "../../queries";
 import { requirePermission } from "@/lib/server-utils";
+import { uploadImage } from "@/lib/queries/upload/upload-image";
 
 type ErrorType = "error" | "validationError";
 
@@ -89,6 +90,13 @@ export async function updateCategoryAction(
         };
       }
     }
+
+    const imageUrl = data.img
+      ? await uploadImage({
+          imageFile: data.img,
+          pathname: `category_images/${categoryFromDb.id}`,
+        })
+      : categoryFromDb.image;
     // Update Category
     await prisma.productCategory.update({
       where: {
@@ -97,7 +105,7 @@ export async function updateCategoryAction(
       data: {
         name: data.name,
         slug: newCategorySlug,
-        image: "/images/special-products/lemon.png", // TODO: handle dynamic image upload with cloudniary
+        image: imageUrl,
       },
     });
 

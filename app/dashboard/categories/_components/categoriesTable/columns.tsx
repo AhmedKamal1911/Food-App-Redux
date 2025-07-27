@@ -39,7 +39,7 @@ export const columns: ColumnDef<ProductCategory>[] = [
       return (
         <div className="bg-gray-200/60 p-2 rounded-sm size-15 inline-flex  shadow-md">
           <Image
-            src={imgSrc}
+            src={imgSrc ?? "https://placehold.co/600x400/png"}
             alt="Product"
             width={100}
             height={100}

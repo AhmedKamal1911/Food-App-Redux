@@ -13,7 +13,11 @@ export default function CategoryCard({
         href={`/categories/${category.slug}`}
         className="block w-full h-full relative"
       >
-        <Image src={category.image} alt={`${category.name} category`} fill />
+        <Image
+          src={category.image ?? "https://placehold.co/600x400/png"}
+          alt={`${category.name} category`}
+          fill
+        />
 
         <div
           className="absolute inset-0 bg-gradient-to-t from-black to-transparent

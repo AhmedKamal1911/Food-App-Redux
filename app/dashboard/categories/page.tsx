@@ -4,6 +4,7 @@ import CreateCategoryModal from "./_components/modals/create-category-modal";
 
 export default async function CategoriesPage() {
   const categories = await getAllCategories();
+
   return (
     <div className="bg-white rounded-sm min-h-full p-4">
       <div className="flex items-center justify-between">

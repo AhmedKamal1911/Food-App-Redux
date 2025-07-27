@@ -10,6 +10,7 @@ import prisma from "@/lib/prisma";
 import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { requirePermission } from "@/lib/server-utils";
+import { uploadImage } from "@/lib/queries/upload/upload-image";
 
 type FailedResponse = {
   success: false;
@@ -100,6 +101,14 @@ export async function updateProductAction(
       (dbExtra) => !data.extras.find((ex) => dbExtra.id === ex.id)
     );
     console.dir({ deletedSizes, clientSizes: data.sizes }, { depth: null });
+
+    const imageUrl = data.img
+      ? await uploadImage({
+          imageFile: data.img,
+          pathname: `product_images/${productFromDb.id}`,
+        })
+      : productFromDb.image;
+
     await prisma.product.update({
       where: {
         id: data.id,
@@ -110,10 +119,7 @@ export async function updateProductAction(
         price: data.price,
         categoryId: data.categoryId,
         description: data.desc,
-        image:
-          data.img === undefined || data.img.size === 0
-            ? productFromDb.image
-            : "/images/special-products/lemon.png",
+        image: imageUrl,
         sizes: {
           deleteMany: deletedSizes.map((s) => ({ id: s.id })),
           upsert: data.sizes.map((s) => ({

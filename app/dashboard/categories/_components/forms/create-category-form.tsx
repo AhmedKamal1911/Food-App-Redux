@@ -24,7 +24,7 @@ export default function CreateCategoryForm() {
     },
     mode: "onChange",
   });
-
+  //TODO: close the modal after creating the category
   const [previewUrl, setPreviewUrl] = useState("");
   console.log(form.formState.errors);
   // 2. Define a submit handler.
