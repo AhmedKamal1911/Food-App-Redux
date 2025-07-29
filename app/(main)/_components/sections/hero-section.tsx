@@ -13,11 +13,11 @@ import {
 import { useEffect, useState } from "react";
 import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-const Slides = [
-  <Slide1 key={"slide-1"} />,
-  <Slide2 key={"slide-2"} />,
-  <Slide3 key={"slide-3"} />,
-];
+// const Slides = [
+//   <Slide1 key={"slide-1"} />,
+//   <Slide2 key={"slide-2"} />,
+//   <Slide3 key={"slide-3"} />,
+// ];
 
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -126,7 +126,6 @@ function Slide1({ className }: { className?: string }) {
         ];
         const animation = animate(sequence);
         await animation;
-        console.log("animation completed", animation.time);
       };
       animateIntro();
     }
@@ -240,7 +239,6 @@ function Slide2({ className }: { className?: string }) {
         ];
         const animation = animate(sequence);
         await animation;
-        console.log("animation completed", animation.time);
       };
       animateIntro();
     }
@@ -344,7 +342,6 @@ function Slide3({ className }: { className?: string }) {
         ];
         const animation = animate(sequence);
         await animation;
-        console.log("animation completed", animation.time);
       };
       animateIntro();
     }

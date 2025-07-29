@@ -21,14 +21,13 @@ export function useCheckEmail({
       );
 
       const data = (await response.json()) as EmailCheckResponse;
-      console.log({ data });
 
       if (data.status === "inavaliable" || data.status === "available") {
         setStatus(data.status);
         latestStatusRef.current = data.status;
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.log({ error });
       setStatus("error");
       setError("failed to check email");
     }

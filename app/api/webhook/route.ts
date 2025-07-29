@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
         where: { paymentId },
       });
       if (existingOrder) {
-        console.log("Order already exists for paymentId:", paymentId);
+        // console.log("Order already exists for paymentId:", paymentId);
         return NextResponse.json(
           { error: `Order already exists for paymentId:${paymentId}` },
           { status: 400 }
@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
           isRegistered: Boolean(userId),
         }),
       });
-      console.log("Order processing ");
+      // console.log("Order processing ");
       break;
     case "charge.refunded":
       await prisma.order.update({
@@ -147,7 +147,7 @@ export async function POST(req: NextRequest) {
 
       break;
     default:
-      console.warn(`Unhandled event type: ${event.type}`);
+      // console.warn(`Unhandled event type: ${event.type}`);
       return NextResponse.json(
         { error: "Unhandled event type" },
         { status: 400 }

@@ -2,7 +2,6 @@ import SpecialHeading from "@/components/common/special-heading";
 import BestChefSlider, { Chef } from "../best-chef-slider";
 import Image from "next/image";
 
-type Props = {};
 const chefList: Chef[] = [
   {
     id: 1,
@@ -35,7 +34,7 @@ const chefList: Chef[] = [
     level: "sous chef",
   },
 ];
-export default function BestChefSection({}: Props) {
+export default function BestChefSection() {
   return (
     <section className="py-30 bg-[url('/images/decorations/chef-bg.png')] bg-cover bg-no-repeat relative">
       <Image

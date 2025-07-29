@@ -24,7 +24,7 @@ import { Extra } from "@prisma/client";
 const MemoizedProductRow = memo(
   function ProductRow({ product }: { product: CartProduct }) {
     const dispatch = useAppDispatch();
-    console.log(`row rerenders ${product.name}`);
+
     function onIncrementClick() {
       dispatch(
         incrementCartItemQty({
@@ -84,7 +84,6 @@ const MemoizedProductRow = memo(
     );
   },
   (prev, next) => {
-    console.log({ prevQty: prev.product.qty, nextQty: next.product.qty });
     return prev.product.qty === next.product.qty;
   }
 );

@@ -14,7 +14,6 @@ import { Lock, LockKeyhole, Mail, User } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
-import Or from "./or";
 import {
   registerInputs,
   RegisterSchema,
@@ -28,6 +27,7 @@ import { cn } from "@/lib/utils";
 import { registerAction } from "@/lib/server/actions/user/register-action";
 import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
+import Or from "@/components/common/or";
 
 export default function RegisterForm() {
   const form = useForm<RegisterSchema>({
@@ -47,13 +47,12 @@ export default function RegisterForm() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: RegisterSchema) {
-    console.log("submitted");
     form.trigger("email", {
       shouldFocus: true,
     });
     try {
       const res = await registerAction(values);
-      // console.log({ res });
+
       if (res.success) {
         toast.success(res.message);
         toast.success("Email Verification Message Has Been Sent To Email");

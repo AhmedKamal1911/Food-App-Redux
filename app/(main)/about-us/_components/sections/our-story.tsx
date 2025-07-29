@@ -1,8 +1,7 @@
 import SpecialHeading from "@/components/common/special-heading";
 import Image from "next/image";
 
-type Props = {};
-export default function OurStorySection({}: Props) {
+export default function OurStorySection() {
   return (
     <section className="py-20 bg-gray-100">
       <div className="container">

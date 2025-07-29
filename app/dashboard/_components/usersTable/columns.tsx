@@ -195,7 +195,6 @@ function UserRowActions({ user }: { user: User }) {
 function RoleHeader({ column }: { column: Column<User> }) {
   const selectedRoles = column.getFilterValue() as UserRole[] | undefined;
 
-  console.log({ selectedRoles });
   function toggleRoleChecked(userRole: UserRole) {
     if (selectedRoles?.includes(userRole)) {
       const newRoles = selectedRoles.filter((role) => role !== userRole);

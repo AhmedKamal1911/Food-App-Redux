@@ -5,8 +5,7 @@ import ExperienceSection from "./_components/sections/experience-section";
 import ReviewsSection from "../../../components/common/sections/reviews-section";
 import BookTableSection from "../../../components/common/sections/book-table-section";
 
-type Props = {};
-export default function AboutUs({}: Props) {
+export default function AboutUs() {
   return (
     <main className="min-h-screen">
       <IntroBanner

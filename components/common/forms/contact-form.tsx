@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { File, Mail, Phone, X } from "lucide-react";
+import { File, Mail } from "lucide-react";
 
 import CustomTextArea from "../custom-text-area";
 import { contactSchema, ContactSchema } from "@/lib/validation/contact-schema";
@@ -34,8 +34,9 @@ export default function ContactForm() {
   });
 
   // 2. Define a submit handler.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function onSubmit(values: ContactSchema) {
-    console.log(values);
+    // console.log(values);
   }
 
   return (

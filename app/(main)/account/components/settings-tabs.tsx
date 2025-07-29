@@ -46,7 +46,7 @@ type Props = {
 export default function SettingsTabs({ user, userTransactions }: Props) {
   const tab = useSearchParams().get("tab");
   const tabs = getTabsContent(user, userTransactions);
-  console.log({ pass: user.hasPassword });
+
   return (
     <Tabs
       value={tab ?? undefined}

@@ -24,11 +24,9 @@ export function useGetCartProducts() {
   useEffect(() => {
     if (prevCartItemsLength && prevCartItemsLength < cartProductsLength) {
       client.invalidateQueries({ queryKey: [TanstackQueryCacheKey.CART] });
-      console.log("invalidating query");
     }
     if (prevCartItemsLength === 0 && cartProductsLength === 0) {
       client.removeQueries({ queryKey: [TanstackQueryCacheKey.CART] });
-      console.log("removing query");
     }
   }, [cartProductsLength, client, prevCartItemsLength]);
 
@@ -59,8 +57,6 @@ export function useGetCartProducts() {
 
     return list;
   }, [cartItems, data]);
-
-  console.log(cartProducts);
 
   return { cartProducts, ...query };
 }

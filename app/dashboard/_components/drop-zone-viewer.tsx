@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 type Props<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = {
   setPreviewUrl: (url: string) => void;
   previewUrl: string;
@@ -18,7 +18,7 @@ type Props<
 
 export default function DropZoneViewer<
   T extends FieldValues = FieldValues,
-  K extends FieldPath<T> = FieldPath<T>
+  K extends FieldPath<T> = FieldPath<T>,
 >({
   setPreviewUrl,
   onCloseImg,
@@ -32,7 +32,6 @@ export default function DropZoneViewer<
     return () => {
       if (previewUrl.startsWith("blob:")) {
         URL.revokeObjectURL(previewUrl);
-        console.log("URL revoked");
       }
     };
   }, [previewUrl]);

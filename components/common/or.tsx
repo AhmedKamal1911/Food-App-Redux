@@ -1,5 +1,4 @@
-type Props = {};
-export default function Or({}: Props) {
+export default function Or() {
   return (
     <div className="flex items-center justify-center w-full ">
       <div className="h-0.5 w-full bg-gray-300 rounded-sm" />

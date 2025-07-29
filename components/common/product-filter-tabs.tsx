@@ -32,7 +32,6 @@ export default function ProductFilterTabs({
           : lastPage.page + 1;
       },
     });
-  console.log({ data, error, fetchNextPage, hasNextPage, isFetchingNextPage });
   const cartProducts = useAppSelector((state) => state.cart.products);
 
   const categoriesNameList = useMemo(
@@ -53,7 +52,6 @@ export default function ProductFilterTabs({
 
     [selectedCategory, data]
   );
-  console.log({ filteredData, selectedCategory });
   const getMoreProducts = () => {
     fetchNextPage();
   };

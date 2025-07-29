@@ -36,7 +36,6 @@ export async function forgetPasswordAction(
 
   if (!result.success) {
     const errorMsg = result.error.flatten().formErrors[0];
-    console.log(result.error.flatten());
     return {
       success: false,
       email: formDataEmail,
@@ -116,9 +115,8 @@ export async function forgetPasswordAction(
       }),
     });
     return { success: true, email: "", status: 200 };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.log(error);
-
     return {
       success: false,
       email: result.data,

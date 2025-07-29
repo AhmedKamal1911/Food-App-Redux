@@ -30,7 +30,6 @@ export function PromoCodeForm() {
 
     setIsPromoCodeApplied(true);
     // ✅ This will be type-safe and validated.
-    console.log(values);
   }
   return isPromoCodeApplied ? (
     <PromoCodeAppliedBox

@@ -30,8 +30,9 @@ export default function BookTableForm() {
   });
 
   // 2. Define a submit handler.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function onSubmit(values: z.infer<typeof bookTableSchema>) {
-    console.log(values);
+    // console.log(values);
   }
 
   return (

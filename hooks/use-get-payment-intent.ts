@@ -10,7 +10,6 @@ async function fetchPaymentIntent({
   subtotal: number;
   metadata: Record<string, unknown>;
 }) {
-  console.log({ fromFetch: metadata });
   const res = await fetch(`/api/create-payment-intent`, {
     method: "POST",
     body: JSON.stringify({

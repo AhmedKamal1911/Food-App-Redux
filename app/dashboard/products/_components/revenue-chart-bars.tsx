@@ -1,5 +1,4 @@
 "use client";
-type Props = {};
 
 import {
   ChartContainer,
@@ -30,7 +29,7 @@ const chartData = [
   { month: "June", revenue: 214, expenses: 140 },
 ];
 
-export default function RevenueChartBars({}: Props) {
+export default function RevenueChartBars() {
   return (
     <div className="flex flex-col gap-2 max-h-[300px]">
       <div className="flex gap-2 items-center">

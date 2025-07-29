@@ -27,7 +27,6 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
       error: { message: "Invalid Order ID", status: 400 },
     };
   const userId = result.data;
-  console.log("from action", { userId });
 
   try {
     const session = await getCurrentSession();
@@ -81,7 +80,6 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
     });
 
     revalidateTag(PRISMA_CACHE_KEY.USERS);
-    console.log("deleteddasdassssssssssssssss");
     return {
       success: true,
       data: {

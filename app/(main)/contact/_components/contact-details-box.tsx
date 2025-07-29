@@ -2,8 +2,7 @@ import { formatPhoneNumber } from "@/lib/utils";
 import { Clock, Home, Mail, Phone } from "lucide-react";
 import Link from "next/link";
 
-type Props = {};
-export default function ContactDetailsBox({}: Props) {
+export default function ContactDetailsBox() {
   return (
     <div className="flex flex-col gap-5 flex-1">
       <span className="text-3xl font-semibold capitalize">contact details</span>

@@ -43,8 +43,8 @@ const reviewsList: Review[] = [
     image: "/images/reviews-section/client-2.jpeg",
   },
 ];
-type Props = {};
-export default function ReviewsSection({}: Props) {
+
+export default function ReviewsSection() {
   return (
     <section className="py-20 sm:py-40 bg-secondary relative">
       <Image

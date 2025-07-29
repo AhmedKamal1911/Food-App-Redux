@@ -14,7 +14,6 @@ type Props = {
   relatedProducts: Product[];
 };
 export default function RelatedProductsSection({ relatedProducts }: Props) {
-  console.log("Related Products:", relatedProducts);
   const swiperRef = useRef<SwiperCore | null>(null); // ✅ Correct Type
 
   return (

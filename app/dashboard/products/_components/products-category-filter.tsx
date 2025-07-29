@@ -35,7 +35,7 @@ export default function ProductsCategoryFilter({
     categoriesQuery,
     isPending,
   } = useCategoryFilter({ categories });
-  console.log({ filteredCategories, isPending });
+
   return (
     <>
       {isPending && <LoadingScreen />}

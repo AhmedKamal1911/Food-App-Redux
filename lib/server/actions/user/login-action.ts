@@ -92,8 +92,8 @@ export async function loginAction(inputs: LoginSchema): LoginResponse {
         role: user.role,
       },
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.log({ error });
     return {
       success: false,
       error: {

@@ -33,7 +33,6 @@ export default function AddToCartDialog({
     addProductToCart,
   } = useProductOptions(product);
 
-  console.log("renders", product.sizes.length, product.extras.length);
   return (
     <Dialog>
       <DialogTrigger asChild>

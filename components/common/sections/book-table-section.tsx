@@ -1,8 +1,7 @@
 import BookTableContainer from "@/components/common/book-table-container";
 import Image from "next/image";
 
-type Props = {};
-export default function BookTableSection({}: Props) {
+export default function BookTableSection() {
   return (
     <section className="py-10 relative">
       <Image

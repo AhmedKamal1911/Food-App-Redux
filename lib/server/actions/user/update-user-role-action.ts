@@ -85,7 +85,6 @@ export async function updateUserRoleAction(
       };
     }
     const loggedInUserRole = session.user.role;
-    console.log({ loggedIn: loggedInUserRole, target: userFromDb.role });
     if (loggedInUserRole && userFromDb.role === "superAdmin") {
       return {
         success: false,

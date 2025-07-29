@@ -55,7 +55,6 @@ export async function createCategoryAction(
   }
   const result = createCategorySchema.safeParse(inputs);
   if (!result.success) {
-    console.log("Validation error:", result.error.format());
     return {
       success: false,
       error: {

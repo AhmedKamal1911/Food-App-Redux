@@ -42,7 +42,6 @@ export async function registerAction(
   registerInputsValues: RegisterSchema
 ): RegisterResponse {
   const result = registerInputs.safeParse(registerInputsValues); // 2min
-  console.log(registerInputsValues);
   if (!result.success) {
     return {
       success: false,
@@ -99,8 +98,8 @@ export async function registerAction(
       status: 201,
       message: "Register Successful",
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.log(error);
     return {
       success: false,
       error: {

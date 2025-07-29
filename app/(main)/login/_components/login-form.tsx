@@ -7,8 +7,6 @@ import { Lock, Mail } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
-import Or from "./or";
-
 import CustomPasswordInputField from "@/components/common/custom-password-input-field";
 
 import {
@@ -21,6 +19,7 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Or from "@/components/common/or";
 
 export default function LoginForm() {
   const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
@@ -71,8 +70,8 @@ export default function LoginForm() {
         form.setError("root", { message: errorObject.error.message });
         setIsSubmitSuccess(false);
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.log({ error });
       toast.error("Network Error!");
       form.setError("root", { message: "Network Error!" });
     }

@@ -8,7 +8,6 @@ export default async function TransactionsPage() {
   const session = await getCurrentSession();
   if (!session) redirect("/login", RedirectType.replace);
   const transactions = await getUsersTransactions();
-  console.log("Transactions:", transactions);
   return (
     <div className="bg-white rounded-sm min-h-full p-4">
       <TransactionTableSection data={transactions} />

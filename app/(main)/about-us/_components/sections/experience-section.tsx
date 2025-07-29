@@ -1,7 +1,6 @@
 import SpecialHeading from "@/components/common/special-heading";
 
-type Props = {};
-export default function ExperienceSection({}: Props) {
+export default function ExperienceSection() {
   return (
     <section className="py-20">
       <div className="container">

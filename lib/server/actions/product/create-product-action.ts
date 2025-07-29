@@ -53,7 +53,6 @@ export async function createProductAction(
   }
   const result = createProductSchema.safeParse(inputs);
   if (!result.success) {
-    console.log("Validation error:", result.error.format());
     return {
       success: false,
       error: {

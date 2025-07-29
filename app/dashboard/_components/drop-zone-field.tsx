@@ -12,7 +12,7 @@ import {
 
 type Props<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = {
   control: Control<TFieldValues>;
   name: TName;
@@ -25,7 +25,7 @@ type Props<
 
 export default function DropZoneField<
   T extends FieldValues = FieldValues,
-  K extends FieldPath<T> = FieldPath<T>
+  K extends FieldPath<T> = FieldPath<T>,
 >({ control, name, placeholder, className, setPreviewImage }: Props<T, K>) {
   const { trigger } = useFormContext(); // Get `trigger` function from useFormContext to trigger validation
 
@@ -37,11 +37,11 @@ export default function DropZoneField<
         <div className="space-y-2">
           <Dropzone
             multiple={false}
-            onDrop={async (acceptedFiles, rej) => {
+            onDrop={async (acceptedFiles) => {
               // Update the field value with the selected file
 
               const file = acceptedFiles[0];
-              console.log({ acceptedFiles, rej });
+              // console.log({ acceptedFiles, rej });
               field.onChange(file);
               await trigger(name);
               if (!fieldState.invalid) {

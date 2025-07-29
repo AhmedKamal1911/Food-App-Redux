@@ -49,7 +49,7 @@ export default function ProductSizesAccordion() {
     PRODUCT_SIZES.filter(
       (size) => size === fieldValue || !sizesFields.some((f) => f.name === size)
     );
-  console.log({ fields });
+
   return (
     <CustomAccordionItem title="Product Sizes">
       {fields.map((item, index) => (

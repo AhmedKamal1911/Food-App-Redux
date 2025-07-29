@@ -15,7 +15,7 @@ export default async function AccountPage() {
   const user = await getUserById(session.user.id);
   if (!user) redirect("/", RedirectType.replace);
   const userTransactions = await getCurrentUserTransactions();
-  console.log({ userTransactions });
+
   const { password, ...userInfo } = user;
   const userInfoWithFlag = {
     ...userInfo,

@@ -8,12 +8,12 @@ import { Metadata } from "next";
 import "./globals.css";
 import { AuthSessionProvider } from "@/providers/next-auth-session-provider";
 
-export const ptSansNarrow = PT_Sans_Narrow({
+const ptSansNarrow = PT_Sans_Narrow({
   subsets: ["latin"],
   weight: ["400", "700"],
   fallback: ["sans-serif"],
 });
-export const pacifico = Pacifico({
+const pacifico = Pacifico({
   variable: "--font-pacifico",
   subsets: ["cyrillic"],
   weight: ["400"],

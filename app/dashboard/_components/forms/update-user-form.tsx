@@ -47,11 +47,6 @@ export default function UpdateUserForm({
     mode: "onChange",
   });
 
-  console.log({
-    defualtValues: form.formState.defaultValues,
-    valuesForm: form.getValues(),
-  });
-
   // 2. Define a submit handler.
   async function onSubmit(values: UpdateUserInputs) {
     try {

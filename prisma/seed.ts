@@ -3,7 +3,6 @@ import slugify from "slugify";
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("🌱 Seeding categories...");
   const categories = ["Burgers", "Pizzas", "Sandwiches"];
 
   const categoryData = await Promise.all(
@@ -21,7 +20,6 @@ async function main() {
     })
   );
 
-  console.log("🍔 Seeding products...");
   const products = [
     "Cheeseburger",
     "Double Burger",
@@ -64,7 +62,6 @@ async function main() {
     })
   );
 
-  console.log("📏 Seeding sizes...");
   const sizes = ["Small", "Medium", "Large"] as SizeEnum[];
 
   await Promise.all(
@@ -83,7 +80,6 @@ async function main() {
     )
   );
 
-  console.log("🛠️ Seeding extras...");
   const extras = ["Cheese", "Bacon", "Mushrooms", "Onions", "Jalapenos"];
 
   await Promise.all(
@@ -101,8 +97,6 @@ async function main() {
       })
     )
   );
-
-  console.log("✅ Seed data inserted successfully!");
 }
 
 main()

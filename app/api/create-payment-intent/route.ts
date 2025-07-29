@@ -15,14 +15,14 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const result = reqBodySchema.safeParse(body);
-    console.log({ d: body.metadata });
+
     if (!result.success) {
       return NextResponse.json(
         { error: result.error.formErrors.fieldErrors },
         { status: 400, statusText: "Bad Request" }
       );
     }
-    console.log({ meta: result.data.metadata });
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: result.data.amount,
 

@@ -41,7 +41,6 @@ export default function UpdateProductForm({
 }: {
   product: ProductWithRelations;
 }) {
-  console.log({ product });
   const form = useForm<UpdateProductInputs>({
     resolver: zodResolver(updateProductSchema),
     defaultValues: {
@@ -56,10 +55,6 @@ export default function UpdateProductForm({
     mode: "onChange",
   });
 
-  console.log({
-    defualtValues: form.formState.defaultValues,
-    valuesForm: form.getValues(),
-  });
   const categories = useCategoriesContext();
 
   const [previewUrl, setPreviewUrl] = useState(

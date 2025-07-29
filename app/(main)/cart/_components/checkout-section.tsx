@@ -7,7 +7,7 @@ import { CartProduct } from "@/lib/types/product";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
-console.log("knijuyiuyiugkg", { stripePromise });
+
 export default function CheckoutSection({
   subtotal,
   itemsCount,
@@ -17,7 +17,6 @@ export default function CheckoutSection({
   itemsCount: number;
   cartProducts: CartProduct[];
 }) {
-  console.log({ amount: Math.trunc(subtotal) * 100 });
   return (
     <div className="lg:sticky lg:top-20 lg:w-[25%] bg-secondary/5 px-3 xl:px-6 py-15 flex flex-col lg:self-start divide-y-2 gap-5">
       <span className="text-2xl capitalize pb-2">order summary</span>

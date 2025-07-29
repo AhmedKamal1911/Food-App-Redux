@@ -33,11 +33,6 @@ export default function UpdateCategoryForm({
     mode: "onChange",
   });
 
-  console.log({
-    defualtValues: form.formState.defaultValues,
-    valuesForm: form.getValues(),
-  });
-
   const [previewUrl, setPreviewUrl] = useState(
     category.image ?? "https://placehold.co/600x400/png"
   );

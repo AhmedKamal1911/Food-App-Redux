@@ -13,10 +13,6 @@ type Props = {
 };
 export default function ProductsViewer({ categoryData, query }: Props) {
   const cartProducts = useAppSelector((state) => state.cart.products);
-  console.log({
-    totalPages: categoryData.products.totalPages,
-    page: categoryData.products.page,
-  });
 
   return (
     <div className="flex-1 p-2">

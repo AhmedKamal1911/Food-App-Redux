@@ -19,7 +19,6 @@ export async function resetPasswordAction(
 
   if (!result.success) {
     const errorMsg = result.error.flatten().formErrors[0];
-    console.log(result.error.flatten());
     return {
       success: false,
       error: {
@@ -67,9 +66,8 @@ export async function resetPasswordAction(
       success: true,
       data: { status: 200, message: "Password Changed Successfully." },
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.log(error);
-
     return {
       success: false,
 

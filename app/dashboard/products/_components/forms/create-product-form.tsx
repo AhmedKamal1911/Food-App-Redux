@@ -51,7 +51,6 @@ export default function CreateProductForm() {
   const categories = useCategoriesContext();
 
   const [previewUrl, setPreviewUrl] = useState("");
-  console.log(form.formState.errors);
   // 2. Define a submit handler.
   async function onSubmit(values: CreateProductInputs) {
     try {
