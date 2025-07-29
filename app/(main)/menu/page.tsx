@@ -5,8 +5,7 @@ import BestChefSection from "../_components/sections/best-chef-section";
 
 import BookTableSection from "@/components/common/sections/book-table-section";
 
-type Props = {};
-export default async function MenuPage({}: Props) {
+export default async function MenuPage() {
   const categories = await getAllCategories();
   return (
     <main className="bg-white pb-10">

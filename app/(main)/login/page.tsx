@@ -1,10 +1,10 @@
-import { getServerSession } from "next-auth";
 import LoginForm from "./_components/login-form";
-import { authOptions } from "@/lib/auth";
+
 import { redirect } from "next/navigation";
+import { getCurrentSession } from "@/lib/dal/user";
 
 export default async function LoginPage() {
-  const session = await getServerSession(authOptions);
+  const session = await getCurrentSession();
   if (session) redirect("/");
 
   return (

@@ -1,7 +1,7 @@
 import IntroBanner from "@/components/common/intro-banner";
 
 import ResetPasswordForm from "./components/reset-password-form";
-import prisma from "@/lib/prisma";
+
 import Link from "next/link";
 import { FileWarning } from "lucide-react";
 import {
@@ -11,19 +11,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getUserByResetToken } from "@/lib/server/queries";
 
 type Props = {
   searchParams: Promise<{ token: string }>;
 };
 export default async function ResetPasswordPage({ searchParams }: Props) {
   const { token } = await searchParams;
-  const user = await prisma.user.findFirst({
-    where: {
-      passwordResetToken: token,
-      passwordTokenExpires: { gte: new Date() },
-    },
-  });
-  console.log({ user });
+  const user = await getUserByResetToken(token);
+
   return (
     <main>
       <IntroBanner

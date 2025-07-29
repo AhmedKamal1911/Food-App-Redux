@@ -2,8 +2,7 @@ import ReservationForm from "@/components/common/forms/reservation-form";
 import IntroBanner from "@/components/common/intro-banner";
 import SpecialHeading from "@/components/common/special-heading";
 
-type Props = {};
-export default function ReservationPage({}: Props) {
+export default function ReservationPage() {
   return (
     <main>
       <IntroBanner
