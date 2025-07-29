@@ -28,8 +28,8 @@ export default function DeleteUserModal({ userId }: Props) {
         if (!response.success) return void toast.error(response.error.message);
         toast.success(response.data.message);
         actionBtnRef.current?.click();
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
-        console.error({ e });
         toast.error("Network Error");
       }
     });

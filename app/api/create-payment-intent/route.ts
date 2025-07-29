@@ -33,8 +33,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json<Response>({
       clientSecret: paymentIntent.client_secret,
     });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.error("Error creating PaymentIntent:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

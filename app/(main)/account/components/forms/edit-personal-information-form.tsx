@@ -83,8 +83,8 @@ export default function EditPersonalInformationForm({ user }: Props) {
       } else if (res.error.status === 400) {
         form.setError("root", { message: res.error.message });
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.error(error);
       toast.error("An Network Error Occured");
     }
   }

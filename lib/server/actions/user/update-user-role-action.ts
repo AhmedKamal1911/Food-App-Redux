@@ -123,9 +123,8 @@ export async function updateUserRoleAction(
       status: 200,
       message: `User Role  Updated Successfully.`,
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.error("Failed to update user:", error);
-
     return {
       success: false,
       error: {

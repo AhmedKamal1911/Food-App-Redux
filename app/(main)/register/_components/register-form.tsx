@@ -68,8 +68,8 @@ export default function RegisterForm() {
           toast.error(res.error.message);
         }
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.error(error);
       toast.error("An Network Error Occurred");
     }
   }

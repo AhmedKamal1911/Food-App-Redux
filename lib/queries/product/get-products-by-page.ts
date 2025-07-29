@@ -17,8 +17,8 @@ export async function getProductsByPage(pageParam = 1, pageSize = 5) {
       throw new Error(data.error?.message || "Failed to fetch products");
     }
     return data as ProductsByPageResponse;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.error("Error fetching products:", error);
     throw new Error("Network error while fetching products");
   }
 }

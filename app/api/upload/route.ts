@@ -43,8 +43,8 @@ export async function POST(request: NextRequest) {
         statusText: "File uploaded successfully",
       }
     );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.error("Upload error:", error);
     return NextResponse.json(
       { error: "Failed to upload file" },
       { status: 500 }

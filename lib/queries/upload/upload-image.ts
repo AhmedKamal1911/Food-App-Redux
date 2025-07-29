@@ -26,8 +26,8 @@ export async function uploadImage({
 
     const data = fileUploadResponseSchema.parse(await response.json());
     return data.url;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.error("Error uploading image:", error);
     throw new Error("Failed to upload image");
   }
 }

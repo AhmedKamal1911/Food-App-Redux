@@ -9,8 +9,8 @@ export function useLogOut() {
     setIsLoading(true);
     try {
       await signOut();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      console.error({ error: e });
       toast.error("Failed to logout due to network error");
       setIsLoading(false);
     }

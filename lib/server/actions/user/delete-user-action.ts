@@ -87,8 +87,8 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
         message: "User Deleted Successfully",
       },
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.error(error);
     return {
       error: {
         status: 500,

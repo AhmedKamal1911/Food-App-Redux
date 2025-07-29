@@ -99,8 +99,8 @@ export async function createCategoryAction(
       status: 201,
       message: "Category created successfully",
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.error("Error creating product:", error);
     return {
       success: false,
       error: {
