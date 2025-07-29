@@ -24,7 +24,7 @@ export default function ProductFilterTabs({
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["products"],
-      queryFn: async ({ pageParam = 1 }) => await getProductsByPage(pageParam),
+      queryFn: ({ pageParam = 1 }) => getProductsByPage(pageParam),
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
         return lastPage.page >= lastPage.totalPages
@@ -32,7 +32,7 @@ export default function ProductFilterTabs({
           : lastPage.page + 1;
       },
     });
-
+  console.log({ data, error, fetchNextPage, hasNextPage, isFetchingNextPage });
   const cartProducts = useAppSelector((state) => state.cart.products);
 
   const categoriesNameList = useMemo(
@@ -53,7 +53,7 @@ export default function ProductFilterTabs({
 
     [selectedCategory, data]
   );
-
+  console.log({ filteredData, selectedCategory });
   const getMoreProducts = () => {
     fetchNextPage();
   };
@@ -71,7 +71,7 @@ export default function ProductFilterTabs({
           {error.message}
         </span>
       )}
-      {filteredData && filteredData.length < 1 ? (
+      {filteredData && filteredData.length === 0 ? (
         <span className="text-center block text-red-600 font-bold text-xl">
           No Any Products In This Category
         </span>

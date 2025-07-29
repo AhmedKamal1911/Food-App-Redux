@@ -1,11 +1,11 @@
-import { getCurrentSession } from "@/lib/dal/user";
 import prisma from "@/lib/prisma";
-import { User } from "@prisma/client";
-import { redirect, RedirectType } from "next/navigation";
+import { requirePermission } from "@/lib/server-utils";
 
-export async function getAllUsers(): Promise<User[] | null> {
-  const session = await getCurrentSession();
-  if (!session) redirect("/login", RedirectType.replace);
-  const res = await prisma.user.findMany();
-  return res;
+export async function getAllUsers() {
+  const isPermitted = await requirePermission(["admin", "superAdmin"]);
+  if (!isPermitted) {
+    throw new Error("Unauthorized User");
+  }
+  const users = await prisma.user.findMany();
+  return users;
 }

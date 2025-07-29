@@ -41,5 +41,6 @@ export function calcProductTotalPrice({
 }
 
 export function getBaseUrl() {
+  console.dir(process.env.NEXT_PUBLIC_BASE_URL);
   return process.env.NEXT_PUBLIC_BASE_URL as string;
 }

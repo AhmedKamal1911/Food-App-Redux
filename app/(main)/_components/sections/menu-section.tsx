@@ -1,12 +1,16 @@
 import ProductFilterTabs from "@/components/common/product-filter-tabs";
 import SpecialHeading from "@/components/common/special-heading";
+import { getProductsByPage } from "@/lib/queries/product/get-products-by-page";
+import { getQueryClient } from "@/providers/react-query-provider/get-query-client";
 
 import { ProductCategory } from "@prisma/client";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { Suspense } from "react";
 
 type Props = {
   categories: ProductCategory[];
 };
-export default function MenuSection({ categories }: Props) {
+export default async function MenuSection({ categories }: Props) {
   return (
     <section className="bg-secondary py-20 sm:py-40">
       <div className="container">
@@ -15,8 +19,28 @@ export default function MenuSection({ categories }: Props) {
           subTitle="our special menu"
           className="text-white"
         />
-        <ProductFilterTabs categories={categories} />
+        <Suspense
+          fallback={
+            <div className="text-center text-red-500 text-4xl">Loading...</div>
+          }
+        >
+          <SuspensedContent categories={categories} />
+        </Suspense>
       </div>
     </section>
+  );
+}
+
+async function SuspensedContent({ categories }: Props) {
+  const queryClient = getQueryClient();
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: ["products"],
+    queryFn: () => getProductsByPage(),
+    initialPageParam: 1,
+  });
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <ProductFilterTabs categories={categories} />
+    </HydrationBoundary>
   );
 }

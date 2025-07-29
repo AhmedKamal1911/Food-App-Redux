@@ -9,8 +9,6 @@ import AboutSection from "./_components/sections/about-section";
 
 import { Metadata } from "next";
 import { getAllCategories } from "@/lib/server/queries";
-import { getQueryClient } from "@/providers/react-query-provider/get-query-client";
-import { getProductsByPage } from "@/lib/queries/product/get-products-by-page";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -18,12 +16,6 @@ export const metadata: Metadata = {
 };
 export default async function Home() {
   const categories = await getAllCategories();
-  const queryClient = getQueryClient();
-
-  void queryClient.prefetchQuery({
-    queryKey: ["products"],
-    queryFn: async () => await getProductsByPage(),
-  });
 
   return (
     <main className="min-h-screen">

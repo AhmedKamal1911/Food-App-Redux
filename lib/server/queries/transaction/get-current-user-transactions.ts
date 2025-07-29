@@ -9,7 +9,7 @@ async function _getUserTransactions() {
   if (!session) {
     redirect("/login", RedirectType.replace);
   }
-
+  console.dir({ sessionFromGetCurrentSession: session });
   const transactions = await prisma.order.findMany({
     where: { userId: session.user.id },
     include: {
@@ -24,6 +24,7 @@ async function _getUserTransactions() {
     },
   });
 
+  console.dir({ transactions: transactions });
   return transactions;
 }
 
