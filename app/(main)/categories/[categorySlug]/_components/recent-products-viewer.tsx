@@ -16,7 +16,7 @@ export default async function RecentProductsViewer() {
           >
             <Image
               className="group-hover:scale-110 transition-[scale]"
-              src={product.image}
+              src={product.image ?? "https://placehold.co/600x400.png"}
               alt={product.name}
               height={90}
               width={90}

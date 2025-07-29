@@ -4,14 +4,18 @@ import prisma from "@/lib/prisma";
 import { unstable_cache } from "next/cache";
 import { redirect, RedirectType } from "next/navigation";
 
-async function _getUserTransactions() {
+export async function getCurrentUserTransactions() {
   const session = await getCurrentSession();
   if (!session) {
     redirect("/login", RedirectType.replace);
   }
-  console.dir({ sessionFromGetCurrentSession: session });
+  console.dir({ session });
+  return await getUserTransactionsById(session.user.id);
+}
+
+async function _getUserTransactions(userId: string) {
   const transactions = await prisma.order.findMany({
-    where: { userId: session.user.id },
+    where: { userId: userId },
     include: {
       user: { select: { name: true, email: true } },
       items: {
@@ -28,7 +32,7 @@ async function _getUserTransactions() {
   return transactions;
 }
 
-export const getCurrentUserTransactions = unstable_cache(
+const getUserTransactionsById = unstable_cache(
   _getUserTransactions,
   undefined,
   {

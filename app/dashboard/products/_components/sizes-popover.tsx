@@ -3,9 +3,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Extra } from "@prisma/client";
+import { Size } from "@prisma/client";
 
-export default function SizesPopover({ sizes }: { sizes: Extra[] }) {
+export default function SizesPopover({ sizes }: { sizes: Size[] }) {
   return (
     <Popover>
       <PopoverTrigger className="cursor-pointer p-1.5 bg-green-600/80 hover:bg-green-700 text-white rounded-sm shadow transition">

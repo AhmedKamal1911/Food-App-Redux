@@ -42,5 +42,10 @@ export function calcProductTotalPrice({
 
 export function getBaseUrl() {
   console.dir(process.env.NEXT_PUBLIC_BASE_URL);
-  return process.env.NEXT_PUBLIC_BASE_URL as string;
+  const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+  if (!baseURL)
+    throw new Error(
+      "NEXT_PUBLIC_BASE_URL is not defined in the environment variables."
+    );
+  return baseURL;
 }
