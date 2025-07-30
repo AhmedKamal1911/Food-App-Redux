@@ -96,7 +96,7 @@ export async function registerAction(
     return {
       success: true,
       status: 201,
-      message: "Register Successful",
+      message: "Register Successful Message Has Been Sent To Email",
     };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {

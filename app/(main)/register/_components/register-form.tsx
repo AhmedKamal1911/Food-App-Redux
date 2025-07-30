@@ -26,7 +26,7 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { cn } from "@/lib/utils";
 import { registerAction } from "@/lib/server/actions/user/register-action";
 import { toast } from "react-toastify";
-import { redirect } from "next/navigation";
+
 import Or from "@/components/common/or";
 
 export default function RegisterForm() {
@@ -55,8 +55,6 @@ export default function RegisterForm() {
 
       if (res.success) {
         toast.success(res.message);
-        toast.success("Email Verification Message Has Been Sent To Email");
-        redirect("/login");
       }
 
       if (!res.success && res.error.type === "error") {

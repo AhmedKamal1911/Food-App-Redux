@@ -31,7 +31,7 @@ export const ResetPasswordTemplate = ({
       <Container style={container}>
         <Section style={logoSection}>
           <Img
-            src={`${baseUrl}/logo.png`}
+            src={`${baseUrl}/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75`}
             alt="Food App"
             width={60}
             height={60}
