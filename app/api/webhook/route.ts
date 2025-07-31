@@ -129,15 +129,6 @@ export async function POST(req: NextRequest) {
       revalidateTag(PRISMA_CACHE_KEY.TRANSACTIONS);
       break;
     case "charge.refunded":
-      await prisma.order.update({
-        where: {
-          paymentId: paymentId,
-        },
-        data: {
-          status: "canceled",
-        },
-      });
-
       await resend.emails.send({
         from: "Pizzon <onboarding@resend.dev>",
         to: billing_details.email!,

@@ -13,6 +13,7 @@ import { format } from "date-fns";
 
 import { View } from "lucide-react";
 import Image from "next/image";
+import MarkDeliveredActionForm from "../forms/mark-delivered-action-form";
 
 export default function ViewTransactionDetailsModal({
   transaction,
@@ -55,6 +56,7 @@ export default function ViewTransactionDetailsModal({
             </div>
           </div>
         </div>
+        <MarkDeliveredActionForm orderId={transaction.id} />
         <DialogDescription className="sr-only">
           show transaction details here
         </DialogDescription>

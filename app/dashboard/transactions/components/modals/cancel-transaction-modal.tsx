@@ -23,8 +23,7 @@ export default function CancelTransactionModal({
 }) {
   const [state, formAction, isPending] = useActionState(
     cancelTransactionAction,
-    undefined,
-    orderId
+    undefined
   );
   useEffect(() => {
     if (state?.success) return void toast.success(state.data.message);
