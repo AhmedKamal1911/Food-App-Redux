@@ -18,6 +18,7 @@ export default async function RegisterPage() {
               <Image
                 src={"/images/categories-section/pizza.jpg"}
                 alt="pizza"
+                priority
                 height={1280}
                 width={1280}
                 className=" h-full"

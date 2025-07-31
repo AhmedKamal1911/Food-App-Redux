@@ -109,6 +109,7 @@ export default function Header({ products }: { products: Product[] }) {
                 alt="logo"
                 width={isInView ? 180 : 150}
                 height={100}
+                priority
                 className={`transition-[width] duration-300  h-auto max-[370px]:w-20`}
               />
             </Link>

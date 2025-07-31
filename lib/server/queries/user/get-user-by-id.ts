@@ -1,8 +1,8 @@
-import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
+// import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import prisma from "@/lib/prisma";
-import { unstable_cache } from "next/cache";
+// import { unstable_cache } from "next/cache";
 
-async function _getUserById(userId: string) {
+export async function getUserById(userId: string) {
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -11,6 +11,6 @@ async function _getUserById(userId: string) {
   return user;
 }
 
-export const getUserById = unstable_cache(_getUserById, undefined, {
-  tags: [PRISMA_CACHE_KEY.USERS],
-});
+// export const getUserById = unstable_cache(_getUserById, undefined, {
+//   tags: [PRISMA_CACHE_KEY.USERS],
+// });

@@ -28,8 +28,10 @@ import { registerAction } from "@/lib/server/actions/user/register-action";
 import { toast } from "react-toastify";
 
 import Or from "@/components/common/or";
+import { useRouter } from "next/router";
 
 export default function RegisterForm() {
+  const router = useRouter();
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerInputs),
     mode: "onBlur",
@@ -55,6 +57,8 @@ export default function RegisterForm() {
 
       if (res.success) {
         toast.success(res.message);
+        router.push("/login");
+        return;
       }
 
       if (!res.success && res.error.type === "error") {
