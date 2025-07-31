@@ -6,7 +6,7 @@ import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
 
@@ -17,12 +17,11 @@ import {
 } from "@/lib/validation/update-category-schema";
 import { updateCategoryAction } from "@/lib/server/actions/category/update-category-action";
 import DropZoneViewer from "@/app/dashboard/_components/drop-zone-viewer";
-
-export default function UpdateCategoryForm({
-  category,
-}: {
+type Props = {
   category: ProductCategory;
-}) {
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
+};
+export default function UpdateCategoryForm({ category, setOpenModal }: Props) {
   const form = useForm<UpdateCategoryInputs>({
     resolver: zodResolver(updateCategorySchema),
     defaultValues: {
@@ -43,6 +42,7 @@ export default function UpdateCategoryForm({
       const res = await updateCategoryAction(values);
       if (res.success) {
         toast.success(res.message);
+        setOpenModal(false);
       }
       if (!res.success && res.error.type === "error") {
         toast.error(res.error.message);

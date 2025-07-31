@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { toast } from "react-toastify";
 import {
@@ -15,7 +15,11 @@ import {
 import { createCategoryAction } from "@/lib/server/actions/category/create-category-action";
 import DropZoneViewer from "@/app/dashboard/_components/drop-zone-viewer";
 
-export default function CreateCategoryForm() {
+export default function CreateCategoryForm({
+  setOpenModal,
+}: {
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
+}) {
   const form = useForm<CreateCategoryInputs>({
     resolver: zodResolver(createCategorySchema),
     defaultValues: {
@@ -24,7 +28,7 @@ export default function CreateCategoryForm() {
     },
     mode: "onChange",
   });
-  //TODO: close the modal after creating the category
+
   const [previewUrl, setPreviewUrl] = useState("");
 
   // 2. Define a submit handler.
@@ -33,6 +37,7 @@ export default function CreateCategoryForm() {
       const res = await createCategoryAction({ ...values });
       if (res.success) {
         toast.success(res.message);
+        setOpenModal(false);
       }
       if (!res.success && res.error.type === "error") {
         toast.error(res.error.message);

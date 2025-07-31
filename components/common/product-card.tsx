@@ -15,7 +15,7 @@ export default memo(function ProductCard({
   return (
     <motion.div className="flex flex-col items-center gap-4">
       <div className="group relative flex flex-col items-center">
-        <div>
+        <div className="size-[150px]">
           <Image
             className="group-hover:animate-wobble transition-all"
             src={product.image || "/placeholder-image.png"}

@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { unstable_cache } from "next/cache";
 
 async function _getUserById(userId: string) {
-  const user = prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       id: userId,
     },

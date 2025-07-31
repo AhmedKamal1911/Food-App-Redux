@@ -10,14 +10,16 @@ import {
 
 import { ProductCategory } from "@prisma/client";
 import UpdateCategoryForm from "../forms/update-category-form";
+import { useState } from "react";
 
 export default function UpdateCategoryModal({
   category,
 }: {
   category: ProductCategory;
 }) {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
@@ -31,7 +33,7 @@ export default function UpdateCategoryModal({
         <DialogHeader>
           <DialogTitle>Update Product</DialogTitle>
         </DialogHeader>
-        <UpdateCategoryForm category={category} />
+        <UpdateCategoryForm setOpenModal={setOpen} category={category} />
         <DialogDescription className="sr-only">
           Update your product details here.
         </DialogDescription>

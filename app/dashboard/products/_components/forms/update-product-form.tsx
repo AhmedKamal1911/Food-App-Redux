@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { ProductWithRelations } from "@/lib/types/product";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   UpdateProductInputs,
   updateProductSchema,
@@ -35,12 +35,11 @@ import { toast } from "react-toastify";
 import DropZoneViewer from "@/app/dashboard/_components/drop-zone-viewer";
 import ProductSizesAccordion from "../product-sizes-accordion";
 import ProductExtrasAccordion from "../product-extras-accordion";
-
-export default function UpdateProductForm({
-  product,
-}: {
+type Props = {
   product: ProductWithRelations;
-}) {
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
+};
+export default function UpdateProductForm({ product, setOpenModal }: Props) {
   const form = useForm<UpdateProductInputs>({
     resolver: zodResolver(updateProductSchema),
     defaultValues: {
@@ -60,13 +59,13 @@ export default function UpdateProductForm({
   const [previewUrl, setPreviewUrl] = useState(
     product.image ?? "https://placehold.co/600x400.png"
   );
-  // TODO: close the modal after successful update
   // 2. Define a submit handler.
   async function onSubmit(values: UpdateProductInputs) {
     try {
       const res = await updateProductAction(values);
       if (res.success) {
         toast.success(res.message);
+        setOpenModal(false);
       }
       if (!res.success && res.error.type === "error") {
         toast.error(res.error.message);

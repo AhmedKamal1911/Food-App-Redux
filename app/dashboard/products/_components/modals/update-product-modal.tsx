@@ -10,14 +10,16 @@ import {
 
 import { ProductWithRelations } from "@/lib/types/product";
 import UpdateProductForm from "../forms/update-product-form";
+import { useState } from "react";
 
 export default function UpdateProductModal({
   product,
 }: {
   product: ProductWithRelations;
 }) {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="rounded-sm text-white" size={"sm"}>
           Edit
@@ -27,7 +29,7 @@ export default function UpdateProductModal({
         <DialogHeader>
           <DialogTitle>Update Product</DialogTitle>
         </DialogHeader>
-        <UpdateProductForm product={product} />
+        <UpdateProductForm setOpenModal={setOpen} product={product} />
         <DialogDescription className="sr-only">
           Update your product details here.
         </DialogDescription>

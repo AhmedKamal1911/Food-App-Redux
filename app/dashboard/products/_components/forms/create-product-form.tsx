@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import CustomTextArea from "@/components/common/custom-text-area";
 import { useCategoriesContext } from "@/providers/categories-provider";
@@ -35,7 +35,11 @@ import DropZoneViewer from "@/app/dashboard/_components/drop-zone-viewer";
 import ProductSizesAccordion from "../product-sizes-accordion";
 import ProductExtrasAccordion from "../product-extras-accordion";
 
-export default function CreateProductForm() {
+export default function CreateProductForm({
+  setOpenModal,
+}: {
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
+}) {
   const form = useForm<CreateProductInputs>({
     resolver: zodResolver(createProductSchema),
     defaultValues: {
@@ -57,6 +61,7 @@ export default function CreateProductForm() {
       const res = await createProductAction({ ...values });
       if (res.success) {
         toast.success(res.message);
+        setOpenModal(false);
       }
       if (!res.success && res.error.type === "error") {
         toast.error(res.error.message);
@@ -109,7 +114,7 @@ export default function CreateProductForm() {
                 >
                   <FormControl>
                     <SelectTrigger className="w-full rounded-sm">
-                      <SelectValue placeholder="Select a verified email to display" />
+                      <SelectValue placeholder="Select Product Category" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>

@@ -8,10 +8,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import CreateProductForm from "../forms/create-product-form";
+import { useState } from "react";
 
 export default function CreateProductModal() {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="bg-black rounded-sm text-white  hover:bg-gray-800">
           + Add Product
@@ -21,7 +23,7 @@ export default function CreateProductModal() {
         <DialogHeader>
           <DialogTitle>Create Product</DialogTitle>
         </DialogHeader>
-        <CreateProductForm />
+        <CreateProductForm setOpenModal={setOpen} />
         <DialogDescription className="sr-only">
           Fill your product details here.
         </DialogDescription>
