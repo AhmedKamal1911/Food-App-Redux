@@ -10,32 +10,28 @@ export async function getCurrentUserTransactions() {
     redirect("/login", RedirectType.replace);
   }
   console.dir({ session });
-  return await getUserTransactionsById(session.user.id);
-}
-
-async function _getUserTransactions(userId: string) {
-  const transactions = await prisma.order.findMany({
-    where: { userId: userId },
-    include: {
-      user: { select: { name: true, email: true } },
-      items: {
+  const getUserTransactionsById = unstable_cache(
+    async () => {
+      const transactions = await prisma.order.findMany({
+        where: { userId: session.user.id },
         include: {
-          selectedExtras: true,
-          selectedSize: true,
-          product: true,
+          user: { select: { name: true, email: true } },
+          items: {
+            include: {
+              selectedExtras: true,
+              selectedSize: true,
+              product: true,
+            },
+          },
         },
-      },
+      });
+      console.dir({ transactions: transactions });
+      return transactions;
     },
-  });
-
-  console.dir({ transactions: transactions });
-  return transactions;
+    undefined,
+    {
+      tags: [`${PRISMA_CACHE_KEY.TRANSACTIONS}-${session.user.id}`],
+    }
+  );
+  return await getUserTransactionsById();
 }
-
-const getUserTransactionsById = unstable_cache(
-  _getUserTransactions,
-  undefined,
-  {
-    tags: [PRISMA_CACHE_KEY.TRANSACTIONS],
-  }
-);

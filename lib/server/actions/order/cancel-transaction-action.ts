@@ -51,6 +51,7 @@ export async function cancelTransactionAction(
 
     // Revalidate any relevant paths if needed
     revalidateTag(PRISMA_CACHE_KEY.TRANSACTIONS);
+    revalidateTag(`${PRISMA_CACHE_KEY.TRANSACTIONS}-${existingOrder.userId}`);
     return {
       success: true,
       data: { status: 200, message: "Order Cancelled Successfully." },

@@ -9,6 +9,8 @@ import { Extra, Size } from "@prisma/client";
 import { Resend } from "resend";
 import { OrderSuccessTemplate } from "@/emails/order-success-template";
 import { OrderCancelTemplate } from "@/emails/order-cancel-template";
+import { revalidateTag } from "next/cache";
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(req: NextRequest) {
@@ -123,6 +125,8 @@ export async function POST(req: NextRequest) {
         }),
       });
       // console.log("Order processing ");
+      revalidateTag(`${PRISMA_CACHE_KEY.TRANSACTIONS}-${userId}`);
+      revalidateTag(PRISMA_CACHE_KEY.TRANSACTIONS);
       break;
     case "charge.refunded":
       await prisma.order.update({
@@ -138,6 +142,29 @@ export async function POST(req: NextRequest) {
         from: "Pizzon <onboarding@resend.dev>",
         to: billing_details.email!,
         subject: "Your Order Canceled",
+        react: OrderCancelTemplate({
+          name: billing_details.name!,
+          totalAmount: totalAmount,
+          currency: session.currency,
+        }),
+      });
+      revalidateTag(`${PRISMA_CACHE_KEY.TRANSACTIONS}-${userId}`);
+      revalidateTag(PRISMA_CACHE_KEY.TRANSACTIONS);
+      break;
+    case "charge.failed":
+      await prisma.order.update({
+        where: {
+          paymentId: paymentId,
+        },
+        data: {
+          status: "canceled",
+        },
+      });
+
+      await resend.emails.send({
+        from: "Pizzon <onboarding@resend.dev>",
+        to: billing_details.email!,
+        subject: "Your Order failed",
         react: OrderCancelTemplate({
           name: billing_details.name!,
           totalAmount: totalAmount,

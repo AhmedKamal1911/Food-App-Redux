@@ -45,6 +45,8 @@ export async function markTransactionDeliveredAction(
 
     // Revalidate any relevant paths if needed
     revalidateTag(PRISMA_CACHE_KEY.TRANSACTIONS);
+    revalidateTag(`${PRISMA_CACHE_KEY.TRANSACTIONS}-${existingOrder.userId}`);
+
     return {
       success: true,
       data: { status: 200, message: "Order Delivered Successfully." },
