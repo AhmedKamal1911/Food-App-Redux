@@ -5,26 +5,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { authOptions } from "@/lib/auth";
-import { verifyUserEmailAction } from "@/lib/server/actions/user/verify-user-email-action";
+
 import { Check, FileWarning } from "lucide-react";
-import { getServerSession } from "next-auth";
 
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import VerifyEmailForm from "../components/forms/verify-email-form";
+import { redirect, RedirectType } from "next/navigation";
+import VerifyEmailForm from "../_components/forms/verify-email-form";
+import { getCurrentSession } from "@/lib/dal/user";
+import { verifyUserEmail } from "@/lib/queries/user/verify-user-email";
 
 type Props = {
   searchParams: Promise<{
-    token: string;
+    token: string | null;
   }>;
 };
 export default async function VerifyEmailPage({ searchParams }: Props) {
   const { token } = await searchParams;
-  const session = await getServerSession(authOptions);
-  if (session && session.user.emailVerified) return redirect("/");
-  const res = await verifyUserEmailAction(token);
-  if (!res.success) {
+  if (!token) return redirect("/", RedirectType.replace);
+  const session = await getCurrentSession();
+  if (!session) return redirect("/login", RedirectType.replace);
+  if (session.user.emailVerified) return redirect("/", RedirectType.replace);
+  const res = await verifyUserEmail(token);
+
+  if (!res) {
     return (
       <main className="bg-gray-950 flex items-center justify-center min-h-[65vh] ">
         <Card className="max-w-sm text-center">

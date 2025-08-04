@@ -26,7 +26,7 @@ export async function resendVerificationEmailAction(): ActionResponse {
   try {
     // Generate new token and expiry
     const emailToken = randomBytes(32).toString("hex");
-    const emailVerificationExpires = new Date(Date.now() + 10 * 60 * 1000);
+    const emailVerificationExpires = new Date(Date.now() + 15 * 1000);
 
     // Update user in DB
     await prisma.user.update({

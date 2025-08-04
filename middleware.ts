@@ -8,10 +8,6 @@ export default withAuth(
   {
     callbacks: {
       authorized: ({ token }) => {
-        console.log("Token:", {
-          canAccessDashboard: Boolean(token && token.role !== "user"),
-          token,
-        });
         return Boolean(token && token.role !== "user");
       },
     },

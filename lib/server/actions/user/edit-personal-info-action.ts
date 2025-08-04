@@ -69,6 +69,7 @@ export async function editPersonalInfoAction(
     });
 
     revalidateTag(PRISMA_CACHE_KEY.USERS);
+    revalidateTag(`${PRISMA_CACHE_KEY.USERS}-${userId}`);
     return {
       success: true,
       data: {

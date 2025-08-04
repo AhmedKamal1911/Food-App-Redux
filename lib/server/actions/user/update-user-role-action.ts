@@ -117,6 +117,7 @@ export async function updateUserRoleAction(
     });
 
     revalidateTag(PRISMA_CACHE_KEY.USERS);
+    revalidateTag(`${PRISMA_CACHE_KEY.USERS}-${data.id}`);
 
     return {
       success: true,

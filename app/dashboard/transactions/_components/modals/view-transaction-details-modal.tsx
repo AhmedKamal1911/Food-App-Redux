@@ -14,12 +14,15 @@ import { format } from "date-fns";
 import { View } from "lucide-react";
 import Image from "next/image";
 import MarkDeliveredActionForm from "../forms/mark-delivered-action-form";
+import { useSession } from "next-auth/react";
 
 export default function ViewTransactionDetailsModal({
   transaction,
 }: {
   transaction: TransactionOrder;
 }) {
+  const session = useSession();
+  const isUser = session.data && session.data.user.role === "user";
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -56,7 +59,11 @@ export default function ViewTransactionDetailsModal({
             </div>
           </div>
         </div>
-        <MarkDeliveredActionForm orderId={transaction.id} />
+
+        {transaction.status === "pending" && !isUser && (
+          <MarkDeliveredActionForm orderId={transaction.id} />
+        )}
+
         <DialogDescription className="sr-only">
           show transaction details here
         </DialogDescription>

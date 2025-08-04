@@ -1,4 +1,4 @@
-import SettingsTabs from "./components/settings-tabs";
+import SettingsTabs from "./_components/settings-tabs";
 
 import { redirect, RedirectType } from "next/navigation";
 

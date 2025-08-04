@@ -10,6 +10,7 @@ import {
 import { ResetPasswordSuccessTemplate } from "@/emails/reset-password-success-template";
 import { hashPassword } from "@/lib/server-utils";
 import { ActionResponse } from "@/lib/types/shared";
+import { getUserByResetToken } from "../../queries";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 export async function resetPasswordAction(
@@ -29,12 +30,7 @@ export async function resetPasswordAction(
   }
 
   try {
-    const user = await prisma.user.findFirst({
-      where: {
-        passwordResetToken: result.data.token,
-        passwordTokenExpires: { gte: new Date() },
-      },
-    });
+    const user = await getUserByResetToken(values.token);
     if (!user) {
       return {
         success: false,

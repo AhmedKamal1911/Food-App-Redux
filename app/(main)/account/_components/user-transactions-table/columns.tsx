@@ -22,9 +22,8 @@ import {
   Coins,
 } from "lucide-react";
 
-import ViewTransactionDetailsModal from "../modals/view-transaction-details-modal";
+import ViewTransactionDetailsModal from "@/app/dashboard/transactions/_components/modals/view-transaction-details-modal";
 import { TransactionOrder } from "@/lib/types/product";
-import CancelTransactionModal from "../modals/cancel-transaction-modal";
 
 export const columns: ColumnDef<TransactionOrder>[] = [
   {
@@ -36,28 +35,6 @@ export const columns: ColumnDef<TransactionOrder>[] = [
 
     cell: ({ row }) => (
       <span className="text-secondary">#{row.original.id}</span>
-    ),
-  },
-  {
-    accessorKey: "user",
-    enablePinning: false,
-    header: ({ column }) => {
-      return (
-        <Button
-          className="font-bold capitalize  rounded-none p-1! focus-visible:ring-primary/50"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          customer
-          <ArrowUpDown className=" size-4" />
-        </Button>
-      );
-    },
-
-    cell: ({ row }) => (
-      <span className="text-secondary">
-        {row.original.user?.name ?? "Guest"}
-      </span>
     ),
   },
 
@@ -80,7 +57,7 @@ export const columns: ColumnDef<TransactionOrder>[] = [
 
     cell: ({ getValue }) => (
       <span className="text-secondary">
-        {format(getValue<Date>(), "MMMM dd, yyyy")}
+        {format(getValue<Date>(), "MMMM dd, yyyy h:mm a")}
       </span>
     ),
   },
@@ -175,15 +152,7 @@ export const columns: ColumnDef<TransactionOrder>[] = [
       );
     },
     cell: ({ row }) => {
-      return (
-        <div className="flex items-center justify-center gap-2">
-          {row.original.status === "pending" && (
-            <CancelTransactionModal orderId={row.original.id} />
-          )}
-
-          <ViewTransactionDetailsModal transaction={row.original} />
-        </div>
-      );
+      return <ViewTransactionDetailsModal transaction={row.original} />;
     },
   },
 ];

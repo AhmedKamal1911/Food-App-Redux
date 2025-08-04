@@ -9,9 +9,11 @@ export async function getCurrentUserTransactions() {
   if (!session) {
     redirect("/login", RedirectType.replace);
   }
-  console.dir({ session });
+
   const getUserTransactionsById = unstable_cache(
     async () => {
+      console.log(`from getCurrentUserTransactions cached`);
+      // Fetch transactions for the current user
       const transactions = await prisma.order.findMany({
         where: { userId: session.user.id },
         include: {
@@ -25,7 +27,7 @@ export async function getCurrentUserTransactions() {
           },
         },
       });
-      console.dir({ transactions: transactions });
+
       return transactions;
     },
     undefined,
@@ -33,5 +35,6 @@ export async function getCurrentUserTransactions() {
       tags: [`${PRISMA_CACHE_KEY.TRANSACTIONS}-${session.user.id}`],
     }
   );
+
   return await getUserTransactionsById();
 }
