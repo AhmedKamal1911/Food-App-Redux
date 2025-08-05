@@ -1,12 +1,11 @@
 "use server";
-import { VerificationTemplate } from "@/emails/email-verification-template";
+
 import prisma from "@/lib/prisma";
 import { randomBytes } from "crypto";
-import { Resend } from "resend";
 
 import { getCurrentSession } from "@/lib/dal/user";
 import { ActionResponse } from "@/lib/types/shared";
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { sendVerificationEmailMessage } from "@/lib/emails";
 
 export async function resendVerificationEmailAction(): ActionResponse {
   const session = await getCurrentSession();
@@ -39,14 +38,10 @@ export async function resendVerificationEmailAction(): ActionResponse {
 
     // Send email
 
-    await resend.emails.send({
-      from: "Pizzon <onboarding@resend.dev>",
-      to: [user.email],
-      subject: "Verify your email address",
-      react: VerificationTemplate({
-        username: user.name,
-        emailVerificationToken: emailToken,
-      }),
+    await sendVerificationEmailMessage({
+      email: user.email,
+      username: user.name,
+      emailVerificationToken: emailToken,
     });
 
     return {

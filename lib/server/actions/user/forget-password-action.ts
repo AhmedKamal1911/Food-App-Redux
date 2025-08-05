@@ -1,9 +1,9 @@
 "use server";
 
-import { ResetPasswordTemplate } from "@/emails/forget-password-template";
+import { sendForgetPasswordMessage } from "@/lib/emails";
 import prisma from "@/lib/prisma";
 import { randomBytes } from "crypto";
-import { Resend } from "resend";
+
 import { z } from "zod";
 
 const schema = z
@@ -26,7 +26,7 @@ type FailedResponse = {
 };
 
 type ForgetPasswordResponse = Promise<SuccessResponse | FailedResponse>;
-const resend = new Resend(process.env.RESEND_API_KEY);
+
 export async function forgetPasswordAction(
   prevState: unknown,
   formData: FormData
@@ -45,10 +45,11 @@ export async function forgetPasswordAction(
       },
     };
   }
+  const email = result.data;
   try {
     const isEmailExist = await prisma.user.findUnique({
       where: {
-        email: result.data,
+        email: email,
       },
     });
 
@@ -64,13 +65,13 @@ export async function forgetPasswordAction(
     }
 
     const dbUser = await prisma.user.findUnique({
-      where: { email: result.data },
+      where: { email: email },
     });
 
     if (!dbUser) {
       return {
         success: false,
-        email: result.data,
+        email: email,
         error: {
           message: "Email does not exist.",
           status: 404,
@@ -81,7 +82,7 @@ export async function forgetPasswordAction(
     if (!dbUser.password) {
       return {
         success: false,
-        email: result.data,
+        email: email,
         error: {
           message:
             "This account was created using a social login and does not have a password.",
@@ -105,21 +106,17 @@ export async function forgetPasswordAction(
 
     // Send email
 
-    await resend.emails.send({
-      from: "Pizzon <onboarding@resend.dev>",
-      to: [result.data],
-      subject: "Reset your password",
-      react: ResetPasswordTemplate({
-        username: dbUser.name,
-        resetToken: passwordResetToken,
-      }),
+    await sendForgetPasswordMessage({
+      email: email,
+      username: dbUser.name,
+      resetPwToken: passwordResetToken,
     });
     return { success: true, email: "", status: 200 };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return {
       success: false,
-      email: result.data,
+      email: email,
       error: {
         message: "Internal Server Error",
         status: 500,

@@ -6,11 +6,12 @@ import {
   RegisterSchema,
 } from "@/lib/validation/register-schema";
 import { randomBytes } from "crypto";
-import { Resend } from "resend";
+
 import { VerificationTemplate } from "@/emails/email-verification-template";
 import { hashPassword } from "@/lib/server-utils";
 
 import parsePhoneNumber from "libphonenumber-js";
+import { resend } from "@/lib/resend";
 type FailedResponse = {
   success: false;
   error: {
@@ -37,7 +38,6 @@ type RegisterResponse = Promise<
 >;
 // TODO: make this type guard shared
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 export async function registerAction(
   registerInputsValues: RegisterSchema
 ): RegisterResponse {

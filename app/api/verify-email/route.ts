@@ -1,6 +1,6 @@
-import { VerificationSuccessTemplate } from "@/emails/email-verification-template";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCurrentSession } from "@/lib/dal/user";
+import { sendVerificationEmailSuccessMessage } from "@/lib/emails";
 import prisma from "@/lib/prisma";
 
 import { User } from "@prisma/client";
@@ -8,8 +8,7 @@ import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
-const resend = new Resend(process.env.RESEND_API_KEY);
+
 export async function POST(req: NextRequest) {
   const cook = await cookies();
   console.dir("Cookies:", cook.getAll());
@@ -54,13 +53,10 @@ export async function POST(req: NextRequest) {
     });
     revalidateTag(PRISMA_CACHE_KEY.USERS);
     revalidateTag(`${PRISMA_CACHE_KEY.USERS}-${user.id}`);
-    await resend.emails.send({
-      from: "Pizzon <onboarding@resend.dev>",
-      to: [user.email],
-      subject: "Email Verification Success!",
-      react: VerificationSuccessTemplate({
-        username: user.name,
-      }),
+
+    await sendVerificationEmailSuccessMessage({
+      email: user.email,
+      username: user.name,
     });
     return NextResponse.json({ message: "Email Verification Success!" });
   } catch (error) {

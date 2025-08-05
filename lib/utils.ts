@@ -49,3 +49,12 @@ export function getBaseUrl() {
     );
   return baseURL;
 }
+
+export function getResendEmailLogoUrl() {
+  const logoUrl = process.env.NEXT_PUBLIC_RESEND_EMAIL_LOGO_URL;
+  if (!logoUrl)
+    throw new Error(
+      "RESEND_EMAIL_LOGO_URL is not defined in the environment variables."
+    );
+  return logoUrl;
+}

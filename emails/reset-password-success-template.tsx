@@ -10,9 +10,7 @@ import {
   Section,
   Text,
 } from "@react-email/components";
-import { getBaseUrl } from "@/lib/utils";
-
-const baseUrl = getBaseUrl();
+import { getResendEmailLogoUrl } from "../lib/utils";
 
 type ResetPasswordSuccessTemplateProps = {
   username: string;
@@ -28,7 +26,7 @@ export const ResetPasswordSuccessTemplate = ({
       <Container style={container}>
         <Section style={logoSection}>
           <Img
-            src={`${baseUrl}/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75`}
+            src={getResendEmailLogoUrl()}
             alt="Food App"
             width={60}
             height={60}

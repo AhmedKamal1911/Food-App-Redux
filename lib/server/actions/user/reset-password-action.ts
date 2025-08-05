@@ -2,17 +2,16 @@
 
 import prisma from "@/lib/prisma";
 
-import { Resend } from "resend";
 import {
   ResetPasswordInputs,
   resetPasswordSchema,
 } from "@/lib/validation/reset-password-schema";
-import { ResetPasswordSuccessTemplate } from "@/emails/reset-password-success-template";
+
 import { hashPassword } from "@/lib/server-utils";
 import { ActionResponse } from "@/lib/types/shared";
 import { getUserByResetToken } from "../../queries";
+import { sendResetPwMessage } from "@/lib/emails";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 export async function resetPasswordAction(
   values: ResetPasswordInputs
 ): ActionResponse {
@@ -50,14 +49,7 @@ export async function resetPasswordAction(
         password: hashedPassword,
       },
     });
-    await resend.emails.send({
-      from: "Pizzon <onboarding@resend.dev>",
-      to: [user.email],
-      subject: "Password Reset Success!",
-      react: ResetPasswordSuccessTemplate({
-        username: user.name,
-      }),
-    });
+    await sendResetPwMessage({ email: user.email, name: user.name });
     return {
       success: true,
       data: { status: 200, message: "Password Changed Successfully." },

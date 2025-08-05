@@ -6,13 +6,15 @@ import { PaymentMetadata } from "@/app/(main)/cart/_components/forms/checkout-fo
 import { getProductsByIds } from "@/lib/queries/product/get-products-by-ids";
 import prisma from "@/lib/prisma";
 import { Extra, Size } from "@prisma/client";
-import { Resend } from "resend";
-import { OrderSuccessTemplate } from "@/emails/order-success-template";
-import { OrderCancelTemplate } from "@/emails/order-cancel-template";
+
 import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
+import {
+  sendFailedOrderMessage,
+  sendOrderConfirmationMessage,
+  sendRefundOrderMessage,
+} from "@/lib/emails";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(req: NextRequest) {
   const body = await req.text();
   const sig = (await headers()).get("Stripe-Signature") as string;
@@ -112,32 +114,24 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      await resend.emails.send({
-        from: "Pizzon <onboarding@resend.dev>",
-        to: billing_details.email!,
-        subject: "Your Order Confirmation",
-        react: OrderSuccessTemplate({
-          name: billing_details.name!,
-          totalAmount: totalAmount,
-          currency: session.currency,
-          receiptUrl: session.receipt_url!,
-          isRegistered: Boolean(userId),
-        }),
+      await sendOrderConfirmationMessage({
+        email: billing_details.email!,
+        currency: session.currency,
+        isRegistered: Boolean(userId),
+        receiptUrl: session.receipt_url!,
+        totalAmount: totalAmount,
+        username: billing_details.name!,
       });
       // console.log("Order processing ");
       revalidateTag(`${PRISMA_CACHE_KEY.TRANSACTIONS}-${userId}`);
       revalidateTag(PRISMA_CACHE_KEY.TRANSACTIONS);
       break;
     case "charge.refunded":
-      await resend.emails.send({
-        from: "Pizzon <onboarding@resend.dev>",
-        to: billing_details.email!,
-        subject: "Your Order Canceled",
-        react: OrderCancelTemplate({
-          name: billing_details.name!,
-          totalAmount: totalAmount,
-          currency: session.currency,
-        }),
+      await sendRefundOrderMessage({
+        currency: session.currency,
+        username: billing_details.name!,
+        email: billing_details.email!,
+        totalAmount: totalAmount,
       });
       revalidateTag(`${PRISMA_CACHE_KEY.TRANSACTIONS}-${userId}`);
       revalidateTag(PRISMA_CACHE_KEY.TRANSACTIONS);
@@ -152,17 +146,12 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      await resend.emails.send({
-        from: "Pizzon <onboarding@resend.dev>",
-        to: billing_details.email!,
-        subject: "Your Order failed",
-        react: OrderCancelTemplate({
-          name: billing_details.name!,
-          totalAmount: totalAmount,
-          currency: session.currency,
-        }),
+      await sendFailedOrderMessage({
+        currency: session.currency,
+        username: billing_details.name!,
+        email: billing_details.email!,
+        totalAmount: totalAmount,
       });
-
       break;
     default:
       // console.warn(`Unhandled event type: ${event.type}`);
