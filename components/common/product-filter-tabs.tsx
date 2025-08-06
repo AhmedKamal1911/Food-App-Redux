@@ -14,6 +14,7 @@ import { useAppSelector } from "@/lib/redux/hooks";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { getProductsByPage } from "@/lib/queries/product/get-products-by-page";
+import { LoaderCircle } from "lucide-react";
 export default function ProductFilterTabs({
   categories,
   className,
@@ -55,6 +56,7 @@ export default function ProductFilterTabs({
   const getMoreProducts = () => {
     fetchNextPage();
   };
+  console.log({ filteredData });
 
   return (
     <div className={cn("flex flex-col gap-10 my-10 text-white", className)}>
@@ -69,43 +71,52 @@ export default function ProductFilterTabs({
           {error.message}
         </span>
       )}
-      {filteredData && filteredData.length === 0 ? (
-        <span className="text-center block text-red-600 font-bold text-xl">
-          No Any Products In This Category
-        </span>
-      ) : (
-        <div
-          className={
-            "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5  xl:gap-10 "
-          }
-        >
-          {filteredData?.map((page, i) => {
-            return (
-              <Fragment key={`page-${i}`}>
-                {page.map((product) => {
-                  const totalQuantity =
-                    cartProducts[product.id]?.reduce(
-                      (acc, curr) => acc + curr.qty,
-                      0
-                    ) ?? 0;
 
-                  return (
-                    <AnimatePresence key={product.id}>
-                      <ProductCard
-                        product={product}
-                        productQty={totalQuantity}
-                      />
-                    </AnimatePresence>
-                  );
-                })}
-              </Fragment>
-            );
-          })}
-        </div>
-      )}
-      {/* TODO: create loading boundry */}
+      {filteredData &&
+        (filteredData[0].length === 0 ? (
+          <span className="text-center block text-red-600 font-bold text-xl">
+            No Any Products In This Category
+          </span>
+        ) : (
+          <div
+            className={
+              "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5  xl:gap-10 "
+            }
+          >
+            {filteredData.map((page, i) => {
+              return (
+                <Fragment key={`page-${i}`}>
+                  {page.map((product) => {
+                    const totalQuantity =
+                      cartProducts[product.id]?.reduce(
+                        (acc, curr) => acc + curr.qty,
+                        0
+                      ) ?? 0;
+
+                    return (
+                      <AnimatePresence key={product.id}>
+                        <ProductCard
+                          product={product}
+                          productQty={totalQuantity}
+                        />
+                      </AnimatePresence>
+                    );
+                  })}
+                </Fragment>
+              );
+            })}
+          </div>
+        ))}
+
       {isFetchingNextPage ? (
-        <p className="text-white text-center">Loading</p>
+        <div className="flex flex-col gap-3 justify-center items-center">
+          <div>
+            <LoaderCircle className="size-14 text-primary animate-spin" />
+          </div>
+          <p className="text-primary font-semibold tracking-wider text-xl animate-bounce text-center">
+            Loading...
+          </p>
+        </div>
       ) : (
         hasNextPage && (
           <Button

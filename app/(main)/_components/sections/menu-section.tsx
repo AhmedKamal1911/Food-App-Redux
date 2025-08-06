@@ -1,4 +1,5 @@
 import ProductFilterTabs from "@/components/common/product-filter-tabs";
+import MenuProductsSkeleton from "@/components/common/skeletons/menu-products-skeleton";
 import SpecialHeading from "@/components/common/special-heading";
 import { getProductsByPage } from "@/lib/queries/product/get-products-by-page";
 import { getQueryClient } from "@/providers/react-query-provider/get-query-client";
@@ -19,11 +20,7 @@ export default async function MenuSection({ categories }: Props) {
           subTitle="our special menu"
           className="text-white"
         />
-        <Suspense
-          fallback={
-            <div className="text-center text-red-500 text-4xl">Loading...</div>
-          }
-        >
+        <Suspense fallback={<MenuProductsSkeleton />}>
           <SuspensedContent categories={categories} />
         </Suspense>
       </div>

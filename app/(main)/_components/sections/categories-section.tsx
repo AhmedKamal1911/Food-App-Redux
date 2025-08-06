@@ -1,6 +1,7 @@
 import SpecialHeading from "@/components/common/special-heading";
 import { Button } from "@/components/ui/button";
 import { ProductCategory } from "@prisma/client";
+import { Archive } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -21,26 +22,31 @@ export default function CategoriesSection({
       <div className="container">
         <SpecialHeading title="fresh from pizzon" subTitle="our speciality" />
         {categories.length === 0 ? (
-          <span className="text-center block text-red-600 font-bold text-xl">
-            No Any Categories Found!
-          </span>
-        ) : (
-          <div className="my-7 p-2  flex max-md:flex-col items-center justify-between gap-10">
-            {categories
-              .slice(0, categories.length > 2 ? 3 : categories.length)
-              .map((category) => (
-                <CategoryCard key={category.id} category={category} />
-              ))}
+          <div className="flex flex-col gap-4 mt-8 items-center justify-center">
+            <Archive className="size-14 sm:size-20" />
+            <span className="text-center capitalize text-red-600 font-bold text-xl sm:text-2xl">
+              no any categories found!
+            </span>
           </div>
-        )}
+        ) : (
+          <>
+            <div className="my-7 p-2  flex max-md:flex-col items-center justify-between gap-10">
+              {categories
+                .slice(0, categories.length > 2 ? 3 : categories.length)
+                .map((category) => (
+                  <CategoryCard key={category.id} category={category} />
+                ))}
+            </div>
 
-        <Button
-          asChild
-          variant={"outline"}
-          className="block text-center text-xl h-11 w-30 mx-auto rounded-3xl font-bold bg-secondary text-white"
-        >
-          <Link href={"/categories"}>View More</Link>
-        </Button>
+            <Button
+              asChild
+              variant={"outline"}
+              className="block text-center text-xl h-11 w-30 mx-auto rounded-3xl font-bold bg-secondary text-white"
+            >
+              <Link href={"/categories"}>View More</Link>
+            </Button>
+          </>
+        )}
       </div>
     </section>
   );
