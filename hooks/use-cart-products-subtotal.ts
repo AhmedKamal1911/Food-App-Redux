@@ -7,15 +7,19 @@ export function useCartProductsSubtotal(cartProducts: CartProduct[]) {
 }
 
 function calcCartProductsSubtotal(cartProducts: CartProduct[]) {
-  return cartProducts.reduce(
-    (acc, curr) =>
-      acc +
-      calcProductTotalPrice({
-        extras: curr.selectedExtras,
-        productPrice: curr.price,
-        size: curr.selectedSize,
-        qty: curr.qty,
-      }),
-    0
+  return Number(
+    cartProducts
+      .reduce(
+        (acc, curr) =>
+          acc +
+          calcProductTotalPrice({
+            extras: curr.selectedExtras,
+            productPrice: curr.price,
+            size: curr.selectedSize,
+            qty: curr.qty,
+          }),
+        0
+      )
+      .toFixed(2)
   );
 }
