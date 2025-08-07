@@ -42,9 +42,6 @@ function CartMenuList({ cartProducts }: { cartProducts: CartProduct[] }) {
       {cartProducts.map((product, i) => (
         <li key={`${product.id}_${i}`}>
           <MemoizedCartProductBox product={product} />
-          <MemoizedCartProductBox product={product} />
-          <MemoizedCartProductBox product={product} />
-          <MemoizedCartProductBox product={product} />
         </li>
       ))}
     </ul>

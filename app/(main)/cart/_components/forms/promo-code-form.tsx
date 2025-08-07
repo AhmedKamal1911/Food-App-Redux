@@ -11,7 +11,7 @@ const formSchema = z.object({
   promoCode: z.string().optional(),
 });
 export function PromoCodeForm() {
-  const [isPromoCodeApplied, setIsPromoCodeApplied] = useState(true);
+  const [isPromoCodeApplied, setIsPromoCodeApplied] = useState(false);
   const [promoCodeData, setPromoCodeData] = useState(() => ({
     name: "",
     discount: "",
@@ -40,14 +40,14 @@ export function PromoCodeForm() {
   ) : (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex flex-col  gap-5">
+        <div className="flex flex-col gap-2">
           <CustomInputField
             control={form.control}
-            className="uppercase max-w-[300px] lg:w-full"
+            className="uppercase max-w-[300px] lg:w-full rounded-sm"
             name="promoCode"
             placeholder="enter your code"
           />
-          <Button className="bg-primary self-start text-white font-semibold text-[19px] px-5 py-5 rounded-sm">
+          <Button className="bg-primary self-start text-white font-semibold  p-3  rounded-sm">
             Apply
           </Button>
         </div>

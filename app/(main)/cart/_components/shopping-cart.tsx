@@ -5,6 +5,7 @@ import { CartProduct } from "@/lib/types/product";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { ProductsResponse } from "@/app/api/products/route";
 import { Button } from "@/components/ui/button";
+import { Fragment } from "react";
 
 export default function ShoppingCart({
   products,
@@ -34,9 +35,7 @@ export default function ShoppingCart({
       <div className="flex flex-col items-start gap-5 py-10  mt-5 border-t-2">
         <div className="w-full overflow-x-auto">
           {isLoading || isRefetching ? (
-            <span className="text-purple-600 text-2xl text-center block">
-              Loading
-            </span>
+            <ShoppingCartSkeletonProducts />
           ) : error ? (
             <div className="flex gap-5 items-center flex-col">
               <span className="text-red-500 text-2xl font-semibold">
@@ -55,11 +54,66 @@ export default function ShoppingCart({
         </div>
         <Link
           href={"/menu"}
-          className="flex gap-3 text-violet-800 font-semibold hover:text-violet-500 transition-colors"
+          className="flex items-center gap-2 text-rose-800 font-semibold hover:text-rose-500 transition-colors text-xl"
         >
           <MoveLeft /> Continue Shopping
         </Link>
       </div>
+    </div>
+  );
+}
+
+function ShoppingCartSkeletonProducts() {
+  return (
+    <div className="flex flex-col gap-1 min-w-[650px]">
+      <div className="space-y-2 px-2">
+        <div className="flex items-center justify-between gap-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-gray-300 animate-pulse rounded-[2px] p-2  w-[25%] h-[25px]"
+            />
+          ))}
+        </div>
+        <div className="bg-gray-300 animate-pulse rounded-sm h-0.5" />
+      </div>
+      {Array.from({ length: 4 }).map((_, i) => (
+        <Fragment key={i}>
+          <ProductSkeleton />
+
+          <div className="bg-gray-300 animate-pulse rounded-sm h-0.5" />
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+function ProductSkeleton() {
+  return (
+    <div className="flex gap-32 items-center  p-2">
+      <div className="flex gap-2">
+        <div className="w-[110px] ">
+          <div className="space-y-2">
+            <div className="bg-gray-300 animate-pulse rounded-sm h-24" />
+            <div className="bg-gray-300 animate-pulse rounded-sm h-7" />
+          </div>
+        </div>
+        <div className="flex flex-col gap-3">
+          <div className="bg-gray-300 animate-pulse rounded-[2px] p-2 w-[130px] h-[20px]" />
+          <div className="bg-gray-300 animate-pulse rounded-[2px] p-2 w-[90px] h-[20px]" />
+          <div className="bg-gray-300 animate-pulse rounded-[2px] p-2 w-[110px] h-[20px]" />
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 ">
+        <div className="bg-gray-300 animate-pulse rounded-[2px] p-2 size-5" />
+        <div className="bg-gray-300 animate-pulse rounded-[2px] p-2 w-[50px] h-[30px]" />
+        <div className="bg-gray-300 animate-pulse rounded-[2px] p-2 size-5" />
+      </div>
+
+      <div className="bg-gray-300 animate-pulse rounded-[2px] p-2 w-[65px] h-[30px]" />
+
+      <div className="bg-gray-300 animate-pulse rounded-[2px] p-2 w-[65px] h-[30px]" />
     </div>
   );
 }
