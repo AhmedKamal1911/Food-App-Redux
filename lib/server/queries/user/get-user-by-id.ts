@@ -4,7 +4,7 @@ import { unstable_cache } from "next/cache";
 
 export const getUserById = (userId: string) => {
   return unstable_cache(
-    async function _getUserById(userId: string) {
+    async function _getUserById() {
       const user = await prisma.user.findUnique({
         where: {
           id: userId,
@@ -12,9 +12,9 @@ export const getUserById = (userId: string) => {
       });
       return user;
     },
-    undefined,
+    [userId],
     {
       tags: [`${PRISMA_CACHE_KEY.USERS}-${userId}`],
     }
-  )(userId);
+  )();
 };

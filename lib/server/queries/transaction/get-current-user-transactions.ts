@@ -30,7 +30,7 @@ export async function getCurrentUserTransactions() {
 
       return transactions;
     },
-    undefined,
+    [session.user.id],
     {
       tags: [`${PRISMA_CACHE_KEY.TRANSACTIONS}-${session.user.id}`],
     }
