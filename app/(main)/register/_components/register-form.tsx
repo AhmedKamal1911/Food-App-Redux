@@ -28,7 +28,7 @@ import { registerAction } from "@/lib/server/actions/user/register-action";
 import { toast } from "react-toastify";
 
 import Or from "@/components/common/or";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const router = useRouter();

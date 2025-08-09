@@ -80,7 +80,10 @@ export const OrderSuccessTemplate = ({
           </Section>
           {isRegistered && (
             <Section style={{ textAlign: "center", margin: "32px 0" }}>
-              <Button href={`${baseUrl}/account/orders`} style={button}>
+              <Button
+                href={`${baseUrl}/account?tab=transactions`}
+                style={button}
+              >
                 View My Orders
               </Button>
             </Section>

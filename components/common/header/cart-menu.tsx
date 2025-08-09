@@ -137,7 +137,7 @@ function ShoppingCartButton({
             <LoaderCircle className="size-5 text-primary animate-spin" />
           </span>
         ) : (
-          subtotal
+          `${subtotal}$`
         )}
       </span>
     </button>

@@ -1,13 +1,13 @@
 import Image from "next/image";
 import RegisterForm from "./_components/register-form";
 
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 
 import { getCurrentSession } from "@/lib/dal/user";
 
 export default async function RegisterPage() {
   const session = await getCurrentSession();
-  if (session) redirect("/");
+  if (session) redirect("/", RedirectType.replace);
 
   return (
     <main>

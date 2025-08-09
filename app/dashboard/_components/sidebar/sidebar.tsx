@@ -36,7 +36,7 @@ export default function SideBar({ categories }: Props) {
       <Sidebar variant="sidebar" collapsible="icon">
         <div className="bg-[#161718] flex flex-col flex-1 text-gray-300 z-[999]">
           <SidebarHeader>
-            <Link href={"/dashboard"}>
+            <Link href={"/"}>
               <div className="flex justify-center border-b-1 border-gray-200 p-2 ">
                 {state === "collapsed" ? (
                   <Pizza />
