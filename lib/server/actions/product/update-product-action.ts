@@ -88,7 +88,6 @@ export async function updateProductAction(
         };
       }
     }
-    // TODO: upload image using cloudinary and store image url in product.
 
     // DB SIZES : [{id:1,},{id:2}]
     // Client Sizes: [{id:2},{..},{..}]

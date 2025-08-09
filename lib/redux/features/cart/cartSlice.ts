@@ -27,10 +27,12 @@ export const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action: PayloadAction<AddToCartPayload>) => {
       const { id, sizeId, extrasIds } = action.payload;
+      console.log({ extrasIds });
       const sizeExtrasStringPayload = generateSizeExtrasString(
         sizeId,
         extrasIds
       );
+
       const sizeExtrasStringStore = state.products[id]?.map((product) =>
         generateSizeExtrasString(product.sizeId, product.extrasIds)
       );
