@@ -94,12 +94,28 @@ export default function ProductFilterTabs({
                       ) ?? 0;
 
                     return (
-                      <AnimatePresence key={product.id}>
-                        <ProductCard
-                          product={product}
-                          productQty={totalQuantity}
-                        />
-                      </AnimatePresence>
+                      <Fragment key={product.id}>
+                        <AnimatePresence>
+                          <motion.div
+                            layout
+                            animate={{
+                              opacity: 1,
+                              scale: 1,
+                            }}
+                            initial={{ opacity: 0, scale: 0 }}
+                            transition={{
+                              duration: 0.4,
+                              ease: "easeIn",
+                            }}
+                            exit={{ opacity: 0, scale: 0 }}
+                          >
+                            <ProductCard
+                              product={product}
+                              productQty={totalQuantity}
+                            />
+                          </motion.div>
+                        </AnimatePresence>
+                      </Fragment>
                     );
                   })}
                 </Fragment>

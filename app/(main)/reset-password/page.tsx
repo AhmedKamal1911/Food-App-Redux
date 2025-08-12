@@ -4,10 +4,22 @@ import { getUserByResetToken } from "@/lib/server/queries";
 
 import InvalidTokenCard from "./_components/invalid-token-card";
 import PageLayout from "./_components/page-layout";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Reset Password",
+  description:
+    "Securely reset your Pizzon account password to continue enjoying fresh pizzas, exclusive deals, and fast delivery.",
+  openGraph: {
+    title: "Reset Password | Pizzon Food Delivery",
+    description:
+      "Forgot your password? Reset it quickly and securely to keep ordering your favorite Pizzon pizzas and meals.",
+  },
+};
 type Props = {
   searchParams: Promise<{ token: string | null }>;
 };
+
 export default async function ResetPasswordPage({ searchParams }: Props) {
   const { token } = await searchParams;
   if (!token)

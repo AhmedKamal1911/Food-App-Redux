@@ -2,7 +2,17 @@ import LoginForm from "./_components/login-form";
 
 import { redirect } from "next/navigation";
 import { getCurrentSession } from "@/lib/dal/user";
-
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Login",
+  description:
+    "Log in to your Pizzon account to track orders, save favorites, and enjoy exclusive deals on fresh pizzas and meals.",
+  openGraph: {
+    title: "Login | Pizzon Food Delivery",
+    description:
+      "Access your Pizzon account to order faster, track deliveries, and get special offers on your favorite meals.",
+  },
+};
 export default async function LoginPage() {
   const session = await getCurrentSession();
   if (session) redirect("/");

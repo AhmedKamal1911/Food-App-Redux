@@ -8,6 +8,7 @@ export function useCheckEmail({
 }: {
   setIsEmailStatusOk?: (status: boolean) => void;
 }) {
+  const setIsEmailStatusOkRef = useRef(setIsEmailStatusOk);
   const latestStatusRef = useRef<EmailStatus>("idle");
   const [status, setStatus] = useState<EmailStatus>("idle");
   const [error, setError] = useState<null | string>(null);
@@ -26,15 +27,16 @@ export function useCheckEmail({
         setStatus(data.status);
         latestStatusRef.current = data.status;
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      console.error(error);
       setStatus("error");
       setError("failed to check email");
     }
   }
   useEffect(() => {
-    setIsEmailStatusOk?.(status === "idle" || status === "available");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
+    setIsEmailStatusOkRef.current?.(
+      status === "idle" || status === "available"
+    );
+  }, [setIsEmailStatusOkRef, status]);
   return { error, status, setStatus, checkEmail, latestStatusRef };
 }

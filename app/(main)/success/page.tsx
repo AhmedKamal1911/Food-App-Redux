@@ -2,6 +2,18 @@ import { stripe } from "@/lib/stripe";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Payment Successful",
+  description:
+    "Your payment was successful! Your Pizzon order is being prepared with fresh ingredients and will be delivered soon.",
+  openGraph: {
+    title: "Payment Successful | Pizzon Food Delivery",
+    description:
+      "Thank you for your order! Your payment has been received and your fresh Pizzon meal is on its way.",
+  },
+};
 
 type Props = { searchParams: Promise<{ payment_intent?: string }> };
 

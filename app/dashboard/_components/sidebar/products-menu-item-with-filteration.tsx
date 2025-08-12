@@ -106,7 +106,7 @@ export function CategoryFilter({
               <div className="flex items-center justify-between gap-2 relative w-full">
                 <label
                   htmlFor={category.slug}
-                  className="text-[15px] flex-1 capitalize before:absolute before:inset-0 before:cursor-pointer"
+                  className={`text-[15px] flex-1 capitalize before:absolute before:inset-0 before:cursor-pointer ${category.id === "noCategory" && "text-rose-500"}`}
                 >
                   {category.name}
                 </label>

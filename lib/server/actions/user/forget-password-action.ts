@@ -112,8 +112,9 @@ export async function forgetPasswordAction(
       resetPwToken: passwordResetToken,
     });
     return { success: true, email: "", status: 200 };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
+    console.error(error);
+
     return {
       success: false,
       email: email,

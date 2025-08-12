@@ -1,5 +1,6 @@
 import IntroBanner from "@/components/common/intro-banner";
 import {
+  getProductBySlug,
   getProductFullInfoBySlug,
   getRelatedProducts,
 } from "@/lib/server/queries";
@@ -7,10 +8,43 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import ProductInfoBox from "./_components/product-info-box";
 import RelatedProductsSection from "./_components/related-products-section";
+import { Metadata } from "next";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+
+  if (!slug) {
+    return {
+      title: "Product Not Found | Pizzon Food Delivery",
+      description: "The requested product does not exist.",
+    };
+  }
+
+  // Replace this with your actual data fetching logic
+  const product = await getProductBySlug(slug);
+
+  if (!product) {
+    return {
+      title: "Product Not Found | Pizzon Food Delivery",
+      description: "The requested product does not exist.",
+    };
+  }
+
+  const description = `Explore our tasty selection of ${product.name.toLowerCase()} at Pizzon Food Delivery. Order fresh and fast!`;
+
+  return {
+    title: `${product.name} | Pizzon Food Delivery`,
+    description,
+    openGraph: {
+      title: `${product.name} | Pizzon Food Delivery`,
+      description,
+    },
+  };
+}
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
   const product = await getProductFullInfoBySlug(slug);
@@ -43,6 +77,7 @@ export default async function ProductPage({ params }: Props) {
           </div>
         </div>
       </section>
+      {/* TODO: skeleton to related products */}
       <RelatedProductsSection relatedProducts={relatedProducts} />
     </main>
   );

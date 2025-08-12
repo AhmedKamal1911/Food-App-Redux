@@ -10,7 +10,7 @@ export function useCategoryFilter({
   const [isPending, startTransition] = useTransition();
   const [search, setSearch] = useState("");
   const categorySlugs = useMemo(
-    () => categories.map((c) => c.slug).sort(),
+    () => [...categories.map((c) => c.slug), "noCategory"].sort(),
     [categories]
   );
   const [allSelected, setAllSelected] = useState(false);
@@ -61,15 +61,24 @@ export function useCategoryFilter({
         name: "All",
       },
       ...filtered,
+      {
+        id: "noCategory",
+        slug: "noCategory",
+        name: "no category",
+      },
     ];
   }, [categories, search]);
 
   useEffect(() => {
+    console.log({ categoriesQuery, categorySlugs });
     if (!categoriesQuery.length && categorySlugs.length) {
+      console.log("from router useEffect");
       // If no categories selected yet → set all
       router.replace(`?cat=${categorySlugs.join(",")}`);
       setAllSelected(true);
     } else {
+      // query has cats, categoryslugs is empty
+      console.log("hey");
       setAllSelected(categoriesQuery.length === categorySlugs.length);
     }
   }, [categoriesQuery, categorySlugs, router]);

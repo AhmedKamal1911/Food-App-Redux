@@ -1,6 +1,18 @@
 import ContactForm from "@/components/common/forms/contact-form";
 import IntroBanner from "@/components/common/intro-banner";
 import ContactDetailsBox from "./_components/contact-details-box";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact Us",
+  description:
+    "Reach out to Pizzon Food Delivery for orders, feedback, or customer support. We’re here to help you enjoy fresh pizzas and great service.",
+  openGraph: {
+    title: "Contact Us | Pizzon Food Delivery",
+    description:
+      "Get in touch with Pizzon for fast order assistance, feedback, and customer care. Your satisfaction is our priority.",
+  },
+};
 
 export default function ContactPage() {
   return (

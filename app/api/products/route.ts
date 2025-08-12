@@ -30,8 +30,8 @@ export async function GET(req: NextRequest) {
       },
     });
     return NextResponse.json<ProductsResponse>({ data: products });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
+    console.error(e);
     return NextResponse.json(
       { message: "An Error Occurred!" },
       { status: 500, statusText: "internal Server Error" }

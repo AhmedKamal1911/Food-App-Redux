@@ -106,8 +106,9 @@ export async function createProductAction(
       status: 201,
       message: "Product created successfully",
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
+    console.error(error);
+
     return {
       success: false,
       error: {

@@ -6,7 +6,6 @@ export function useCartProductsCount() {
   const products = Object.values(p);
   const itemsCount = useMemo(() => {
     return products.reduce((acc, curr) => acc + curr.length, 0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [products.length]);
+  }, [products]);
   return itemsCount;
 }

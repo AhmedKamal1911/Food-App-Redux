@@ -3,7 +3,18 @@ import RevenueChartBars from "./_components/revenue-chart-bars";
 
 import KPICardsContainer from "./_components/kpi-cards-container";
 import ProductsTableSection from "./_components/products-table-section";
+import type { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Products",
+  description:
+    "Manage your menu items in the Pizzon Dashboard. Add, edit, or remove pizzas, pasta, and other food products to keep your offerings fresh.",
+  openGraph: {
+    title: "Products | Dashboard | Pizzon Food Delivery",
+    description:
+      "Control your food menu with ease. Update product details, pricing, and availability in the Pizzon Dashboard.",
+  },
+};
 type Props = {
   searchParams: Promise<{
     cat: string;
@@ -20,7 +31,7 @@ export default async function ProductsPage({ searchParams }: Props) {
     page: Number(page) || 1,
     pageSize: 5,
   });
-
+  console.log({ totalPages });
   return (
     <div className="space-y-4">
       {/* Top Section: Chart + Cards */}

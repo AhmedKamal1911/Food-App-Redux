@@ -58,8 +58,8 @@ export default function UpdateUserForm({
       if (!res.success && res.error.type === "error") {
         toast.error(res.error.message);
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      console.error(error);
       toast.error("Network Error Occurred");
     }
   }

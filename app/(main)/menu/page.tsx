@@ -7,7 +7,17 @@ import BookTableSection from "@/components/common/sections/book-table-section";
 import { ProductCategory } from "@prisma/client";
 import { Suspense } from "react";
 import MenuProductsSkeleton from "@/components/common/skeletons/menu-products-skeleton";
-
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Menu",
+  description:
+    "Discover Pizzon’s delicious menu featuring fresh pizzas, pasta, sides, and more. Order online for fast delivery and unbeatable taste.",
+  openGraph: {
+    title: "Menu | Pizzon Food Delivery",
+    description:
+      "Explore Pizzon’s full menu of fresh, tasty pizzas, pasta, sides, and drinks. Order now and enjoy quick delivery.",
+  },
+};
 export default async function MenuPage() {
   const categories = await getAllCategories();
   return (

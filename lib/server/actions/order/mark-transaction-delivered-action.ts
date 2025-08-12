@@ -53,8 +53,9 @@ export async function markTransactionDeliveredAction(
       success: true,
       data: { status: 200, message: "Order Delivered Successfully." },
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
+    console.error(error);
+
     return {
       success: false,
       error: { message: "Internal Server Error", status: 500 },

@@ -14,8 +14,20 @@ async function _getFilteredProducts({
   // 1) Get the total *count* of filtered products
   const totalCount = await prisma.product.count({
     where: {
-      category:
-        productCategories.length > 0 ? { slug: { in: productCategories } } : {},
+      OR: [
+        // Match products with specific category slugs
+        productCategories.length > 0
+          ? {
+              category: {
+                slug: {
+                  in: productCategories.filter((c) => c !== "noCategory"),
+                },
+              },
+            }
+          : {},
+        // Match products where category is null
+        productCategories.includes("noCategory") ? { categoryId: null } : {},
+      ],
     },
   });
 
@@ -28,11 +40,22 @@ async function _getFilteredProducts({
     skip: (page - 1) * pageSize,
     include: { category: true, extras: true, sizes: true },
     where: {
-      category:
-        productCategories.length > 0 ? { slug: { in: productCategories } } : {},
+      OR: [
+        // Match products with specific category slugs
+        productCategories.length > 0
+          ? {
+              category: {
+                slug: {
+                  in: productCategories.filter((c) => c !== "noCategory"),
+                },
+              },
+            }
+          : {},
+        // Match products where category is null
+        productCategories.includes("noCategory") ? { categoryId: null } : {},
+      ],
     },
   });
-
   return { products, currentPage: page, totalPages, pageSize, totalCount };
 }
 

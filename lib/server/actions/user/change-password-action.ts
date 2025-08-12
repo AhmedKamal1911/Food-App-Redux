@@ -79,8 +79,9 @@ export async function changePasswordAction(
       success: true,
       data: { status: 200, message: "Password Changed Successfully." },
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
+    console.error(error);
+
     return {
       success: false,
 

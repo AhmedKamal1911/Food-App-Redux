@@ -33,7 +33,7 @@ function MenuProduct({ product }: { product: Product }) {
       </div>
       <div className="flex flex-col">
         <Link
-          href={`/product/${product.slug}`}
+          href={`/products/${product.slug}`}
           className="line-clamp-2 word-break before:absolute before:inset-0"
         >
           {product.name}

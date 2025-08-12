@@ -2,7 +2,18 @@ import IntroBanner from "@/components/common/intro-banner";
 import SectionDivider from "@/components/common/section-divider";
 import { getAllCategories } from "@/lib/server/queries";
 import CategoryCard from "./_components/category-card";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Categories",
+  description:
+    "Browse Pizzon’s food categories including pizzas, pasta, sides, and drinks. Find your favorites and order fresh meals delivered fast.",
+  openGraph: {
+    title: "Categories | Pizzon Food Delivery",
+    description:
+      "Explore a variety of food categories at Pizzon. Order fresh pizzas, pasta, sides, and more with fast delivery to your door.",
+  },
+};
 export default async function CategoriesPage() {
   const categories = await getAllCategories();
   return (

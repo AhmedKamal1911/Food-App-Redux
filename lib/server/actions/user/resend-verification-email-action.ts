@@ -48,8 +48,9 @@ export async function resendVerificationEmailAction(): ActionResponse {
       success: true,
       data: { message: "Verification email resent successfully.", status: 200 },
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
+    console.error(error);
+
     return {
       success: false,
       error: { status: 500, message: "Failed to resend verification email." },

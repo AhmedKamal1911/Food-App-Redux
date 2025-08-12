@@ -16,7 +16,7 @@ import {
   BookTableSchema,
 } from "@/lib/validation/book-table-schema";
 import { numberOfPersons } from "@/lib/data";
-
+// TODO: dont forget to create the action to send mail
 export default function BookTableForm() {
   // 1. Define your form.
   const form = useForm<BookTableSchema>({
@@ -30,9 +30,9 @@ export default function BookTableForm() {
   });
 
   // 2. Define a submit handler.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   function onSubmit(values: z.infer<typeof bookTableSchema>) {
-    // console.log(values);
+    console.log(values);
   }
 
   return (

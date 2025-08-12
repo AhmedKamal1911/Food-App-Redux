@@ -6,7 +6,18 @@ import IntroBanner from "@/components/common/intro-banner";
 import { getUserById } from "@/lib/server/queries/user";
 import { getCurrentSession } from "@/lib/dal/user";
 import { getCurrentUserTransactions } from "@/lib/server/queries/transaction";
+import type { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Account",
+  description:
+    "Manage your Pizzon account details to keep your profile up to date and enjoy a smooth ordering experience.",
+  openGraph: {
+    title: "Account | Pizzon Food Delivery",
+    description:
+      "Update your profile information and account settings at Pizzon Food Delivery.",
+  },
+};
 export default async function AccountPage() {
   const session = await getCurrentSession();
 

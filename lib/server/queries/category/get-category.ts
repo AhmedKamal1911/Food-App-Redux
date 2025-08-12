@@ -6,14 +6,14 @@ async function _getCategory({
   categorySlug,
   searchQuery,
   productsOrder = "asc",
-  page,
-  pageSize,
+  page = 1,
+  pageSize = 6,
 }: {
   categorySlug: string;
   searchQuery?: string;
   productsOrder?: "asc" | "desc";
-  page: number;
-  pageSize: number;
+  page?: number;
+  pageSize?: number;
 }) {
   const category = await prisma.productCategory.findUnique({
     where: {

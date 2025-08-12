@@ -4,7 +4,18 @@ import RegisterForm from "./_components/register-form";
 import { redirect, RedirectType } from "next/navigation";
 
 import { getCurrentSession } from "@/lib/dal/user";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Register",
+  description:
+    "Create your Pizzon account to order delicious pizzas and meals faster. Enjoy fresh ingredients, exclusive deals, and quick delivery.",
+  openGraph: {
+    title: "Register | Pizzon Food Delivery",
+    description:
+      "Sign up for Pizzon Food Delivery to enjoy fresh pizzas, exclusive offers, and quick delivery straight to your door.",
+  },
+};
 export default async function RegisterPage() {
   const session = await getCurrentSession();
   if (session) redirect("/", RedirectType.replace);

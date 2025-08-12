@@ -143,8 +143,9 @@ export async function updateProductAction(
       status: 200,
       message: `${data.name} updated successfully`,
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
+    console.error(error);
+
     return {
       success: false,
       error: {

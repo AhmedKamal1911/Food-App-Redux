@@ -38,8 +38,8 @@ export async function GET(req: NextRequest) {
       totalPages,
       page,
     });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
+    console.error(error);
     return NextResponse.json({
       error: {
         status: 500,

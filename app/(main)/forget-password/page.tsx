@@ -1,6 +1,18 @@
 import { getCurrentSession } from "@/lib/dal/user";
 import ForgetPasswordForm from "./_components/forget-password-form";
 import { redirect, RedirectType } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Forgot Password",
+  description:
+    "Forgot your Pizzon account password? Easily reset it here to get back to ordering your favorite fresh pizzas and meals.",
+  openGraph: {
+    title: "Forgot Password | Pizzon Food Delivery",
+    description:
+      "Reset your Pizzon password quickly and securely. Continue enjoying fast delivery and delicious food without interruption.",
+  },
+};
 
 export default async function ForgetPasswordPage() {
   const session = await getCurrentSession();

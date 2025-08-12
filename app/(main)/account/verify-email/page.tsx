@@ -10,14 +10,27 @@ import { Check, FileWarning } from "lucide-react";
 
 import Link from "next/link";
 import { redirect, RedirectType } from "next/navigation";
-import VerifyEmailForm from "../_components/forms/verify-email-form";
+
 import { getCurrentSession } from "@/lib/dal/user";
 import { verifyUserEmail } from "@/lib/queries/user/verify-user-email";
+import type { Metadata } from "next";
+import VerifyEmailForm from "../_components/forms/verify-email-form";
 
 type Props = {
   searchParams: Promise<{
     token: string | null;
   }>;
+};
+
+export const metadata: Metadata = {
+  title: "Verify Email",
+  description:
+    "Verify your email address to complete your Pizzon account setup and start ordering delicious pizzas and meals.",
+  openGraph: {
+    title: "Verify Email | Pizzon Food Delivery",
+    description:
+      "Complete your registration by verifying your email address. Enjoy fresh food and fast delivery with Pizzon.",
+  },
 };
 export default async function VerifyEmailPage({ searchParams }: Props) {
   const { token } = await searchParams;

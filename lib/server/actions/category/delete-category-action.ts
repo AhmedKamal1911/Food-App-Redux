@@ -68,8 +68,9 @@ export async function deleteCategoryAction(
         message: "Category deleted successfully",
       },
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
+    console.error(error);
+
     return {
       error: {
         status: 500,

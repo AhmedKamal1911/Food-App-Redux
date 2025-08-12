@@ -26,8 +26,8 @@ export default function DeleteProductModal({
       } else {
         toast.success(res.data.message);
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      console.error(error);
       toast.error("An Network Error Occured");
     }
   }

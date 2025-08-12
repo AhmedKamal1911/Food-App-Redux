@@ -80,7 +80,7 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
     });
 
     revalidateTag(PRISMA_CACHE_KEY.USERS);
-    // TODO: test this behavior in proudction and see if it works
+
     return {
       success: true,
       data: {
@@ -88,8 +88,9 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
         message: "User Deleted Successfully",
       },
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
+    console.error(error);
+
     return {
       error: {
         status: 500,

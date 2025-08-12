@@ -34,9 +34,9 @@ export default function ContactForm() {
   });
 
   // 2. Define a submit handler.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   function onSubmit(values: ContactSchema) {
-    // console.log(values);
+    console.log(values);
   }
 
   return (

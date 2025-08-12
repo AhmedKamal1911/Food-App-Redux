@@ -33,8 +33,8 @@ export async function POST(req: NextRequest) {
       message: "Email is Avaliable",
       status: "available",
     });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
+    console.error(error);
     return NextResponse.json<EmailCheckResponse>(
       { message: "Having Server Problem!", status: "error" },
       { status: 500, statusText: "Internal Server Error" }

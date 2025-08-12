@@ -37,9 +37,8 @@ export default function ReservationForm() {
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function onSubmit(values: ReservationSchema) {
-    // console.log(values);
+    console.log(values);
   }
   return (
     <Form {...form}>
