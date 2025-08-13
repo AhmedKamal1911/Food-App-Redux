@@ -10,7 +10,7 @@ import {
   decrementCartItemQty,
   incrementCartItemQty,
 } from "@/lib/redux/features/cart/cartSlice";
-import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { useAppDispatch } from "@/lib/redux/hooks";
 import { ProductWithRelations } from "@/lib/types/product";
 import { Extra, Size } from "@prisma/client";
 import clsx from "clsx";
@@ -20,14 +20,13 @@ type Props = {
 };
 export default function ProductInfoBox({ product }: Props) {
   const dispatch = useAppDispatch();
-  const cartProducts = useAppSelector((state) => state.cart.products);
-  const totalQuantity =
-    cartProducts[product.id]?.reduce((acc, curr) => acc + curr.qty, 0) ?? 0;
+
   const {
     selectedOptions,
     selectedOptionsUpdater,
     totalProductPrice,
     addProductToCart,
+    totalQuantity,
   } = useProductOptions(product);
 
   function onIncrementClick() {

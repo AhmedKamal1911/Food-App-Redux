@@ -1,18 +1,17 @@
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import prisma from "@/lib/prisma";
 import { unstable_cache } from "next/cache";
-
-async function _getRecentProducts({
-  order = "desc",
-  limit = 3,
-}: {
+type Options = {
   order?: "desc" | "asc";
   limit?: number;
-}) {
+};
+async function _getRecentProducts(
+  options: Options = { order: "desc", limit: 5 }
+) {
   const recentProducts = await prisma.product.findMany({
     include: { category: true, extras: true, sizes: true },
-    orderBy: order ? { createdAt: order } : {},
-    take: limit,
+    orderBy: options.order ? { createdAt: options.order } : {},
+    take: options.limit,
   });
 
   return recentProducts;

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useProductTotalPrice } from "@/hooks/use-product-total-price";
 import { ProductWithRelations } from "@/lib/types/product";
 import { Extra, Size } from "@prisma/client";
+import { useCartProductQty } from "./use-cart-product-qty";
 
 type SelectedOptionsState = {
   size: Size | undefined;
@@ -13,6 +14,7 @@ type SelectedOptionsState = {
 
 export function useProductOptions(product: ProductWithRelations) {
   const dispatch = useAppDispatch();
+  const totalQuantity = useCartProductQty(product.id);
   const [selectedOptions, setSelectedOptions] = useState<SelectedOptionsState>(
     () => ({
       size:
@@ -48,5 +50,6 @@ export function useProductOptions(product: ProductWithRelations) {
     selectedOptionsUpdater,
     totalProductPrice,
     addProductToCart,
+    totalQuantity,
   };
 }

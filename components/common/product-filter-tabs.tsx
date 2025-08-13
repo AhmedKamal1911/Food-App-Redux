@@ -10,7 +10,7 @@ import { ProductCategory } from "@prisma/client";
 import { CategoriesNameList } from "@/lib/types/category";
 
 import ProductCard from "./product-card";
-import { useAppSelector } from "@/lib/redux/hooks";
+
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { getProductsByPage } from "@/lib/queries/product/get-products-by-page";
@@ -33,7 +33,6 @@ export default function ProductFilterTabs({
           : lastPage.page + 1;
       },
     });
-  const cartProducts = useAppSelector((state) => state.cart.products);
 
   const categoriesNameList = useMemo(
     () => ["all", ...categories.map((category) => category.name)],
@@ -87,12 +86,6 @@ export default function ProductFilterTabs({
               return (
                 <Fragment key={`page-${i}`}>
                   {page.map((product) => {
-                    const totalQuantity =
-                      cartProducts[product.id]?.reduce(
-                        (acc, curr) => acc + curr.qty,
-                        0
-                      ) ?? 0;
-
                     return (
                       <Fragment key={product.id}>
                         <AnimatePresence>
@@ -109,10 +102,7 @@ export default function ProductFilterTabs({
                             }}
                             exit={{ opacity: 0, scale: 0 }}
                           >
-                            <ProductCard
-                              product={product}
-                              productQty={totalQuantity}
-                            />
+                            <ProductCard product={product} />
                           </motion.div>
                         </AnimatePresence>
                       </Fragment>

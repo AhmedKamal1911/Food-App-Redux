@@ -1,19 +1,23 @@
-"use client";
-
 import ProductCard from "@/components/common/product-card";
 
-import { useAppSelector } from "@/lib/redux/hooks";
-
 import Pagination from "./pagination";
-import { CategoryWithPaginatedProducts } from "@/lib/types/category";
+
+import { ProductWithRelations } from "@/lib/types/product";
 
 type Props = {
-  categoryData: CategoryWithPaginatedProducts;
+  totalPages: number;
+  page: number;
+  products: ProductWithRelations[];
+  slug: string;
   query?: string;
 };
-export default function ProductsViewer({ categoryData, query }: Props) {
-  const cartProducts = useAppSelector((state) => state.cart.products);
-
+export default function ProductsViewer({
+  products,
+  page,
+  totalPages,
+  query,
+  slug,
+}: Props) {
   return (
     <div className="flex-1 p-2">
       <div className="flex flex-col h-full">
@@ -21,24 +25,8 @@ export default function ProductsViewer({ categoryData, query }: Props) {
           <p className="text-xl text-primary">{`Results of Query : ${query}`}</p>
         )}
         <div className="flex-1">
-          {categoryData.products.data.length > 0 ? (
-            <div className="grid grid-cols-1  md:grid-cols-3  gap-7 ">
-              {categoryData.products.data.map((product) => {
-                const totalQuantity =
-                  cartProducts[product.id]?.reduce(
-                    (acc, curr) => acc + curr.qty,
-                    0
-                  ) ?? 0;
-
-                return (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    productQty={totalQuantity}
-                  />
-                );
-              })}
-            </div>
+          {products.length > 0 ? (
+            <ProductsGridList products={products} />
           ) : (
             <p className="text-center text-2xl font-semibold">
               No Products Found
@@ -46,15 +34,25 @@ export default function ProductsViewer({ categoryData, query }: Props) {
           )}
         </div>
 
-        {categoryData.products.totalPages > 1 && (
+        {totalPages > 1 && (
           <Pagination
             className={"justify-end mt-10 max-md:justify-center"}
-            totalPages={categoryData.products.totalPages}
-            currentPage={categoryData.products.page}
-            currentPageLocation={categoryData.slug}
+            totalPages={totalPages}
+            currentPage={page}
+            currentPageLocation={slug}
           />
         )}
       </div>
+    </div>
+  );
+}
+
+function ProductsGridList({ products }: { products: ProductWithRelations[] }) {
+  return (
+    <div className="grid grid-cols-1  md:grid-cols-3  gap-7 ">
+      {products.map((product) => {
+        return <ProductCard key={product.id} product={product} />;
+      })}
     </div>
   );
 }

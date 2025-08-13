@@ -10,7 +10,7 @@ export default function SearchInput({
 }) {
   return (
     <Form action="">
-      <div className="flex items-center">
+      <div className="flex items-center ">
         <Input
           disabled={isDisabled}
           placeholder="Search.."

@@ -21,16 +21,15 @@ import { useProductOptions } from "@/hooks/use-product-options";
 
 export default function AddToCartDialog({
   product,
-  totalQty,
 }: {
   product: ProductWithRelations;
-  totalQty: number;
 }) {
   const {
     selectedOptions,
     selectedOptionsUpdater,
     totalProductPrice,
     addProductToCart,
+    totalQuantity,
   } = useProductOptions(product);
 
   return (
@@ -86,8 +85,8 @@ export default function AddToCartDialog({
             onClick={addProductToCart}
             className="capitalize font-semibold w-full bg-orange-600 hover:bg-orange-600/90"
           >
-            {totalQty > 0
-              ? `Add to cart (${totalQty})`
+            {totalQuantity > 0
+              ? `Add to cart (${totalQuantity})`
               : `Add to cart ($${totalProductPrice})`}
           </Button>
         </DialogFooter>

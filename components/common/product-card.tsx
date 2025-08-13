@@ -7,10 +7,8 @@ import { memo } from "react";
 
 export default memo(function ProductCard({
   product,
-  productQty,
 }: {
   product: ProductWithRelations;
-  productQty: number;
 }) {
   return (
     <div className="flex flex-col items-center gap-4">
@@ -42,7 +40,7 @@ export default memo(function ProductCard({
         </div>
       </div>
 
-      <AddToCartDialog product={product} totalQty={productQty} />
+      <AddToCartDialog product={product} />
     </div>
   );
 });

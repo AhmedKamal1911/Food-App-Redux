@@ -52,9 +52,8 @@ export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
   const product = await getProductFullInfoBySlug(slug);
   if (!product) return notFound();
-  // const relatedProducts = product.categoryId
-  //   ? await getRelatedProducts(product.categoryId)
-  //   : [];
+
+  const relatedProductsPromise = getRelatedProducts(product.categoryId!);
 
   return (
     <main>
@@ -82,7 +81,7 @@ export default async function ProductPage({ params }: Props) {
       </section>
 
       <Suspense fallback={<RelatedProductsSkeleton />}>
-        <Awaited promise={getRelatedProducts(product.categoryId!)}>
+        <Awaited promise={relatedProductsPromise}>
           {(relatedProducts) => (
             <RelatedProductsSection relatedProducts={relatedProducts} />
           )}
