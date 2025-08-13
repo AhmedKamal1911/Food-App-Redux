@@ -76,7 +76,7 @@ function BestChefCustomNavigationButtons({
 
 function ProductCard({ product }: { product: Product }) {
   return (
-    <div className="relative flex flex-col  h-full px-3 lg:px-3 xl:px-0">
+    <div className="relative flex flex-col  h-full px-3 lg:px-3 xl:px-0 ">
       <div className="w-full h-full">
         <Image
           src={product.image ?? "https://placehold.co/600x400.png"}

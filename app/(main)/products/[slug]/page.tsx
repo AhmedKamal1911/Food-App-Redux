@@ -9,6 +9,9 @@ import { notFound } from "next/navigation";
 import ProductInfoBox from "./_components/product-info-box";
 import RelatedProductsSection from "./_components/related-products-section";
 import { Metadata } from "next";
+import Awaited from "@/components/common/awaited";
+import { Suspense } from "react";
+import RelatedProductsSkeleton from "./_components/related-products-skeleton";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -49,9 +52,9 @@ export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
   const product = await getProductFullInfoBySlug(slug);
   if (!product) return notFound();
-  const relatedProducts = product.categoryId
-    ? await getRelatedProducts(product.categoryId)
-    : [];
+  // const relatedProducts = product.categoryId
+  //   ? await getRelatedProducts(product.categoryId)
+  //   : [];
 
   return (
     <main>
@@ -77,8 +80,14 @@ export default async function ProductPage({ params }: Props) {
           </div>
         </div>
       </section>
-      {/* TODO: skeleton to related products */}
-      <RelatedProductsSection relatedProducts={relatedProducts} />
+
+      <Suspense fallback={<RelatedProductsSkeleton />}>
+        <Awaited promise={getRelatedProducts(product.categoryId!)}>
+          {(relatedProducts) => (
+            <RelatedProductsSection relatedProducts={relatedProducts} />
+          )}
+        </Awaited>
+      </Suspense>
     </main>
   );
 }
