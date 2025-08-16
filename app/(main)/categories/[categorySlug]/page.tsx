@@ -26,6 +26,14 @@ type Props = {
   params: Promise<{ categorySlug: string }>;
   searchParams: Promise<{ q?: string; page?: string }>;
 };
+
+export async function generateStaticParams() {
+  const categories = await getAllCategories();
+  return categories.map((cat) => ({
+    categorySlug: cat.slug,
+  }));
+}
+
 export async function generateMetadata({
   params,
 }: {

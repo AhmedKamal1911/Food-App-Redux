@@ -22,30 +22,36 @@ export default function RelatedProductsSection({ relatedProducts }: Props) {
         <span className="text-2xl font-bold  mb-6 text-white inline-block text-left">
           Related Products :
         </span>
-        <div className="relative px-5 lg:px-10">
-          <BestChefCustomNavigationButtons swiperRef={swiperRef} />
-          <Swiper
-            onSwiper={(swiper) => (swiperRef.current = swiper)} // ✅ Store Swiper instance correctly
-            slidesPerView={2}
-            spaceBetween={5}
-            loop={true}
-            pagination={{ clickable: true }}
-            modules={[Pagination, Navigation]}
-            className="mySwiper pb-16!"
-            breakpoints={{
-              0: { slidesPerView: 1, spaceBetween: 5 }, // Small screens (sm): 1 slide, 5px gap
-              768: { slidesPerView: 2, spaceBetween: 5 }, // Medium screens (md): 3 slides, 10px gap
-              900: { slidesPerView: 3, spaceBetween: 2 }, // Medium screens (md): 3 slides, 10px gap
-              1200: { slidesPerView: 4, spaceBetween: 15 }, // Large screens (lg and above): 4 slides, 20px gap
-            }}
-          >
-            {relatedProducts.map((product) => (
-              <SwiperSlide key={product.id}>
-                <ProductCard product={product} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
+        {relatedProducts.length > 1 ? (
+          <div className="relative px-5 lg:px-10">
+            <BestChefCustomNavigationButtons swiperRef={swiperRef} />
+            <Swiper
+              onSwiper={(swiper) => (swiperRef.current = swiper)} // ✅ Store Swiper instance correctly
+              slidesPerView={2}
+              spaceBetween={5}
+              loop={true}
+              pagination={{ clickable: true }}
+              modules={[Pagination, Navigation]}
+              className="mySwiper pb-16!"
+              breakpoints={{
+                0: { slidesPerView: 1, spaceBetween: 5 }, // Small screens (sm): 1 slide, 5px gap
+                768: { slidesPerView: 2, spaceBetween: 5 }, // Medium screens (md): 3 slides, 10px gap
+                900: { slidesPerView: 3, spaceBetween: 2 }, // Medium screens (md): 3 slides, 10px gap
+                1200: { slidesPerView: 4, spaceBetween: 15 }, // Large screens (lg and above): 4 slides, 20px gap
+              }}
+            >
+              {relatedProducts.map((product) => (
+                <SwiperSlide key={product.id}>
+                  <ProductCard product={product} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        ) : (
+          <p className="text-center capitalize text-2xl sm:text-3xl text-rose-500 font-bold">
+            there is no any related products
+          </p>
+        )}
       </div>
     </section>
   );
@@ -79,7 +85,7 @@ function ProductCard({ product }: { product: Product }) {
     <div className="relative flex flex-col  h-full px-3 lg:px-3 xl:px-0 ">
       <div className="w-full h-full">
         <Image
-          src={product.image ?? "https://placehold.co/600x400.png"}
+          src={product.image ?? "/images/decorations/placeholder.png"}
           alt="product img"
           height={100}
           width={100}

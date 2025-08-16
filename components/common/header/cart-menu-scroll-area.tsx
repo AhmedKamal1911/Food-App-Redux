@@ -67,8 +67,8 @@ const MemoizedCartProductBox = memo(function CartProductBox({
   return (
     <div className="flex items-center">
       <Image
-        src={product.image ?? "https://placehold.co/600x400.png"}
-        alt={product.name}
+        src={product.image ?? "/images/decorations/placeholder.png"}
+        alt={product.name ?? "product image placeholder"}
         width={80}
         height={80}
       />
@@ -114,7 +114,7 @@ function CartMenuItemsSkeleton({ count = 3 }: { count?: number }) {
 
 import { ShoppingBag, TriangleAlert } from "lucide-react";
 
-function CartMenuStatusBox({
+export function CartMenuStatusBox({
   status,
   message,
 }: {

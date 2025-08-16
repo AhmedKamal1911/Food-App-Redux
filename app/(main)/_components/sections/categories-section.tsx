@@ -61,7 +61,7 @@ function CategoryCard({ category }: { category: ProductCategory }) {
           height={400}
           width={400}
           alt={`${category.name} category`}
-          src={category.image ?? "https://placehold.co/600x400/png"}
+          src={category.image ?? "/images/decorations/placeholder.png"}
         />
       </div>
       <Link

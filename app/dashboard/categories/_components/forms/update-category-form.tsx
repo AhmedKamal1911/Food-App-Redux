@@ -33,7 +33,7 @@ export default function UpdateCategoryForm({ category, setOpenModal }: Props) {
   });
 
   const [previewUrl, setPreviewUrl] = useState(
-    category.image ?? "https://placehold.co/600x400/png"
+    category.image ?? "/images/decorations/placeholder.png"
   );
 
   // 2. Define a submit handler.

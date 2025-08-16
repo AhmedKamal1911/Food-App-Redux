@@ -85,8 +85,8 @@ function TransactionItem({
       <div className="flex items-center gap-2">
         <div>
           <Image
-            src={item.product.image ?? "https://placehold.co/600x400.png"}
-            alt={item.product.name}
+            src={item.product.image ?? "/images/decorations/placeholder.png"}
+            alt={item.product.name ?? "product image placeholder"}
             width={40}
             height={40}
             className="rounded object-cover"

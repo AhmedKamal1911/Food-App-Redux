@@ -12,10 +12,22 @@ import { Metadata } from "next";
 import Awaited from "@/components/common/awaited";
 import { Suspense } from "react";
 import RelatedProductsSkeleton from "./_components/related-products-skeleton";
+import prisma from "@/lib/prisma";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+export async function generateStaticParams() {
+  const products = await prisma.product.findMany({
+    select: {
+      slug: true,
+    },
+  });
+  return products.map((product) => ({
+    slug: product.slug,
+  }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -69,8 +81,8 @@ export default async function ProductPage({ params }: Props) {
           <div className="flex items-center justify-center gap-5 max-md:flex-col">
             <div className="flex flex-col items-center justify-center flex-1 size-[300px] max-w-full max-h-full">
               <Image
-                src={product.image ?? "https://placehold.co/600x400.png"}
-                alt={product.name}
+                src={product.image ?? "/images/decorations/placeholder.png"}
+                alt={product.name ?? "product image placeholder"}
                 height={200}
                 width={200}
               />

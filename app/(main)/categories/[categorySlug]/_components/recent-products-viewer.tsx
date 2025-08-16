@@ -18,7 +18,7 @@ export default async function RecentProductsViewer({ products }: Props) {
           >
             <Image
               className="group-hover:scale-110 transition-[scale]"
-              src={product.image ?? "https://placehold.co/600x400.png"}
+              src={product.image ?? "/images/decorations/placeholder.png"}
               alt={product.name}
               height={90}
               width={90}

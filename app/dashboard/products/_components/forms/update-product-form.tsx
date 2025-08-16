@@ -57,7 +57,7 @@ export default function UpdateProductForm({ product, setOpenModal }: Props) {
   const categories = useCategoriesContext();
 
   const [previewUrl, setPreviewUrl] = useState(
-    product.image ?? "https://placehold.co/600x400.png"
+    product.image ?? "/images/decorations/placeholder.png"
   );
   // 2. Define a submit handler.
   async function onSubmit(values: UpdateProductInputs) {

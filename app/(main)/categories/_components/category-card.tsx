@@ -14,7 +14,7 @@ export default function CategoryCard({
         className="block w-full h-full relative"
       >
         <Image
-          src={category.image ?? "https://placehold.co/600x400/png"}
+          src={category.image ?? "/images/decorations/placeholder.png"}
           alt={`${category.name} category`}
           fill
         />
