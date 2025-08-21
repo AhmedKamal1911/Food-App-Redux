@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍕 Food Ordering App
 
-## Getting Started
+> **Demo Link:** [https://food-app-redux.vercel.app/](https://food-app-redux.vercel.app/)  
+> **Demo Admin Account (for testing)**
+>
+> - **Email:** `medo0122689@gmail.com`
+> - **Password:** `asdASD123456@`
+> - **Role:** `super admin`
 
-First, run the development server:
+A modern food-ordering web app built with **Next.js**. It includes full authentication flows, cart with persistence, an admin panel with role-based access (admin/super admin), and **Stripe** payments. The UI is built with **Shadcn** and animations via **Framer Motion**; forms use **React Hook Form** with **Zod** validation.
+
+---
+
+## 📸 Screenshots
+
+### Admin Dashboard
+
+![Dashboard Products Admin Page](https://res.cloudinary.com/dny22pvbp/image/upload/v1755091010/site_images/1012dac3-3a98-466c-ab44-e81513f1d39d.png)  
+![Dashboard Transactions Admin Page](https://res.cloudinary.com/dny22pvbp/image/upload/v1755090971/site_images/cf1c7ba4-f2ca-4b52-9e64-7d8229ae1cf9.png)  
+![Admin Dashboard Users Page](https://res.cloudinary.com/dny22pvbp/image/upload/v1755090900/site_images/983c1502-3f39-458b-ae7e-6d0bbe46ef7c.png)
+
+### Store Pages
+
+![Cart & Checkout Page](https://res.cloudinary.com/dny22pvbp/image/upload/v1755090962/site_images/b7de5bdb-58f8-451d-affb-fe3cfee429c1.png)  
+![Register Page](https://res.cloudinary.com/dny22pvbp/image/upload/v1755090879/site_images/d6c3eb38-719a-4cb6-804e-590ed6fa6c90.png)  
+![Account Page](https://res.cloudinary.com/dny22pvbp/image/upload/v1755090944/site_images/eef7fc14-f84b-486b-984f-426f680c6b7b.png)
+
+### Mobile View
+
+![Mobile View](https://res.cloudinary.com/dny22pvbp/image/upload/v1755090896/site_images/08527c0e-6b05-4c88-91e5-f0859272be93.png)
+
+---
+
+## ✨ Highlights
+
+- 🔐 **Auth**: Login, Register, Email Verification, Forgot/Reset Password (NextAuth.js + Prisma)
+- 🧺 **Cart**: Add to cart, update quantities, remove items, and persisted state (Redux Toolkit)
+- 👤 **RBAC**: Role-based access (**user**, **admin**, **super admin**) with user management in the dashboard
+- 💳 **Payments**: Secure checkout & payments with **Stripe**
+- 🧱 **UI/UX**: **Shadcn** components, responsive layout, and **Framer Motion** animations
+- ✅ **Forms**: **React Hook Form** + **Zod** schema validation
+- 🗃️ **ORM/DB**: **Prisma ORM** with typed models and migrations
+- ⚙️ **DX**: Type-safe codebase with **TypeScript**
+
+---
+
+## 🛠 Tech Stack
+
+- **Frontend**: Next.js, TypeScript, Shadcn UI, Framer Motion
+- **State Management**: Redux Toolkit (cart + persistence)
+- **Auth**: NextAuth.js
+- **Validation**: React Hook Form, Zod
+- **Payments**: Stripe
+- **Database/ORM**: Prisma ORM
+- **Styling**: Tailwind CSS (with Shadcn)
+
+---
+
+## 🚀 Getting Started
+
+### 1) Install dependencies
 
 ```bash
-npm run dev
+npm install
 # or
-yarn dev
+yarn
 # or
-pnpm dev
+pnpm install
 # or
-bun dev
+bun install
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
