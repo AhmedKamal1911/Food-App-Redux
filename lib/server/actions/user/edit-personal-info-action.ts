@@ -17,9 +17,9 @@ export async function editPersonalInfoAction(
   const session = await getCurrentSession();
   if (!session) {
     return {
-      success: false,
+      status: "error",
       error: {
-        message: "Unauthorized action",
+        message: "Something went wrong, please try again.",
         status: 401,
       },
     };
@@ -31,7 +31,7 @@ export async function editPersonalInfoAction(
   if (!result.success) {
     const errorMsg = result.error.flatten().formErrors[0];
     return {
-      success: false,
+      status: "validationError",
       error: {
         message: errorMsg,
         status: 400,
@@ -49,7 +49,7 @@ export async function editPersonalInfoAction(
 
   if (isPhoneNumberInUse) {
     return {
-      success: false,
+      status: "error",
       error: {
         status: 409,
         message: "Phone number is already in use.",
@@ -71,17 +71,15 @@ export async function editPersonalInfoAction(
     revalidateTag(PRISMA_CACHE_KEY.USERS);
     revalidateTag(`${PRISMA_CACHE_KEY.USERS}-${userId}`);
     return {
-      success: true,
-      data: {
-        status: 200,
-        message: "Personal information updated successfully.",
-      },
+      status: "success",
+
+      message: "Personal information updated successfully.",
     };
   } catch (error) {
     console.error(error);
 
     return {
-      success: false,
+      status: "error",
 
       error: {
         message: "Internal Server Error",

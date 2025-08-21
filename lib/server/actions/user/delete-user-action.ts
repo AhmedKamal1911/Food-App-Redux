@@ -13,7 +13,7 @@ import { z } from "zod";
 export async function deleteUserAction(userIdInput: string): ActionResponse {
   if (!requirePermission(["superAdmin"])) {
     return {
-      success: false,
+      status: "error",
       error: {
         message: "Unauthorized action",
         status: 401,
@@ -23,7 +23,7 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
   const result = z.string().safeParse(userIdInput);
   if (!result.success)
     return {
-      success: false,
+      status: "validationError",
       error: { message: "Invalid Order ID", status: 400 },
     };
   const userId = result.data;
@@ -33,7 +33,7 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
 
     if (!session) {
       return {
-        success: false,
+        status: "error",
         error: {
           message: "Unauthorized action",
           status: 401,
@@ -49,13 +49,13 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
           status: 404,
           message: "user not found",
         },
-        success: false,
+        status: "error",
       };
     }
 
     if (userId === session.user.id) {
       return {
-        success: false,
+        status: "error",
         error: {
           status: 401,
           message: "This user can't be removed",
@@ -64,7 +64,7 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
     }
     if (session.user.role === "superAdmin" && user.role === "superAdmin") {
       return {
-        success: false,
+        status: "error",
         error: {
           status: 401,
           message: "Superadmin can't delete another superadmin",
@@ -82,21 +82,19 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
     revalidateTag(PRISMA_CACHE_KEY.USERS);
 
     return {
-      success: true,
-      data: {
-        status: 200,
-        message: "User Deleted Successfully",
-      },
+      status: "success",
+
+      message: "User Deleted Successfully",
     };
   } catch (error) {
     console.error(error);
 
     return {
+      status: "error",
       error: {
         status: 500,
         message: "Internal server error",
       },
-      success: false,
     };
   }
 }

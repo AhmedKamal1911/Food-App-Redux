@@ -8,5 +8,3 @@ export default async function Awaited<T>({ children, promise }: Props<T>) {
   const fetcherData = await promise;
   return children(fetcherData);
 }
-
-// TODO: use awaited server component to use suspense

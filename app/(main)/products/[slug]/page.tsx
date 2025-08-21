@@ -65,7 +65,9 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductFullInfoBySlug(slug);
   if (!product) return notFound();
 
-  const relatedProductsPromise = getRelatedProducts(product.categoryId!);
+  const relatedProductsPromise = product.categoryId
+    ? getRelatedProducts(product.categoryId, product.id)
+    : Promise.resolve([]);
 
   return (
     <main>

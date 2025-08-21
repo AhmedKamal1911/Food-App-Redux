@@ -20,11 +20,11 @@ export const authOptions: NextAuthOptions = {
       },
       authorize: async (credentials) => {
         const res = await loginAction(credentials!);
-        if (!res.success) {
+        if (res.status !== "success") {
           throw new Error(JSON.stringify(res.error));
         }
 
-        return res.user;
+        return res.data!;
       },
     }),
   ],

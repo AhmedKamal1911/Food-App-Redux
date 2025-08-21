@@ -12,36 +12,17 @@ import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCategoryById, getCategoryBySlug } from "../../queries";
 import { requirePermission } from "@/lib/server-utils";
 import { uploadImage } from "@/lib/queries/upload/upload-image";
-
-type ErrorType = "error" | "validationError";
-
-type FailedResponse = {
-  success: false;
-  error: {
-    status?: number;
-    message?: string;
-    type: ErrorType;
-  };
-};
-
-type SuccessResponse = {
-  success: true;
-  status: number;
-  message: string;
-};
-
-type UpdateCategoryResponse = Promise<SuccessResponse | FailedResponse>;
+import { ActionResponse } from "@/lib/types/shared";
 
 export async function updateCategoryAction(
   inputs: UpdateCategoryInputs
-): UpdateCategoryResponse {
+): ActionResponse {
   if (!requirePermission(["admin", "superAdmin"])) {
     return {
-      success: false,
+      status: "error",
       error: {
         message: "Unauthorized action",
         status: 401,
-        type: "error",
       },
     };
   }
@@ -49,9 +30,10 @@ export async function updateCategoryAction(
   const result = updateCategorySchema.safeParse(inputs);
   if (!result.success) {
     return {
-      success: false,
+      status: "validationError",
       error: {
-        type: "validationError",
+        message: "Some inputs missed!",
+        status: 400,
       },
     };
   }
@@ -63,11 +45,10 @@ export async function updateCategoryAction(
     const categoryFromDb = await getCategoryById(data.id);
     if (!categoryFromDb) {
       return {
-        success: false,
+        status: "error",
         error: {
           status: 404,
           message: "Category doesn't exist.",
-          type: "error",
         },
       };
     }
@@ -81,11 +62,10 @@ export async function updateCategoryAction(
       const existingCategory = await getCategoryBySlug(newCategorySlug);
       if (existingCategory) {
         return {
-          success: false,
+          status: "error",
           error: {
             status: 409,
             message: `Category "${existingCategory.name}" already exists.`,
-            type: "error",
           },
         };
       }
@@ -112,19 +92,18 @@ export async function updateCategoryAction(
     revalidateTag(PRISMA_CACHE_KEY.CATEGORIES);
 
     return {
-      success: true,
-      status: 200,
+      status: "success",
+
       message: `Category "${data.name}" updated successfully.`,
     };
   } catch (error) {
     console.error(error);
 
     return {
-      success: false,
+      status: "error",
       error: {
         status: 500,
         message: "An unexpected error occurred while updating the category.",
-        type: "error",
       },
     };
   }

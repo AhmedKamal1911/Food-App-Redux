@@ -51,11 +51,12 @@ export default function UpdateUserForm({
   async function onSubmit(values: UpdateUserInputs) {
     try {
       const res = await updateUserRoleAction(values);
-      if (res.success) {
+      if (res.status === "success") {
         toast.success(res.message);
         setOpenDialog(false);
       }
-      if (!res.success && res.error.type === "error") {
+      if (res.status === "validationError") return;
+      if (res.status === "error") {
         toast.error(res.error.message);
       }
     } catch (error) {

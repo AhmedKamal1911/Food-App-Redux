@@ -11,51 +11,27 @@ import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { requirePermission } from "@/lib/server-utils";
 import { uploadImage } from "@/lib/queries/upload/upload-image";
-
-type FailedResponse = {
-  success: false;
-  error: {
-    status: number;
-    message: string;
-    type: "error";
-  };
-};
-type FailedValidationResponse = {
-  success: false;
-  error: {
-    type: "validationError";
-  };
-};
-
-type SuccessResponse = {
-  success: true;
-  status: number;
-  message: string;
-};
-
-type UpdateProductResponse = Promise<
-  SuccessResponse | FailedResponse | FailedValidationResponse
->;
+import { ActionResponse } from "@/lib/types/shared";
 
 export async function updateProductAction(
   inputs: UpdateProductInputs
-): UpdateProductResponse {
+): ActionResponse {
   if (!requirePermission(["admin", "superAdmin"])) {
     return {
-      success: false,
+      status: "error",
       error: {
         message: "Unauthorized action",
         status: 401,
-        type: "error",
       },
     };
   }
   const result = updateProductSchema.safeParse(inputs);
   if (!result.success) {
     return {
-      success: false,
+      status: "validationError",
       error: {
-        type: "validationError",
+        message: "Some inputs missed!",
+        status: 400,
       },
     };
   }
@@ -64,12 +40,11 @@ export async function updateProductAction(
     const productFromDb = await getProductById(data.id);
     if (!productFromDb) {
       return {
-        success: false,
+        status: "error",
 
         error: {
           status: 404,
           message: "Product Doesn't Exist!",
-          type: "error",
         },
       };
     }
@@ -79,11 +54,10 @@ export async function updateProductAction(
       const existingProduct = await getProductBySlug(newProductSlug);
       if (existingProduct) {
         return {
-          success: false,
+          status: "error",
           error: {
             message: `${existingProduct.name} Product is already exist!`,
             status: 409,
-            type: "error",
           },
         };
       }
@@ -139,19 +113,18 @@ export async function updateProductAction(
     });
     revalidateTag(PRISMA_CACHE_KEY.PRODUCTS);
     return {
-      success: true,
-      status: 200,
+      status: "success",
+
       message: `${data.name} updated successfully`,
     };
   } catch (error) {
     console.error(error);
 
     return {
-      success: false,
+      status: "error",
       error: {
         message: "An Error Occurred",
         status: 500,
-        type: "error",
       },
     };
   }

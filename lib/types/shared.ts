@@ -1,17 +1,16 @@
-export type SuccessRes = {
-  success: true;
-  data: {
-    status: number;
-    message: string;
-  };
+export type SuccessRes<TData = null> = {
+  status: "success";
+  message: string;
+  data?: TData;
 };
-
 export type FailedRes = {
-  success: false;
+  status: "validationError" | "error";
   error: {
     status: number;
     message: string;
   };
 };
 
-export type ActionResponse = Promise<SuccessRes | FailedRes>;
+export type ActionResponse<SuccessData = null> = Promise<
+  SuccessRes<SuccessData> | FailedRes
+>;

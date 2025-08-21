@@ -14,51 +14,27 @@ import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCategoryBySlug } from "../../queries";
 import { requirePermission } from "@/lib/server-utils";
 import { uploadImage } from "@/lib/queries/upload/upload-image";
-
-type FailedResponse = {
-  success: false;
-  error: {
-    status: number;
-    message: string;
-    type: "error";
-  };
-};
-type FailedValidationResponse = {
-  success: false;
-  error: {
-    type: "validationError";
-  };
-};
-
-type SuccessResponse = {
-  success: true;
-  status: number;
-  message: string;
-};
-
-type CreateCategoryResponse = Promise<
-  SuccessResponse | FailedResponse | FailedValidationResponse
->;
+import { ActionResponse } from "@/lib/types/shared";
 
 export async function createCategoryAction(
   inputs: CreateCategoryInputs
-): CreateCategoryResponse {
+): ActionResponse {
   if (!requirePermission(["admin", "superAdmin"])) {
     return {
-      success: false,
+      status: "error",
       error: {
         message: "Unauthorized action",
         status: 401,
-        type: "error",
       },
     };
   }
   const result = createCategorySchema.safeParse(inputs);
   if (!result.success) {
     return {
-      success: false,
+      status: "validationError",
       error: {
-        type: "validationError",
+        message: "Some inputs missed!",
+        status: 400,
       },
     };
   }
@@ -70,10 +46,10 @@ export async function createCategoryAction(
 
     if (categoryExist) {
       return {
-        success: false,
+        status: "error",
         error: {
           status: 409,
-          type: "error",
+
           message: `(${categoryExist.name}) Category already exists`,
         },
       };
@@ -95,18 +71,18 @@ export async function createCategoryAction(
     });
     revalidateTag(PRISMA_CACHE_KEY.CATEGORIES);
     return {
-      success: true,
-      status: 201,
+      status: "success",
+
       message: "Category created successfully",
     };
   } catch (error) {
     console.error(error);
 
     return {
-      success: false,
+      status: "error",
       error: {
         status: 500,
-        type: "error",
+
         message: "Internal server error",
       },
     };

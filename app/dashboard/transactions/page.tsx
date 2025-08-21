@@ -1,10 +1,10 @@
 import TransactionTableSection from "./_components/transactions-table-section";
 
 import { getCurrentSession } from "@/lib/dal/user";
-import { getAllTransactions } from "@/lib/server/queries/transaction";
 
 import { redirect, RedirectType } from "next/navigation";
 import type { Metadata } from "next";
+import { getAllTransactions } from "@/lib/server/queries";
 
 export const metadata: Metadata = {
   title: "Transactions",

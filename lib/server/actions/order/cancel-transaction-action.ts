@@ -14,7 +14,7 @@ export async function cancelTransactionAction(
 ): ActionResponse {
   if (!requirePermission(["admin", "superAdmin"])) {
     return {
-      success: false,
+      status: "error",
       error: {
         message: "Unauthorized action",
         status: 401,
@@ -25,7 +25,7 @@ export async function cancelTransactionAction(
   const result = z.string().safeParse(formData.get("orderId"));
   if (!result.success)
     return {
-      success: false,
+      status: "validationError",
       error: { message: "Invalid Order ID", status: 400 },
     };
   const orderId = result.data;
@@ -35,7 +35,7 @@ export async function cancelTransactionAction(
     });
     if (!existingOrder) {
       return {
-        success: false,
+        status: "error",
         error: { message: "Order not found", status: 404 },
       };
     }
@@ -53,14 +53,14 @@ export async function cancelTransactionAction(
     revalidateTag(PRISMA_CACHE_KEY.TRANSACTIONS);
     revalidateTag(`${PRISMA_CACHE_KEY.TRANSACTIONS}-${existingOrder.userId}`);
     return {
-      success: true,
-      data: { status: 200, message: "Order Cancelled Successfully." },
+      status: "success",
+      message: "Order Cancelled Successfully.",
     };
   } catch (error) {
     console.error(error);
 
     return {
-      success: false,
+      status: "error",
       error: { message: "Internal Server Error", status: 500 },
     };
   }

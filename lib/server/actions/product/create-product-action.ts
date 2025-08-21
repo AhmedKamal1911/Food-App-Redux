@@ -12,51 +12,27 @@ import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getProductBySlug } from "../../queries";
 import { requirePermission } from "@/lib/server-utils";
 import { uploadImage } from "@/lib/queries/upload/upload-image";
-
-type FailedResponse = {
-  success: false;
-  error: {
-    status: number;
-    message: string;
-    type: "error";
-  };
-};
-type FailedValidationResponse = {
-  success: false;
-  error: {
-    type: "validationError";
-  };
-};
-
-type SuccessResponse = {
-  success: true;
-  status: number;
-  message: string;
-};
-
-type CreateProductResponse = Promise<
-  SuccessResponse | FailedResponse | FailedValidationResponse
->;
+import { ActionResponse } from "@/lib/types/shared";
 
 export async function createProductAction(
   inputs: CreateProductInputs
-): CreateProductResponse {
+): ActionResponse {
   if (!requirePermission(["admin", "superAdmin"])) {
     return {
-      success: false,
+      status: "error",
       error: {
         message: "Unauthorized action",
         status: 401,
-        type: "error",
       },
     };
   }
   const result = createProductSchema.safeParse(inputs);
   if (!result.success) {
     return {
-      success: false,
+      status: "validationError",
       error: {
-        type: "validationError",
+        message: "Some inputs missed!",
+        status: 400,
       },
     };
   }
@@ -68,10 +44,10 @@ export async function createProductAction(
 
     if (productExists) {
       return {
-        success: false,
+        status: "error",
         error: {
           status: 409,
-          type: "error",
+
           message: `(${productExists.name}) Product already exists`,
         },
       };
@@ -102,18 +78,18 @@ export async function createProductAction(
     });
     revalidateTag(PRISMA_CACHE_KEY.PRODUCTS);
     return {
-      success: true,
-      status: 201,
+      status: "success",
+
       message: "Product created successfully",
     };
   } catch (error) {
     console.error(error);
 
     return {
-      success: false,
+      status: "error",
       error: {
         status: 500,
-        type: "error",
+
         message: "Internal server error",
       },
     };

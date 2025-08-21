@@ -25,8 +25,9 @@ export default function DeleteUserModal({ userId }: Props) {
     startTransition(async () => {
       try {
         const response = await deleteUserAction(userId);
-        if (!response.success) return void toast.error(response.error.message);
-        toast.success(response.data.message);
+        if (response.status !== "success")
+          return void toast.error(response.error.message);
+        toast.success(response.message);
         actionBtnRef.current?.click();
       } catch (e) {
         console.error(e);

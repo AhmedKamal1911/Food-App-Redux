@@ -1,40 +1,26 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import {
-  loginSchema,
-  LoginSchema,
-  reqSchema,
-} from "@/lib/validation/login-schema";
+import { ActionResponse } from "@/lib/types/shared";
+import { loginSchema, LoginSchema } from "@/lib/validation/login-schema";
 import { UserRole } from "@prisma/client";
 import bcrypt from "bcrypt";
-import { z } from "zod";
 
-type FailedResponse = z.infer<typeof reqSchema>;
-
-type SuccessResponse = {
-  success: true;
-  status: number;
-  message: string;
-  user: {
-    id: string;
-    email: string;
-    image: string | null;
-    name: string;
-    role: UserRole;
-  };
-};
-
-type LoginResponse = Promise<SuccessResponse | FailedResponse>;
-
-export async function loginAction(inputs: LoginSchema): LoginResponse {
+export async function loginAction(inputs: LoginSchema): ActionResponse<{
+  id: string;
+  email: string;
+  image: string | null;
+  name: string;
+  role: UserRole;
+}> {
   const result = loginSchema.safeParse(inputs);
   if (!result.success) {
     return {
+      status: "validationError",
       error: {
-        type: "validationError",
+        message: "Some inputs missed!",
+        status: 400,
       },
-      success: false,
     };
   }
   try {
@@ -45,22 +31,20 @@ export async function loginAction(inputs: LoginSchema): LoginResponse {
     });
     if (!user?.password) {
       return {
-        success: false,
+        status: "error",
         error: {
           status: 400,
           message: "invalid email or password!",
-          type: "error",
         },
       };
     }
     // Check if user exist
     if (!user) {
       return {
-        success: false,
+        status: "error",
         error: {
           status: 404,
           message: "user not found",
-          type: "error",
         },
       };
     }
@@ -71,20 +55,19 @@ export async function loginAction(inputs: LoginSchema): LoginResponse {
     );
     if (!isValidPassword) {
       return {
-        success: false,
+        status: "error",
         error: {
           status: 400,
           message: "invalid email or password!",
-          type: "error",
         },
       };
     }
 
     return {
-      success: true,
-      status: 200,
+      status: "success",
+
       message: "login success",
-      user: {
+      data: {
         id: user.id,
         email: user.email,
         image: user.image,
@@ -96,9 +79,8 @@ export async function loginAction(inputs: LoginSchema): LoginResponse {
     console.error(error);
 
     return {
-      success: false,
+      status: "error",
       error: {
-        type: "error",
         status: 500,
         message: "internal server error",
       },

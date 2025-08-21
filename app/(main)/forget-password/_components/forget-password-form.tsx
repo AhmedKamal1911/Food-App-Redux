@@ -10,14 +10,12 @@ import { toast } from "react-toastify";
 
 export default function ForgetPasswordForm() {
   const [state, action, isPending] = useActionState(forgetPasswordAction, null);
-  const isValidationError = !state?.success && state?.error.status === 400;
-  const serverError =
-    !state?.success &&
-    (state?.error.status === 404 || state?.error.status === 500);
+  const isValidationError = state?.status === "validationError";
+  const serverError = state?.status === "error";
 
   useEffect(() => {
     if (!state) return;
-    if (state.success) {
+    if (state.status === "success") {
       toast.success(`A password reset link has been sent to your email.`);
     } else {
       toast.error(

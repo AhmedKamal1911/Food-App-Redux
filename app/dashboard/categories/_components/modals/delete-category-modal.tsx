@@ -26,8 +26,9 @@ export default function DeleteCategoryModal({
     startTransition(async () => {
       try {
         const response = await deleteCategoryAction(categoryId);
-        if (!response.success) return void toast.error(response.error.message);
-        toast.success(response.data.message);
+        if (response.status !== "success")
+          return void toast.error(response.error.message);
+        toast.success(response.message);
         actionBtnRef.current?.click();
       } catch (e) {
         console.error(e);

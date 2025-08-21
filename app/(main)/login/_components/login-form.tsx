@@ -10,9 +10,9 @@ import { useForm } from "react-hook-form";
 import CustomPasswordInputField from "@/components/common/custom-password-input-field";
 
 import {
+  loginErrorSchema,
   LoginSchema,
   loginSchema,
-  reqSchema,
 } from "@/lib/validation/login-schema";
 
 import { toast } from "react-toastify";
@@ -56,7 +56,7 @@ export default function LoginForm() {
         setIsSubmitSuccess(true);
         return;
       }
-      const parseResult = reqSchema.safeParse(JSON.parse(res.error));
+      const parseResult = loginErrorSchema.safeParse(JSON.parse(res.error));
       if (!parseResult.success) {
         // any error msg to the client
         form.setError("root", { message: "invalid email or password!" });
@@ -65,7 +65,7 @@ export default function LoginForm() {
         return;
       }
       const errorObject = parseResult.data;
-      if (errorObject.error.type === "error") {
+      if (errorObject.status === "error") {
         toast.error(errorObject.error.message);
         form.setError("root", { message: errorObject.error.message });
         setIsSubmitSuccess(false);

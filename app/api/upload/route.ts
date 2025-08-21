@@ -12,7 +12,8 @@ export async function POST(request: NextRequest) {
     file: formData.get("file"),
     pathname: formData.get("pathname"),
   });
-
+  // TODO: authenticated user only for pathnames and all roles
+  // TODO: rate limiting
   if (!result.success) {
     return NextResponse.json(
       { error: result.error.errors[0].message },

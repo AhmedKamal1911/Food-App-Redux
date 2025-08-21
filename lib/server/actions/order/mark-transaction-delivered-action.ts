@@ -13,7 +13,7 @@ export async function markTransactionDeliveredAction(
 ): ActionResponse {
   if (!requirePermission(["admin", "superAdmin"])) {
     return {
-      success: false,
+      status: "error",
       error: {
         message: "Unauthorized action",
         status: 401,
@@ -25,7 +25,7 @@ export async function markTransactionDeliveredAction(
   const orderId = result.data;
   if (!result.success)
     return {
-      success: false,
+      status: "validationError",
       error: { message: "Invalid Order ID", status: 400 },
     };
   try {
@@ -34,7 +34,7 @@ export async function markTransactionDeliveredAction(
     });
     if (!existingOrder) {
       return {
-        success: false,
+        status: "error",
         error: { message: "Order not found", status: 404 },
       };
     }
@@ -50,14 +50,14 @@ export async function markTransactionDeliveredAction(
       `from mark as deliverd: ${PRISMA_CACHE_KEY.TRANSACTIONS}-${existingOrder.userId}`
     );
     return {
-      success: true,
-      data: { status: 200, message: "Order Delivered Successfully." },
+      status: "success",
+      message: "Order Delivered Successfully.",
     };
   } catch (error) {
     console.error(error);
 
     return {
-      success: false,
+      status: "error",
       error: { message: "Internal Server Error", status: 500 },
     };
   }

@@ -15,7 +15,7 @@ export async function deleteCategoryAction(
 ): ActionResponse {
   if (!requirePermission(["admin", "superAdmin"])) {
     return {
-      success: false,
+      status: "error",
       error: {
         message: "Unauthorized action",
         status: 401,
@@ -25,7 +25,7 @@ export async function deleteCategoryAction(
   const result = z.string().safeParse(categoryIdInput);
   if (!result.success)
     return {
-      success: false,
+      status: "validationError",
       error: { message: "Invalid Category ID", status: 400 },
     };
   const categoryId = result.data;
@@ -39,7 +39,7 @@ export async function deleteCategoryAction(
           status: 404,
           message: "Category not found",
         },
-        success: false,
+        status: "error",
       };
     }
     if (category.image) {
@@ -62,11 +62,8 @@ export async function deleteCategoryAction(
 
     revalidateTag(PRISMA_CACHE_KEY.CATEGORIES);
     return {
-      success: true,
-      data: {
-        status: 200,
-        message: "Category deleted successfully",
-      },
+      status: "success",
+      message: "Category deleted successfully",
     };
   } catch (error) {
     console.error(error);
@@ -76,7 +73,7 @@ export async function deleteCategoryAction(
         status: 500,
         message: "Internal server error",
       },
-      success: false,
+      status: "error",
     };
   }
 }

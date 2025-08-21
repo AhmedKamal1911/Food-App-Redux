@@ -55,21 +55,20 @@ export default function RegisterForm() {
     try {
       const res = await registerAction(values);
 
-      if (res.success) {
+      if (res.status === "success") {
         toast.success(res.message);
         router.push("/login");
         return;
       }
+      if (res.status === "validationError") return;
 
-      if (!res.success && res.error.type === "error") {
-        if (res.error.status === 409) {
-          form.setError("root", {
-            message: res.error.message,
-          });
-        } else {
-          toast.error(res.error.message);
-        }
+      if (res.error.status === 409) {
+        form.setError("root", {
+          message: res.error.message,
+        });
+        return;
       }
+      toast.error(res.error.message);
     } catch (error) {
       console.error(error);
       toast.error("An Network Error Occurred");

@@ -15,7 +15,7 @@ export async function deleteProductAction({
 }): ActionResponse {
   if (!requirePermission(["admin", "superAdmin"])) {
     return {
-      success: false,
+      status: "error",
       error: {
         message: "Unauthorized action",
         status: 401,
@@ -32,7 +32,7 @@ export async function deleteProductAction({
           status: 404,
           message: "Product not found",
         },
-        success: false,
+        status: "error",
       };
     }
 
@@ -56,11 +56,9 @@ export async function deleteProductAction({
 
     revalidateTag(PRISMA_CACHE_KEY.PRODUCTS);
     return {
-      success: true,
-      data: {
-        status: 200,
-        message: "Product deleted successfully",
-      },
+      status: "success",
+
+      message: "Product deleted successfully",
     };
   } catch (error) {
     console.error(error);
@@ -70,7 +68,7 @@ export async function deleteProductAction({
         status: 500,
         message: "Internal server error",
       },
-      success: false,
+      status: "error",
     };
   }
 }

@@ -35,11 +35,12 @@ export default function CreateCategoryForm({
   async function onSubmit(values: CreateCategoryInputs) {
     try {
       const res = await createCategoryAction({ ...values });
-      if (res.success) {
+      if (res.status === "success") {
         toast.success(res.message);
         setOpenModal(false);
       }
-      if (!res.success && res.error.type === "error") {
+      if (res.status === "validationError") return;
+      if (res.status === "error") {
         toast.error(res.error.message);
       }
     } catch (error) {

@@ -18,7 +18,7 @@ export async function changePasswordAction(
   const session = await getCurrentSession();
   if (!session) {
     return {
-      success: false,
+      status: "error",
       error: {
         status: 401,
         message: "Unauthorized action",
@@ -30,7 +30,7 @@ export async function changePasswordAction(
   if (!result.success) {
     const errorMsg = result.error.flatten().formErrors[0];
     return {
-      success: false,
+      status: "validationError",
       error: {
         message: errorMsg,
         status: 400,
@@ -43,10 +43,10 @@ export async function changePasswordAction(
     const user = await getUserById(userId);
     if (!user) {
       return {
-        success: false,
+        status: "error",
         error: {
-          status: 404,
-          message: "user not found!",
+          status: 400,
+          message: "Something went wrong, please try again.",
         },
       };
     }
@@ -57,7 +57,7 @@ export async function changePasswordAction(
 
     if (!isPasswordCorrect) {
       return {
-        success: false,
+        status: "error",
         error: {
           status: 401,
           message: "Current password is incorrect.",
@@ -76,15 +76,14 @@ export async function changePasswordAction(
     });
     // Redirect to confirm reset code page
     return {
-      success: true,
-      data: { status: 200, message: "Password Changed Successfully." },
+      status: "success",
+      message: "Password Changed Successfully.",
     };
   } catch (error) {
     console.error(error);
 
     return {
-      success: false,
-
+      status: "error",
       error: {
         message: "Internal Server Error",
         status: 500,

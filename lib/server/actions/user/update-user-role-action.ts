@@ -11,36 +11,20 @@ import {
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getUserById } from "../../queries";
 import { getCurrentSession } from "@/lib/dal/user";
-
-type ErrorType = "error" | "validationError";
-
-type FailedResponse = {
-  success: false;
-  error: {
-    status?: number;
-    message?: string;
-    type: ErrorType;
-  };
-};
-
-type SuccessResponse = {
-  success: true;
-  status: number;
-  message: string;
-};
-
-type UpdateUserResponse = Promise<SuccessResponse | FailedResponse>;
+import { ActionResponse } from "@/lib/types/shared";
 
 export async function updateUserRoleAction(
   inputs: UpdateUserInputs
-): UpdateUserResponse {
+): ActionResponse {
   // Validate Inputs
   const result = updateUserSchema.safeParse(inputs);
   if (!result.success) {
     return {
-      success: false,
+      status: "validationError",
+
       error: {
-        type: "validationError",
+        message: "Some inputs missed!",
+        status: 400,
       },
     };
   }
@@ -51,11 +35,10 @@ export async function updateUserRoleAction(
   const userFromDb = await getUserById(data.id);
   if (!userFromDb) {
     return {
-      success: false,
+      status: "error",
       error: {
         status: 404,
         message: "User doesn't exist.",
-        type: "error",
       },
     };
   }
@@ -63,11 +46,10 @@ export async function updateUserRoleAction(
   // If the role has changed , return an error
   if (userFromDb.role === data.role) {
     return {
-      success: false,
+      status: "error",
       error: {
         status: 409,
         message: "No changes detected.",
-        type: "error",
       },
     };
   }
@@ -76,9 +58,8 @@ export async function updateUserRoleAction(
     const session = await getCurrentSession();
     if (!session) {
       return {
-        success: false,
+        status: "error",
         error: {
-          type: "error",
           message: "Unauthorized action",
           status: 401,
         },
@@ -87,9 +68,8 @@ export async function updateUserRoleAction(
     const loggedInUserRole = session.user.role;
     if (loggedInUserRole && userFromDb.role === "superAdmin") {
       return {
-        success: false,
+        status: "error",
         error: {
-          type: "error",
           status: 401,
           message: "Superadmin can't updated superadmin!",
         },
@@ -97,9 +77,8 @@ export async function updateUserRoleAction(
     }
     if (loggedInUserRole === "admin") {
       return {
-        success: false,
+        status: "error",
         error: {
-          type: "error",
           status: 401,
           message: "Admin can't update anyone!",
         },
@@ -120,19 +99,18 @@ export async function updateUserRoleAction(
     revalidateTag(`${PRISMA_CACHE_KEY.USERS}-${data.id}`);
 
     return {
-      success: true,
-      status: 200,
+      status: "success",
+
       message: `User Role  Updated Successfully.`,
     };
   } catch (error) {
     console.error(error);
 
     return {
-      success: false,
+      status: "error",
       error: {
         status: 500,
         message: "An unexpected error occurred while updating the user.",
-        type: "error",
       },
     };
   }

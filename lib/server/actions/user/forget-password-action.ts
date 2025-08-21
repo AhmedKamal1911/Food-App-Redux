@@ -12,12 +12,11 @@ const schema = z
   .email({ message: "invalid Email" });
 
 type SuccessResponse = {
-  success: true;
-  status: number;
+  status: "success";
   email: string;
 };
 type FailedResponse = {
-  success: false;
+  status: "error" | "validationError";
   email: string;
   error: {
     status: number;
@@ -37,7 +36,7 @@ export async function forgetPasswordAction(
   if (!result.success) {
     const errorMsg = result.error.flatten().formErrors[0];
     return {
-      success: false,
+      status: "validationError",
       email: formDataEmail,
       error: {
         message: errorMsg,
@@ -55,7 +54,7 @@ export async function forgetPasswordAction(
 
     if (!isEmailExist) {
       return {
-        success: false,
+        status: "error",
         email: formDataEmail,
         error: {
           message: "Email is not exist",
@@ -70,7 +69,7 @@ export async function forgetPasswordAction(
 
     if (!dbUser) {
       return {
-        success: false,
+        status: "error",
         email: email,
         error: {
           message: "Email does not exist.",
@@ -81,7 +80,7 @@ export async function forgetPasswordAction(
 
     if (!dbUser.password) {
       return {
-        success: false,
+        status: "error",
         email: email,
         error: {
           message:
@@ -111,12 +110,12 @@ export async function forgetPasswordAction(
       username: dbUser.name,
       resetPwToken: passwordResetToken,
     });
-    return { success: true, email: "", status: 200 };
+    return { status: "success", email: "" };
   } catch (error) {
     console.error(error);
 
     return {
-      success: false,
+      status: "error",
       email: email,
       error: {
         message: "Internal Server Error",

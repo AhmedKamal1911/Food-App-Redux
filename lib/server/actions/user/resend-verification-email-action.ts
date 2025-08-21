@@ -12,7 +12,7 @@ export async function resendVerificationEmailAction(): ActionResponse {
 
   if (!session) {
     return {
-      success: false,
+      status: "error",
       error: {
         message: "Unauthorized action",
         status: 401,
@@ -45,14 +45,14 @@ export async function resendVerificationEmailAction(): ActionResponse {
     });
 
     return {
-      success: true,
-      data: { message: "Verification email resent successfully.", status: 200 },
+      status: "success",
+      message: "Verification email resent successfully.",
     };
   } catch (error) {
     console.error(error);
 
     return {
-      success: false,
+      status: "error",
       error: { status: 500, message: "Failed to resend verification email." },
     };
   }

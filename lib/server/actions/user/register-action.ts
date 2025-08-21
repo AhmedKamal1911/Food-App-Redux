@@ -12,41 +12,18 @@ import { hashPassword } from "@/lib/server-utils";
 
 import parsePhoneNumber from "libphonenumber-js";
 import { resend } from "@/lib/resend";
-type FailedResponse = {
-  success: false;
-  error: {
-    status: number;
-    message: string;
-    type: "error";
-  };
-};
-type FailedValidationResponse = {
-  success: false;
-  error: {
-    type: "validationError";
-  };
-};
-
-type SuccessResponse = {
-  success: true;
-  status: number;
-  message: string;
-};
-
-type RegisterResponse = Promise<
-  SuccessResponse | FailedResponse | FailedValidationResponse
->;
-// TODO: make this type guard shared
+import { ActionResponse } from "@/lib/types/shared";
 
 export async function registerAction(
   registerInputsValues: RegisterSchema
-): RegisterResponse {
+): ActionResponse {
   const result = registerInputs.safeParse(registerInputsValues); // 2min
   if (!result.success) {
     return {
-      success: false,
+      status: "validationError",
       error: {
-        type: "validationError",
+        message: "Some inputs missed!",
+        status: 400,
       },
     };
   }
@@ -60,9 +37,8 @@ export async function registerAction(
 
   if (existingUser) {
     return {
-      success: false,
+      status: "error",
       error: {
-        type: "error",
         status: 409,
         message: "Email or Phone Already exists",
       },
@@ -94,19 +70,18 @@ export async function registerAction(
       }),
     });
     return {
-      success: true,
-      status: 201,
+      status: "success",
+
       message: "Register Successful Message Has Been Sent To Email",
     };
   } catch (error) {
     console.error(error);
 
     return {
-      success: false,
+      status: "error",
       error: {
         message: "An Error Occurred",
         status: 500,
-        type: "error",
       },
     };
   }

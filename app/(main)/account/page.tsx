@@ -5,8 +5,9 @@ import { redirect, RedirectType } from "next/navigation";
 import IntroBanner from "@/components/common/intro-banner";
 import { getUserById } from "@/lib/server/queries/user";
 import { getCurrentSession } from "@/lib/dal/user";
-import { getCurrentUserTransactions } from "@/lib/server/queries/transaction";
+
 import type { Metadata } from "next";
+import { getCurrentUserTransactions } from "@/lib/server/queries";
 
 export const metadata: Metadata = {
   title: "Account",

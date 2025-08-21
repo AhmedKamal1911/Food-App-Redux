@@ -41,23 +41,22 @@ export default function ChangePasswordForm() {
   async function onSubmit(values: ChangePasswordInputs) {
     try {
       const res = await changePasswordAction(values);
-      if (res.success) {
-        toast.success(res.data.message);
+      if (res.status === "success") {
+        toast.success(res.message);
         closeBtnRef.current?.click();
         return;
       }
+      if (res.status === "validationError") return;
 
       if (res.error.status === 404) {
         form.setError("root", {
-          message: "Something went wrong, please try again.",
+          message: res.error.message,
         });
-        toast.error("Something went wrong, please try again.");
+        toast.error(res.error.message);
       }
 
       if (res.error.status === 401) {
         form.setError("currentPassword", { message: res.error.message });
-      } else if (res.error.status === 400) {
-        form.setError("root", { message: res.error.message });
       }
     } catch (error) {
       console.error(error);

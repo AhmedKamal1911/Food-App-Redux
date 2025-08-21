@@ -21,10 +21,10 @@ export default function DeleteProductModal({
   async function onConfirmDeleteProduct() {
     try {
       const res = await deleteProductAction({ productId });
-      if (!res.success) {
+      if (res.status !== "success") {
         toast.error(res.error.message);
       } else {
-        toast.success(res.data.message);
+        toast.success(res.message);
       }
     } catch (error) {
       console.error(error);

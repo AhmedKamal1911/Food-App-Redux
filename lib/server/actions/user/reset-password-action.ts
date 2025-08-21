@@ -20,7 +20,7 @@ export async function resetPasswordAction(
   if (!result.success) {
     const errorMsg = result.error.flatten().formErrors[0];
     return {
-      success: false,
+      status: "validationError",
       error: {
         message: errorMsg,
         status: 400,
@@ -32,7 +32,7 @@ export async function resetPasswordAction(
     const user = await getUserByResetToken(values.token);
     if (!user) {
       return {
-        success: false,
+        status: "error",
         error: {
           status: 400,
           message: "Invalid or expired reset token.",
@@ -51,14 +51,14 @@ export async function resetPasswordAction(
     });
     await sendResetPwMessage({ email: user.email, name: user.name });
     return {
-      success: true,
-      data: { status: 200, message: "Password Changed Successfully." },
+      status: "success",
+      message: "Password Changed Successfully.",
     };
   } catch (error) {
     console.error(error);
 
     return {
-      success: false,
+      status: "error",
 
       error: {
         message: "Internal Server Error",

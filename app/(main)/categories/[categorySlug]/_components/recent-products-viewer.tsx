@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 
-// TODO: change placehold.co to local placeholder img
 type Props = {
   products: ProductWithRelations[];
 };
@@ -14,7 +13,7 @@ export default async function RecentProductsViewer({ products }: Props) {
         <li key={product.id}>
           <Link
             href={`/categories/`}
-            className="group flex max-sm:flex-col max-sm:items-center gap-1 py-2 uppercase text-[16px]  text-gray-500 hover:text-primary transition-colors"
+            className="group flex max-sm:flex-col max-sm:items-center gap-3 py-2 uppercase text-[16px]  text-gray-500 hover:text-primary transition-colors"
           >
             <Image
               className="group-hover:scale-110 transition-[scale]"
