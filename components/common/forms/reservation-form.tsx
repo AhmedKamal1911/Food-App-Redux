@@ -22,23 +22,38 @@ import {
 } from "@/lib/validation/reservation-table-schema";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { cn } from "@/lib/utils";
+import { toast } from "react-toastify";
+import { sendBookTableEmailAction } from "@/lib/server/actions/emails/send-book-table-email-action";
 
 export default function ReservationForm() {
   // 1. Define your form.
   const form = useForm<ReservationSchema>({
     resolver: zodResolver(reservationSchema),
     defaultValues: {
-      username: "",
-      emailAddress: "",
+      name: "",
+      email: "",
       bookingDate: new Date(),
       numberOfCustomers: "empty",
       phoneNumber: "",
-      comments: "",
     },
   });
 
-  function onSubmit(values: ReservationSchema) {
-    console.log(values);
+  async function onSubmit(values: ReservationSchema) {
+    try {
+      const response = await sendBookTableEmailAction(values);
+      if (response.status === "validationError") return;
+      if (response.status === "success") {
+        toast.success(response.message);
+        form.reset();
+        return;
+      }
+      toast.error(response.error.message);
+
+      console.log(values);
+    } catch (error) {
+      console.error(error);
+      toast.error("Network Error Occurred");
+    }
   }
   return (
     <Form {...form}>
@@ -65,7 +80,7 @@ export default function ReservationForm() {
         />
         <CustomInputField
           control={form.control}
-          name="username"
+          name="name"
           placeholder="name"
         />
         <FormField
@@ -89,7 +104,7 @@ export default function ReservationForm() {
 
         <CustomInputField
           control={form.control}
-          name="emailAddress"
+          name="email"
           placeholder="email address"
         />
         <CustomTextArea
@@ -97,8 +112,12 @@ export default function ReservationForm() {
           name="comments"
           placeholder="comments"
         />
-        <Button className="rounded-[3px] font-semibold" type="submit">
-          Book Now
+        <Button
+          disabled={form.formState.isSubmitting}
+          className="rounded-[3px] font-semibold"
+          type="submit"
+        >
+          {form.formState.isSubmitting ? "Booking.." : "Book Now"}
         </Button>
       </form>
     </Form>

@@ -1,7 +1,6 @@
 import * as React from "react";
 import {
   Body,
-  Button,
   Container,
   Head,
   Hr,
@@ -11,22 +10,20 @@ import {
   Section,
   Text,
 } from "@react-email/components";
-import { getBaseUrl, getResendEmailLogoUrl } from "@/lib/utils";
+import { getResendEmailLogoUrl } from "@/lib/utils";
+import { ReservationSchema } from "@/lib/validation/reservation-table-schema";
 
-const baseUrl = getBaseUrl();
-
-type ResetPasswordTemplateProps = {
-  username: string;
-  resetToken: string;
-};
-
-export const ResetPasswordTemplate = ({
-  username,
-  resetToken,
-}: ResetPasswordTemplateProps) => (
+export const BookTableTemplate = ({
+  name,
+  email,
+  numberOfCustomers,
+  bookingDate,
+  phoneNumber,
+  comments,
+}: ReservationSchema) => (
   <Html>
     <Head />
-    <Preview>Reset your Food App password</Preview>
+    <Preview>Your table reservation at Food App 🍽</Preview>
     <Body style={main}>
       <Container style={container}>
         <Section style={logoSection}>
@@ -42,28 +39,55 @@ export const ResetPasswordTemplate = ({
             }}
           />
         </Section>
-        <Text style={heading}>Reset Your Password</Text>
+
+        <Text style={heading}>Table Booking Request</Text>
         <Text style={subHeading}>
-          Hi {username}, we received a request to reset your password.
+          Hi <b>{name}</b>, thank you for booking with <b>Food App</b>!
         </Text>
+
         <Text style={message}>
-          Click the button below to reset your password. <br />
-          <span style={{ color: "#f43f5e", fontWeight: 500 }}>
-            This link will expire after <b>10 minutes</b>.
-          </span>
+          We have received your reservation request. Below are your booking
+          details:
         </Text>
-        <Section style={{ textAlign: "center", margin: "32px 0" }}>
-          <Button
-            href={`${baseUrl}/reset-password?token=${resetToken}`}
-            style={button}
-          >
-            Reset Password
-          </Button>
+
+        <Section style={detailsBox}>
+          <Text style={detailItem}>
+            <b>Name:</b> {name}
+          </Text>
+          <Text style={detailItem}>
+            <b>Email:</b> {email}
+          </Text>
+          <Text style={detailItem}>
+            <b>Guests:</b> {numberOfCustomers}
+          </Text>
+          <Text style={detailItem}>
+            <b>Date:</b>{" "}
+            {bookingDate.toLocaleString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </Text>
+          <Text style={detailItem}>
+            <b>Phone:</b> {phoneNumber}
+          </Text>
+
+          {/* ✅ Only show comments if they exist */}
+          {comments && (
+            <Text style={detailItem}>
+              <b>Comments:</b> {comments}
+            </Text>
+          )}
         </Section>
-        <Text style={info}>
-          If you did not request a password reset, you can safely ignore this
-          email.
+
+        <Text style={message}>
+          Our team will contact you shortly to confirm your reservation. We look
+          forward to serving you!
         </Text>
+
         <Hr style={{ borderColor: "#22223b", margin: "32px 0" }} />
         <Text style={footer}>
           &copy; {new Date().getFullYear()} Food App. All rights reserved.
@@ -73,7 +97,7 @@ export const ResetPasswordTemplate = ({
   </Html>
 );
 
-// يمكنك إعادة استخدام نفس الـ styles من قالب التفعيل أو نسخها هنا:
+// ==== STYLES (same as before) ====
 const main = {
   backgroundColor: "#18181b",
   color: "#fff",
@@ -118,24 +142,17 @@ const message = {
   color: "#e5e7eb",
 };
 
-const button = {
-  backgroundColor: "#f43f5e",
-  color: "#fff",
-  fontWeight: 600,
-  fontSize: "16px",
-  padding: "14px 32px",
-  borderRadius: "8px",
-  border: "none",
-  cursor: "pointer",
-  textDecoration: "none",
-  display: "inline-block",
+const detailsBox = {
+  background: "#1f2937",
+  borderRadius: "12px",
+  padding: "16px",
+  margin: "24px 0",
 };
 
-const info = {
-  fontSize: "13px",
-  color: "#a1a1aa",
-  textAlign: "center" as const,
-  margin: "0 0 8px",
+const detailItem = {
+  fontSize: "14px",
+  color: "#f3f4f6",
+  marginBottom: "6px",
 };
 
 const footer = {

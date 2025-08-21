@@ -38,9 +38,13 @@ export const OrderCancelTemplate = ({
             <Img
               src={getResendEmailLogoUrl()}
               alt="Food App"
-              width={60}
-              height={60}
-              style={{ borderRadius: "12px", margin: "0 auto" }}
+              width={150}
+              height={100}
+              style={{
+                borderRadius: "12px",
+                margin: "0 auto",
+                objectFit: "contain",
+              }}
             />
           </Section>
 

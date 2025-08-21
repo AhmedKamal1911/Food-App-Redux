@@ -4,35 +4,62 @@ import { Button } from "@/components/ui/button";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+
 import CustomInputField from "../custom-input-field";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Mail, X } from "lucide-react";
 import CustomSelectField from "../custom-select-field";
 import { SelectItem } from "@/components/ui/select";
 import { DateTimePicker } from "../date-picker/date-time-picker";
-import {
-  bookTableSchema,
-  BookTableSchema,
-} from "@/lib/validation/book-table-schema";
+
 import { numberOfPersons } from "@/lib/data";
-// TODO: dont forget to create the action to send mail
+import { sendBookTableEmailAction } from "@/lib/server/actions/emails/send-book-table-email-action";
+import { toast } from "react-toastify";
+import { PhoneInput } from "@/components/ui/phone-input";
+import { cn } from "@/lib/utils";
+import {
+  reservationSchema,
+  ReservationSchema,
+} from "@/lib/validation/reservation-table-schema";
+
 export default function BookTableForm() {
   // 1. Define your form.
-  const form = useForm<BookTableSchema>({
-    resolver: zodResolver(bookTableSchema),
+  const form = useForm<ReservationSchema>({
+    resolver: zodResolver(reservationSchema),
     defaultValues: {
       name: "",
       email: "",
       numberOfCustomers: "empty",
       bookingDate: new Date(),
+      phoneNumber: "",
     },
   });
 
   // 2. Define a submit handler.
 
-  function onSubmit(values: z.infer<typeof bookTableSchema>) {
-    console.log(values);
+  async function onSubmit(values: ReservationSchema) {
+    try {
+      const response = await sendBookTableEmailAction(values);
+      if (response.status === "validationError") return;
+      if (response.status === "success") {
+        toast.success(response.message);
+        form.reset();
+        return;
+      }
+      toast.error(response.error.message);
+
+      console.log(values);
+    } catch (error) {
+      console.error(error);
+      toast.error("Network Error Occurred");
+    }
   }
 
   return (
@@ -73,12 +100,31 @@ export default function BookTableForm() {
           name="bookingDate"
           placeholder="pick up date"
         />
+        <FormField
+          control={form.control}
+          name={"phoneNumber"}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="sr-only">{field.name}</FormLabel>
+              <FormControl>
+                <PhoneInput
+                  className={cn("bg-white")}
+                  placeholder={"Enter phone number"}
+                  {...field}
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button
+          disabled={form.formState.isSubmitting}
           variant={"outline"}
           type="submit"
           className="font-semibold text-xl self-center text-white rounded-4xl border bg-secondary hover:text-secondary border-secondary hover:border-secondary py-6 px-8 md:py-7 md:px-10 transition-all"
         >
-          Book Now
+          {form.formState.isSubmitting ? "Booking.." : "Book Now"}
         </Button>
       </form>
     </Form>

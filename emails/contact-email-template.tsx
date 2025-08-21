@@ -10,18 +10,18 @@ import {
   Section,
   Text,
 } from "@react-email/components";
-import { getResendEmailLogoUrl } from "../lib/utils";
+import { getResendEmailLogoUrl } from "@/lib/utils";
+import { ContactSchema } from "@/lib/validation/contact-schema";
 
-type ResetPasswordSuccessTemplateProps = {
-  username: string;
-};
-
-export const ResetPasswordSuccessTemplate = ({
-  username,
-}: ResetPasswordSuccessTemplateProps) => (
+export const ContactEmailTemplate = ({
+  email,
+  subject,
+  message,
+  phone,
+}: ContactSchema) => (
   <Html>
     <Head />
-    <Preview>Your Pizzon password was reset successfully</Preview>
+    <Preview>New contact request from {email}</Preview>
     <Body style={main}>
       <Container style={container}>
         <Section style={logoSection}>
@@ -37,16 +37,34 @@ export const ResetPasswordSuccessTemplate = ({
             }}
           />
         </Section>
-        <Text style={heading}>Password Reset Successful</Text>
-        <Text style={subHeading}>
-          Hi {username}, your password has been reset successfully.
+
+        <Text style={heading}>New Contact Request</Text>
+
+        <Text style={messageText}>
+          You have received a new message from <b>{email}</b>.
         </Text>
-        <Text style={message}>
-          If you did not perform this action, please contact our support
-          immediately.
-          <br />
-          Otherwise, you can now log in with your new password.
+
+        <Section style={detailsBox}>
+          <Text style={detailItem}>
+            <b>Email:</b> {email}
+          </Text>
+          {phone && (
+            <Text style={detailItem}>
+              <b>Phone:</b> {phone}
+            </Text>
+          )}
+          <Text style={detailItem}>
+            <b>Subject:</b> {subject}
+          </Text>
+          <Text style={detailItem}>
+            <b>Message:</b> {message}
+          </Text>
+        </Section>
+
+        <Text style={messageText}>
+          Please reply to the user as soon as possible.
         </Text>
+
         <Hr style={{ borderColor: "#22223b", margin: "32px 0" }} />
         <Text style={footer}>
           &copy; {new Date().getFullYear()} Food App. All rights reserved.
@@ -56,6 +74,7 @@ export const ResetPasswordSuccessTemplate = ({
   </Html>
 );
 
+// ==== STYLES ====
 const main = {
   backgroundColor: "#18181b",
   color: "#fff",
@@ -83,21 +102,27 @@ const heading = {
   fontWeight: 700,
   textAlign: "center" as const,
   margin: "16px 0 8px",
-  color: "#22c55e",
+  color: "#fbbf24",
 };
 
-const subHeading = {
-  fontSize: "16px",
-  textAlign: "center" as const,
-  marginBottom: "8px",
-  color: "#fff",
-};
-
-const message = {
+const messageText = {
   fontSize: "15px",
   textAlign: "center" as const,
   margin: "16px 0",
   color: "#e5e7eb",
+};
+
+const detailsBox = {
+  background: "#1f2937",
+  borderRadius: "12px",
+  padding: "16px",
+  margin: "24px 0",
+};
+
+const detailItem = {
+  fontSize: "14px",
+  color: "#f3f4f6",
+  marginBottom: "6px",
 };
 
 const footer = {

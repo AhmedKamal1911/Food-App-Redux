@@ -10,7 +10,7 @@ import { Control, FieldPath, FieldValues } from "react-hook-form";
 
 type Props<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = {
   control: Control<TFieldValues>;
   name: TName;
@@ -21,7 +21,7 @@ type Props<
 
 export default function CustomSelectField<
   T extends FieldValues = FieldValues,
-  K extends FieldPath<T> = FieldPath<T>
+  K extends FieldPath<T> = FieldPath<T>,
 >({ control, name, placeholder, children }: Props<T, K>) {
   return (
     <FormField
@@ -30,7 +30,7 @@ export default function CustomSelectField<
       render={({ field }) => (
         <FormItem>
           <FormLabel className="sr-only">{field.name}</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select onValueChange={field.onChange} value={field.value}>
             <SelectTrigger className="bg-white py-5 w-full border-gray-500/40 focus-visible:ring-primary/50 focus-visible:border-primary capitalize">
               <SelectValue className="py-4" placeholder={placeholder} />
             </SelectTrigger>
