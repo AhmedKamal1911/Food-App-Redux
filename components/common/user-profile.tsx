@@ -29,6 +29,7 @@ export default function UserProfile({ session }: Props) {
             className="rounded-full cursor-pointer border-2 border-gray-300 hover:border-primary transition"
             height={40}
             width={40}
+            priority
             src={session.user.image ?? "/svgs/user.svg"}
             alt="User Avatar"
           />

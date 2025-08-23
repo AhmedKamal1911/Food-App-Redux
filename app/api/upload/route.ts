@@ -1,4 +1,5 @@
 import cloudinary from "@/lib/cloudinary";
+import { requirePermission } from "@/lib/server-utils";
 import {
   FileUploadResponseSchema,
   fileUploadSchema,
@@ -12,6 +13,12 @@ export async function POST(request: NextRequest) {
     file: formData.get("file"),
     pathname: formData.get("pathname"),
   });
+  // if (!requirePermission(["admin", "superAdmin"])) {
+  //   return NextResponse.json(
+  //     { error: "Failed to upload file" },
+  //     { status: 403 }
+  //   );
+  // }
   // TODO: authenticated user only for pathnames and all roles
   // TODO: rate limiting
   if (!result.success) {

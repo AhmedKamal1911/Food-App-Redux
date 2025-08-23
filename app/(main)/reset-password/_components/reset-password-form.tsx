@@ -40,15 +40,12 @@ export default function ResetPasswordForm({ token }: Props) {
         setIsSendSuccess(true);
         return router.push("/login");
       }
-      if (res.status === "validationError") {
-        form.setError("root", { message: res.error.message });
-      }
-      if (res.status === "error") {
-        form.setError("root", {
-          message: "Something went wrong, please try again.",
-        });
-        toast.error("Something went wrong, please try again.");
-      }
+      if (res.status === "validationError") return;
+
+      form.setError("root", {
+        message: res.error.message,
+      });
+      toast.error(res.error.message);
     } catch (error) {
       console.error(error);
       toast.error("An Network Error Occured");

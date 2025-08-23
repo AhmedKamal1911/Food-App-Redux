@@ -46,17 +46,14 @@ export default function ChangePasswordForm() {
         closeBtnRef.current?.click();
         return;
       }
+
       if (res.status === "validationError") return;
 
-      if (res.error.status === 404) {
+      if (res.status === "error") {
         form.setError("root", {
           message: res.error.message,
         });
         toast.error(res.error.message);
-      }
-
-      if (res.error.status === 401) {
-        form.setError("currentPassword", { message: res.error.message });
       }
     } catch (error) {
       console.error(error);

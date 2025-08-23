@@ -59,8 +59,23 @@ export async function changePasswordAction(
       return {
         status: "error",
         error: {
-          status: 401,
+          status: 400,
           message: "Current password is incorrect.",
+        },
+      };
+    }
+    // Check if new password is same as old one
+    const isSamePassword = await bcrypt.compare(
+      result.data.newPassword,
+      user.password!
+    );
+
+    if (isSamePassword) {
+      return {
+        status: "error",
+        error: {
+          message: "New password cannot be the same as the current password.",
+          status: 400,
         },
       };
     }

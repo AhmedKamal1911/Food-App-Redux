@@ -93,6 +93,7 @@ export const columns: ColumnDef<User>[] = [
             alt="user"
             width={50}
             height={50}
+            priority
             className="object-cover rounded-sm"
           />
         </div>
