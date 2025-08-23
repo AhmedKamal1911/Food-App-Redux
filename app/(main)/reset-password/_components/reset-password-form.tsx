@@ -35,23 +35,19 @@ export default function ResetPasswordForm({ token }: Props) {
   async function onSubmit(values: ResetPasswordInputs) {
     try {
       const res = await resetPasswordAction(values);
-      if (res.success) {
-        toast.success(res.data.message);
+      if (res.status === "success") {
+        toast.success(res.message);
         setIsSendSuccess(true);
         return router.push("/login");
       }
-
-      if (res.error.status === 404) {
+      if (res.status === "validationError") {
+        form.setError("root", { message: res.error.message });
+      }
+      if (res.status === "error") {
         form.setError("root", {
           message: "Something went wrong, please try again.",
         });
         toast.error("Something went wrong, please try again.");
-      }
-
-      if (res.error.status === 401) {
-        form.setError("newPassword", { message: res.error.message });
-      } else if (res.error.status === 400) {
-        form.setError("root", { message: res.error.message });
       }
     } catch (error) {
       console.error(error);
