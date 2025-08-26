@@ -31,7 +31,8 @@ export default async function ProductsPage({ searchParams }: Props) {
     page: Number(page) || 1,
     pageSize: 5,
   });
-  console.log({ totalPages });
+
+  // TODO: dont forget to make the queries with promise.all
   return (
     <div className="space-y-4">
       {/* Top Section: Chart + Cards */}

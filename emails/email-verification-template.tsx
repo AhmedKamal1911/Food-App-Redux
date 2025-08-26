@@ -49,7 +49,7 @@ export const VerificationTemplate = ({
         <Text style={message}>
           Please verify your email address to activate your account. <br />
           <span style={{ color: "#f43f5e", fontWeight: 500 }}>
-            The verification link will expire after <b>10 minutes</b>.
+            The verification link will expire after <b>15 minutes</b>.
           </span>
         </Text>
         <Section style={{ textAlign: "center", margin: "32px 0" }}>

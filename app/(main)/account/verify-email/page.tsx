@@ -103,9 +103,9 @@ export default async function VerifyEmailPage({ searchParams }: Props) {
             session.user.role !== "user" && (
               <Link
                 href="/"
-                className="bg-primary text-white text-sm font-medium hover:bg-primary/90 h-10 px-4 py-2 rounded-lg w-full text-center transition-colors"
+                className="bg-primary text-white text-sm font-medium hover:bg-primary/90 h-10 px-4 py-2 rounded-lg w-full text-center transition-colors capitalize"
               >
-                Go to Dashboard
+                move to home
               </Link>
             )
           ) : (

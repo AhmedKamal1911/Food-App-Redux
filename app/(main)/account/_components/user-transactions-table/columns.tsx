@@ -24,6 +24,7 @@ import {
 
 import ViewTransactionDetailsModal from "@/app/dashboard/transactions/_components/modals/view-transaction-details-modal";
 import { TransactionOrder } from "@/lib/types/product";
+import { formatAmount } from "@/lib/utils";
 
 export const columns: ColumnDef<TransactionOrder>[] = [
   {
@@ -77,7 +78,9 @@ export const columns: ColumnDef<TransactionOrder>[] = [
       </div>
     ),
     cell: ({ getValue }) => (
-      <span className="text-secondary">${getValue<number>()}</span>
+      <span className="text-secondary">
+        ${formatAmount(getValue<number>())}
+      </span>
     ),
   },
 

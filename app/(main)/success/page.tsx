@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
+import { formatAmount } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Payment Successful",
@@ -33,7 +34,7 @@ export default async function Success({ searchParams }: Props) {
   const charge = await stripe.charges.retrieve(chargeId as string);
 
   // Step 4: Extract values
-  const amount = (paymentIntent.amount_received / 100).toFixed(2);
+  const amount = formatAmount(paymentIntent.amount_received);
   const currency = paymentIntent.currency.toUpperCase();
   const { email, name, phone } = charge.billing_details;
   const { shipping, receipt_url } = charge;

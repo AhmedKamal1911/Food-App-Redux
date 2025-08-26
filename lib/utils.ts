@@ -1,5 +1,6 @@
 import { Extra, Size } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx";
+import { addMonths, startOfMonth, subMonths } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -57,4 +58,36 @@ export function getResendEmailLogoUrl() {
       "RESEND_EMAIL_LOGO_URL is not defined in the environment variables."
     );
   return logoUrl;
+}
+
+export function calculateGrowthPercentage(
+  current: number,
+  previous: number
+): string {
+  if (previous === 0) return "0";
+  const percent = ((current - previous) / previous) * 100;
+  return percent.toFixed(2);
+}
+
+export function formatAmount(amountInCents: number): string {
+  return (amountInCents / 100).toFixed(2);
+}
+
+export function getCurrentAndPreviousMonthRange() {
+  const now = new Date();
+
+  // بداية الشهر الحالي
+  const startOfCurrentMonth = startOfMonth(now);
+
+  // بداية الشهر القادم
+  const startOfNextMonth = startOfMonth(addMonths(now, 1));
+
+  // بداية الشهر السابق
+  const startOfPrevMonth = startOfMonth(subMonths(now, 1));
+
+  return {
+    startOfCurrentMonth,
+    startOfNextMonth,
+    startOfPrevMonth,
+  };
 }

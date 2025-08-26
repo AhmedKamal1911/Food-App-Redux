@@ -95,41 +95,7 @@ export const columns: ColumnDef<ProductWithRelations>[] = [
       return <span>${price.toFixed(2)}</span>;
     },
   },
-  {
-    accessorKey: "sell",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="font-bold capitalize text-[16px] rounded-none"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Sell
-          <ArrowUpDown className="size-4" />
-        </Button>
-      );
-    },
-    cell: () => {
-      const sell = Math.floor(Math.random() * 100 + 50);
-      return <span>{sell}</span>;
-    },
-  },
-  {
-    header: "View",
-    cell: () => {
-      const view = Math.floor(Math.random() * 6000 + 8000);
-      return <span>{view.toLocaleString()}</span>;
-    },
-  },
-  {
-    header: "Earning",
-    cell: ({ row }) => {
-      const price = row.original.price || 0;
-      const sell = Math.floor(Math.random() * 100 + 50);
-      const earning = price * sell;
-      return <span>${earning.toLocaleString()}</span>;
-    },
-  },
+
   {
     accessorKey: "sizes",
     header: "sizes",

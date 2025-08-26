@@ -1,13 +1,8 @@
 import "server-only";
 import { getBaseUrl } from "@/lib/utils";
-import { cookies } from "next/headers";
-async function getSessionCookieString() {
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("next-auth.session-token")?.value;
-  console.log("Cookie value:", sessionCookie);
-  // TODO: __Secure-next-auth.session-token FOR PRODUCTION
-  return `next-auth.session-token=${sessionCookie}`;
-}
+
+import { getSessionCookieString } from "@/lib/server-utils";
+
 export async function verifyUserEmail(token: string) {
   const res = await fetch(`${getBaseUrl()}/api/verify-email?token=${token}`, {
     method: "POST",

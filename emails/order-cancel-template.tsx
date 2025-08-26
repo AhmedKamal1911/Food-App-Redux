@@ -11,7 +11,7 @@ import {
   Section,
   Text,
 } from "@react-email/components";
-import { getBaseUrl, getResendEmailLogoUrl } from "@/lib/utils";
+import { formatAmount, getBaseUrl, getResendEmailLogoUrl } from "@/lib/utils";
 
 const baseUrl = getBaseUrl();
 
@@ -26,7 +26,7 @@ export const OrderCancelTemplate = ({
   totalAmount,
   currency,
 }: OrderCancelProps) => {
-  const formattedAmount = `${(totalAmount / 100).toFixed(2)} ${currency.toUpperCase()}`;
+  const formattedAmount = `${formatAmount(totalAmount)} ${currency.toUpperCase()}`;
 
   return (
     <Html>

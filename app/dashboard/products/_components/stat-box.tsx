@@ -5,9 +5,9 @@ import { ReactNode } from "react";
 type Props = {
   icon: ReactNode;
   title: string;
-  stat: string;
+  stat: string | number;
   className?: string;
-  details: ReactNode;
+  details?: ReactNode;
 };
 export default function StatBox({
   icon,
