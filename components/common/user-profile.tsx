@@ -26,7 +26,7 @@ export default function UserProfile({ session }: Props) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Image
-            className="rounded-full cursor-pointer border-2 border-gray-300 hover:border-primary transition"
+            className="rounded-full size-10 object-cover cursor-pointer border-2 border-gray-300 hover:border-primary transition"
             height={40}
             width={40}
             priority

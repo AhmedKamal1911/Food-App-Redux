@@ -1,15 +1,23 @@
 "use server";
 
+import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCurrentSession } from "@/lib/dal/user";
 import prisma from "@/lib/prisma";
-import { uploadImage } from "@/lib/queries/upload/upload-image";
+
+import { uploadProfileImage } from "@/lib/server/queries/upload/upload-profile-image";
 import { ActionResponse } from "@/lib/types/shared";
 import { profileImageSchema } from "@/lib/validation/profile-image-schema";
+import { revalidateTag } from "next/cache";
 
 export async function updateProfileImageAction(
   prevState: unknown,
   formData: FormData
 ): ActionResponse {
+  await new Promise((res) => {
+    setTimeout(() => {
+      res("res");
+    }, 5000);
+  });
   const session = await getCurrentSession();
   if (!session) {
     return {
@@ -33,10 +41,7 @@ export async function updateProfileImageAction(
     };
   }
   try {
-    const imageUrl = await uploadImage({
-      imageFile: schemaParseResult.data,
-      pathname: `profile_images/${session.user.id}`,
-    });
+    const imageUrl = await uploadProfileImage(schemaParseResult.data);
 
     await prisma.user.update({
       where: {
@@ -46,7 +51,8 @@ export async function updateProfileImageAction(
         image: imageUrl,
       },
     });
-
+    revalidateTag(PRISMA_CACHE_KEY.USERS);
+    revalidateTag(`${PRISMA_CACHE_KEY.USERS}-${session.user.id}`);
     return {
       status: "success",
       message: "Profile Image Updated Successfully.",

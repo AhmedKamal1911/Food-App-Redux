@@ -68,6 +68,10 @@ export default function EditPersonalInformationForm({ user }: Props) {
       if (res.status === "success") {
         toast.success(res.message);
         closeBtnRef.current?.click();
+        form.reset({
+          fullName: values.fullName,
+          phoneNumber: values.phoneNumber,
+        });
         return;
       }
       if (res.status === "validationError") return;

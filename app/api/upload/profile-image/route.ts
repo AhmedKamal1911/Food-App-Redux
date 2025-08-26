@@ -1,33 +1,23 @@
 import cloudinary from "@/lib/cloudinary";
 import { getCurrentSession } from "@/lib/dal/user";
-import { requirePermission } from "@/lib/server-utils";
-import {
-  FileUploadResponseSchema,
-  fileUploadSchema,
-} from "@/lib/validation/file-upload-schema";
+
+import { FileUploadResponseSchema } from "@/lib/validation/file-upload-schema";
+import { profileImageSchema } from "@/lib/validation/profile-image-schema";
+
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const session = await getCurrentSession();
-
+  console.dir({ session }, { depth: null });
   if (!session) {
     return NextResponse.json(
       { error: "Unauthorized User!" },
-      { status: 401, statusText: "Unauthorized" }
+      { status: 403, statusText: "Unauthorized" }
     );
   }
   const formData = await request.formData();
 
-  const result = fileUploadSchema.safeParse({
-    file: formData.get("file"),
-    pathname: formData.get("pathname"),
-  });
-  if (!requirePermission(["admin", "superAdmin"])) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 403, statusText: "Forbidden" }
-    );
-  }
+  const result = profileImageSchema.safeParse(formData.get("file"));
 
   // TODO: rate limiting
   if (!result.success) {
@@ -37,8 +27,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { pathname, file } = result.data;
-  const imageName = pathname.split("/")[1];
+  const file = result.data;
+
   try {
     const fileBuffer = await file.arrayBuffer();
     const base64File = Buffer.from(fileBuffer).toString("base64");
@@ -46,8 +36,9 @@ export async function POST(request: NextRequest) {
     const uploadResponse = await cloudinary.uploader.upload(
       `data:${file.type};base64,${base64File}`,
       {
-        folder: pathname,
-        public_id: imageName, // Use the image name from the pathname
+        folder: "profile_images",
+        public_id: session.user.id,
+
         resource_type: "auto",
         overwrite: true,
       }

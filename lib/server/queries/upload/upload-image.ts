@@ -1,3 +1,5 @@
+import "server-only";
+import { getSessionCookieString } from "@/lib/server-utils";
 import { fileUploadResponseSchema } from "@/lib/validation/file-upload-schema";
 
 export async function uploadImage({
@@ -16,6 +18,10 @@ export async function uploadImage({
       {
         method: "POST",
         body: formData,
+        headers: {
+          Cookie: await getSessionCookieString(), // Include your cookie(s) here
+          // REMEMBER: cookies are not sent auto with request when the request is from server to server.
+        },
       }
     );
 
