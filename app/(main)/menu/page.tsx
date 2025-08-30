@@ -4,10 +4,11 @@ import { getAllCategories } from "@/lib/server/queries";
 import BestChefSection from "../_components/sections/best-chef-section";
 
 import BookTableSection from "@/components/common/sections/book-table-section";
-import { ProductCategory } from "@prisma/client";
+
 import { Suspense } from "react";
 import MenuProductsSkeleton from "@/components/common/skeletons/menu-products-skeleton";
 import { Metadata } from "next";
+import Awaited from "@/components/common/awaited";
 export const metadata: Metadata = {
   title: "Menu",
   description:
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   },
 };
 export default async function MenuPage() {
-  const categories = await getAllCategories();
+  const categoriesPromise = getAllCategories();
   return (
     <main className="bg-white pb-10">
       <IntroBanner
@@ -28,22 +29,19 @@ export default async function MenuPage() {
       />
       <div className="container">
         <Suspense fallback={<MenuProductsSkeleton />}>
-          <SuspensedContent categories={categories} />
+          <Awaited promise={categoriesPromise}>
+            {(categories) => (
+              <ProductFilterTabs
+                categories={categories}
+                className="text-secondary"
+              />
+            )}
+          </Awaited>
         </Suspense>
       </div>
       <BestChefSection />
 
       <BookTableSection />
     </main>
-  );
-}
-
-async function SuspensedContent({
-  categories,
-}: {
-  categories: ProductCategory[];
-}) {
-  return (
-    <ProductFilterTabs categories={categories} className="text-secondary" />
   );
 }

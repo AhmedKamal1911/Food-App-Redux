@@ -42,6 +42,8 @@ export const authOptions: NextAuthOptions = {
       token.emailVerified = dbUser.emailVerified;
       token.emailVerificationExpires = dbUser.emailVerificationExpires;
       token.country = dbUser.country;
+      token.name = dbUser.name;
+      token.email = dbUser.email;
       return token;
     },
     session: async ({ session, token }) => {
@@ -59,6 +61,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  useSecureCookies: process.env.NODE_ENV === "production",
 };
 
 declare module "next-auth" {

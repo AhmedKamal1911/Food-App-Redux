@@ -38,16 +38,16 @@ import { toast } from "react-toastify";
 
 import { editPersonalInfoAction } from "@/lib/server/actions/user/edit-personal-info-action";
 import { UserInfo } from "../settings-tabs";
-import { useRefreshClientSession } from "@/hooks/use-refresh-client-session";
+// import { useRefreshClientSession } from "@/hooks/use-refresh-client-session";
 import CustomEmailInputField from "@/components/common/custom-email-input-field";
+import { useSession } from "next-auth/react";
 
 type Props = {
   user: UserInfo;
 };
 export default function EditPersonalInformationForm({ user }: Props) {
-  const [open, setOpen] = useState(false);
   const [isEmailOk, setIsEmailOk] = useState(true);
-  const updateSessionObj = useRefreshClientSession();
+  const session = useSession();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const form = useForm<PersonalInformationInputs>({
     resolver: zodResolver(personalInformationSchema),
@@ -74,13 +74,8 @@ export default function EditPersonalInformationForm({ user }: Props) {
       if (res.status === "success") {
         toast.success(res.message);
         closeBtnRef.current?.click();
-        form.reset({
-          fullName: values.fullName,
-          phoneNumber: values.phoneNumber,
-          email: values.email,
-        });
 
-        updateSessionObj.updateSession();
+        session.update();
         return;
       }
       if (res.status === "validationError") return;
@@ -101,12 +96,14 @@ export default function EditPersonalInformationForm({ user }: Props) {
   }
 
   useEffect(() => {
-    if (!open) {
-      form.reset();
-    }
-  }, [open, form]);
+    form.reset({
+      fullName: user.name,
+      phoneNumber: user.phone,
+      email: user.email,
+    });
+  }, [form, user]);
   return (
-    <Dialog onOpenChange={setOpen}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button variant={"ghost"} className="flex items-center gap-2">
           <Edit />

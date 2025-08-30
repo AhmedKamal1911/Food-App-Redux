@@ -19,7 +19,7 @@ export async function editPersonalInfoAction(
     return {
       status: "error",
       error: {
-        message: "Something went wrong, please try again.",
+        message: "Unauthorized User!",
         status: 401,
       },
     };

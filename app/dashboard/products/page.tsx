@@ -32,7 +32,6 @@ export default async function ProductsPage({ searchParams }: Props) {
     pageSize: 5,
   });
 
-  // TODO: dont forget to make the queries with promise.all
   return (
     <div className="space-y-4">
       {/* Top Section: Chart + Cards */}

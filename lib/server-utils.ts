@@ -22,6 +22,6 @@ export async function getSessionCookieString() {
       ? "__Secure-next-auth.session-token"
       : "next-auth.session-token";
   const sessionCookieValue = cookieStore.get(sessionCookieName)?.value;
-
+  console.log({ sessionCookieName });
   return `${sessionCookieName}=${sessionCookieValue}`;
 }
