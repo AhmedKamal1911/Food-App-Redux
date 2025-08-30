@@ -23,7 +23,7 @@ import { Button } from "../ui/button";
 
 type Props<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = {
   control: Control<TFieldValues>;
   name: TName;
@@ -32,10 +32,11 @@ type Props<
   icon?: ReactNode;
   className?: string;
   setIsEmailStatusOk?: (statusFlag: boolean) => void;
+  initialEmail?: string;
 };
 export default function CustomEmailInputField<
   T extends FieldValues = FieldValues,
-  K extends FieldPath<T> = FieldPath<T>
+  K extends FieldPath<T> = FieldPath<T>,
 >({
   control,
   name,
@@ -44,6 +45,7 @@ export default function CustomEmailInputField<
   type,
   icon,
   className,
+  initialEmail,
 }: Props<T, K>) {
   const emailRef = useRef<string | null>(null);
   const form = useFormContext();
@@ -65,6 +67,10 @@ export default function CustomEmailInputField<
                 onBlur();
                 await form.trigger(restField.name);
                 const isValid = !fieldState.invalid;
+                if (e.target.value === initialEmail) {
+                  setStatus("idle"); // or reset to idle
+                  return;
+                }
                 if (
                   (fieldState.isTouched &&
                     isValid &&

@@ -39,20 +39,22 @@ export async function editPersonalInfoAction(
     };
   }
 
-  // Checking if phone number used
-  const isPhoneNumberInUse = await prisma.user.findFirst({
+  const existingUser = await prisma.user.findFirst({
     where: {
-      phone: result.data.phoneNumber,
-      NOT: { id: userId },
+      OR: [{ email: result.data.email }, { phone: result.data.phoneNumber }],
+      NOT: { id: userId }, // exclude current user if updating
     },
   });
 
-  if (isPhoneNumberInUse) {
+  if (existingUser) {
     return {
       status: "error",
       error: {
         status: 409,
-        message: "Phone number is already in use.",
+        message:
+          existingUser.email === result.data.email
+            ? "Email is already in use."
+            : "Phone number is already in use.",
       },
     };
   }
@@ -65,6 +67,7 @@ export async function editPersonalInfoAction(
       data: {
         name: result.data.fullName,
         phone: result.data.phoneNumber,
+        email: result.data.email,
       },
     });
 

@@ -10,7 +10,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { ChevronsUpDown, LogOut, Pizza, User } from "lucide-react";
+import { ChevronsUpDown, LogOut, Pizza, Settings, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -104,10 +104,16 @@ function NavUser() {
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <Link href={"/account"}>
+              <Link href={"/account?tab=personal-info"}>
                 <DropdownMenuItem className="cursor-pointer">
                   <User />
-                  Account
+                  Profile
+                </DropdownMenuItem>
+              </Link>
+              <Link href={"/account?tab=general"}>
+                <DropdownMenuItem className="cursor-pointer">
+                  <Settings />
+                  Settings
                 </DropdownMenuItem>
               </Link>
             </DropdownMenuGroup>

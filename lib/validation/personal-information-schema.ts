@@ -12,6 +12,7 @@ export const personalInformationSchema = z.object({
   phoneNumber: z.string({
     required_error: "Please confirm your new password",
   }),
+  email: z.string().email({ message: "Invalid Email" }),
 });
 
 export type PersonalInformationInputs = z.infer<

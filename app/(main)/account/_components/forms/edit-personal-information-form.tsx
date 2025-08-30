@@ -30,7 +30,7 @@ import {
   personalInformationSchema,
 } from "@/lib/validation/personal-information-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Edit } from "lucide-react";
+import { Edit, Mail } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { useForm } from "react-hook-form";
@@ -38,25 +38,31 @@ import { toast } from "react-toastify";
 
 import { editPersonalInfoAction } from "@/lib/server/actions/user/edit-personal-info-action";
 import { UserInfo } from "../settings-tabs";
+import { useRefreshClientSession } from "@/hooks/use-refresh-client-session";
+import CustomEmailInputField from "@/components/common/custom-email-input-field";
 
 type Props = {
   user: UserInfo;
 };
 export default function EditPersonalInformationForm({ user }: Props) {
   const [open, setOpen] = useState(false);
-
+  const [isEmailOk, setIsEmailOk] = useState(true);
+  const updateSessionObj = useRefreshClientSession();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const form = useForm<PersonalInformationInputs>({
     resolver: zodResolver(personalInformationSchema),
     defaultValues: {
       fullName: user.name,
       phoneNumber: user.phone,
+      email: user.email,
     },
   });
 
   async function onSubmit(values: PersonalInformationInputs) {
     const isNotValuesChanged =
-      values.fullName === user.name && values.phoneNumber === user.phone;
+      values.fullName === user.name &&
+      values.phoneNumber === user.phone &&
+      values.email === user.email;
     if (isNotValuesChanged) {
       toast.success("Personal information updated successfully.");
       closeBtnRef.current?.click();
@@ -71,7 +77,10 @@ export default function EditPersonalInformationForm({ user }: Props) {
         form.reset({
           fullName: values.fullName,
           phoneNumber: values.phoneNumber,
+          email: values.email,
         });
+
+        updateSessionObj.updateSession();
         return;
       }
       if (res.status === "validationError") return;
@@ -127,7 +136,15 @@ export default function EditPersonalInformationForm({ user }: Props) {
               name={"fullName"}
               placeholder="full name"
             />
-
+            <CustomEmailInputField
+              placeholder="email"
+              control={form.control}
+              initialEmail={user.email}
+              name="email"
+              icon={<Mail className="size-4" />}
+              setIsEmailStatusOk={setIsEmailOk}
+              className="py-2 rounded-sm"
+            />
             <FormField
               control={form.control}
               name={"phoneNumber"}
@@ -147,7 +164,7 @@ export default function EditPersonalInformationForm({ user }: Props) {
               )}
             />
             <DialogFooter>
-              <Button disabled={form.formState.isSubmitting}>
+              <Button disabled={!isEmailOk || form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? "Saving.." : "Save changes"}
               </Button>
             </DialogFooter>
