@@ -6,7 +6,7 @@ import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { ActionResponse } from "@/lib/types/shared";
 import { getUserById } from "../../queries";
-import { requirePermission } from "@/lib/server-utils";
+import { deleteImageFromBucket, requirePermission } from "@/lib/server-utils";
 import { getCurrentSession } from "@/lib/dal/user";
 import { z } from "zod";
 
@@ -72,18 +72,16 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
       };
     }
 
-    // TODO: dont forget to remove user images from storage
     await prisma.user.delete({
       where: {
         id: userId,
       },
     });
 
+    await deleteImageFromBucket(userId);
     revalidateTag(PRISMA_CACHE_KEY.USERS);
-
     return {
       status: "success",
-
       message: "User Deleted Successfully",
     };
   } catch (error) {

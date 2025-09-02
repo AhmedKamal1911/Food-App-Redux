@@ -22,6 +22,7 @@ export function ProfileImageForm({
 }: {
   profileImageSrc: string | null;
 }) {
+  // FIXME: there is limit on upload profile image  route body Error: Body exceeded 1 MB limit.
   console.log({ newProp: profileImageSrc });
   const updateSessionObj = useRefreshClientSession();
   const [imageSrc, setImageSrc] = useState<string | null>(profileImageSrc);

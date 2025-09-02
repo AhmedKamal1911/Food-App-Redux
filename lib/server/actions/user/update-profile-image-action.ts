@@ -13,11 +13,6 @@ export async function updateProfileImageAction(
   prevState: unknown,
   formData: FormData
 ): ActionResponse {
-  await new Promise((res) => {
-    setTimeout(() => {
-      res("res");
-    }, 5000);
-  });
   const session = await getCurrentSession();
   if (!session) {
     return {

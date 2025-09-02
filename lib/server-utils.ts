@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { getCurrentSession } from "./dal/user";
 import { UserRole } from "@prisma/client";
 import { cookies } from "next/headers";
+import cloudinary from "./cloudinary";
 export async function hashPassword(password: string) {
   return await bcrypt.hash(password, 10);
 }
@@ -24,4 +25,12 @@ export async function getSessionCookieString() {
   const sessionCookieValue = cookieStore.get(sessionCookieName)?.value;
   console.log({ sessionCookieName });
   return `${sessionCookieName}=${sessionCookieValue}`;
+}
+
+export async function deleteImageFromBucket(userId: string) {
+  await cloudinary.uploader.destroy(`profile_images/${userId}`, {
+    resource_type: "image",
+    type: "upload",
+    invalidate: true,
+  });
 }
