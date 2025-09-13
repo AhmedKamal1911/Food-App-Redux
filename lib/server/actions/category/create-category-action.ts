@@ -13,7 +13,7 @@ import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCategoryBySlug } from "../../queries";
 import { requirePermission } from "@/lib/server-utils";
-import { uploadImage } from "@/lib/server/queries/upload/upload-image";
+import { uploadImage } from "@/lib/queries/upload/upload-image";
 import { ActionResponse } from "@/lib/types/shared";
 
 export async function createCategoryAction(

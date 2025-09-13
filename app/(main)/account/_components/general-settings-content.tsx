@@ -3,20 +3,21 @@ import { PlusCircle } from "lucide-react";
 
 import ChangePasswordForm from "./forms/change-password-form";
 import { ProfileImageForm } from "./forms/profile-image-form";
+import { UserInfo } from "./settings-tabs";
 
 type Props = {
   hasPassword: boolean;
-  profileImageSrc: string | null;
+  profileImg: UserInfo["image"];
 };
 export default function GeneralSettingsContent({
   hasPassword,
-  profileImageSrc,
+  profileImg,
 }: Props) {
   return (
     <div>
       <span className="text-xl font-semibold mb-2 block">General Settings</span>
       <div className="divide-y-2 flex flex-col gap-4 mb-4">
-        <ProfileImageForm profileImageSrc={profileImageSrc} />
+        <ProfileImageForm profileImg={profileImg} />
         <PasswordBox hasPassword={hasPassword} />
       </div>
     </div>

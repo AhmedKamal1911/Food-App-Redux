@@ -32,7 +32,6 @@ export async function POST(request: NextRequest) {
   try {
     const fileBuffer = await file.arrayBuffer();
     const base64File = Buffer.from(fileBuffer).toString("base64");
-
     const uploadResponse = await cloudinary.uploader.upload(
       `data:${file.type};base64,${base64File}`,
       {

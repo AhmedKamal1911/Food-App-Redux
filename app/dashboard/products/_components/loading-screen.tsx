@@ -12,7 +12,6 @@ function Portal({ children }: { children: ReactNode }) {
 }
 
 export default function LoadingScreen() {
-  // TODO: use radix ui portal
   return (
     <Portal>
       <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[2232323]">

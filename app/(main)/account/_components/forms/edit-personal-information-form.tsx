@@ -38,7 +38,6 @@ import { toast } from "react-toastify";
 
 import { editPersonalInfoAction } from "@/lib/server/actions/user/edit-personal-info-action";
 import { UserInfo } from "../settings-tabs";
-// import { useRefreshClientSession } from "@/hooks/use-refresh-client-session";
 import CustomEmailInputField from "@/components/common/custom-email-input-field";
 import { useSession } from "next-auth/react";
 

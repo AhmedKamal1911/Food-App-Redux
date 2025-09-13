@@ -17,6 +17,7 @@ import {
 } from "@/lib/validation/update-category-schema";
 import { updateCategoryAction } from "@/lib/server/actions/category/update-category-action";
 import DropZoneViewer from "@/app/dashboard/_components/drop-zone-viewer";
+import { uploadImage } from "@/lib/queries/upload/upload-image";
 type Props = {
   category: ProductCategory;
   setOpenModal: Dispatch<SetStateAction<boolean>>;
@@ -39,7 +40,18 @@ export default function UpdateCategoryForm({ category, setOpenModal }: Props) {
   // 2. Define a submit handler.
   async function onSubmit(values: UpdateCategoryInputs) {
     try {
-      const res = await updateCategoryAction(values);
+      const uploadImgResponse = await (values.img === undefined
+        ? Promise.resolve(undefined)
+        : uploadImage({
+            imageFile: values.img,
+            pathname: `category_images/${values.id}`,
+          }));
+
+      const res = await updateCategoryAction({
+        id: values.id,
+        name: values.name,
+        imgUrl: uploadImgResponse,
+      });
       if (res.status === "success") {
         toast.success(res.message);
         setOpenModal(false);

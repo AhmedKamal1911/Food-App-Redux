@@ -3,20 +3,19 @@
 import slugify from "slugify";
 import prisma from "@/lib/prisma";
 import { revalidateTag } from "next/cache";
-import {
-  UpdateCategoryInputs,
-  updateCategorySchema,
-} from "@/lib/validation/update-category-schema";
+import { updateCategorySchema } from "@/lib/validation/update-category-schema";
 
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCategoryById, getCategoryBySlug } from "../../queries";
 import { requirePermission } from "@/lib/server-utils";
-import { uploadImage } from "@/lib/server/queries/upload/upload-image";
-import { ActionResponse } from "@/lib/types/shared";
 
-export async function updateCategoryAction(
-  inputs: UpdateCategoryInputs
-): ActionResponse {
+import { ActionResponse } from "@/lib/types/shared";
+import { z } from "zod";
+const schema = updateCategorySchema
+  .omit({ img: true })
+  .merge(z.object({ imgUrl: z.string().optional() }));
+type Inputs = z.infer<typeof schema>;
+export async function updateCategoryAction(inputs: Inputs): ActionResponse {
   if (!requirePermission(["admin", "superAdmin"])) {
     return {
       status: "error",
@@ -27,7 +26,7 @@ export async function updateCategoryAction(
     };
   }
   // Validate Inputs
-  const result = updateCategorySchema.safeParse(inputs);
+  const result = schema.safeParse(inputs);
   if (!result.success) {
     return {
       status: "validationError",
@@ -70,13 +69,6 @@ export async function updateCategoryAction(
         };
       }
     }
-
-    const imageUrl = data.img
-      ? await uploadImage({
-          imageFile: data.img,
-          pathname: `category_images/${categoryFromDb.id}`,
-        })
-      : categoryFromDb.image;
     // Update Category
     await prisma.productCategory.update({
       where: {
@@ -85,7 +77,7 @@ export async function updateCategoryAction(
       data: {
         name: data.name,
         slug: newCategorySlug,
-        image: imageUrl,
+        image: data.imgUrl ?? categoryFromDb.image,
       },
     });
 

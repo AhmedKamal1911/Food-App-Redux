@@ -51,7 +51,6 @@ export async function _getProductsByCatSlug({
   return { products, totalPages, page: options.page };
 }
 
-// TODO: change tag to more spcific tag that incldues catSlug
 export const getProductsByCatSlug = unstable_cache(
   _getProductsByCatSlug,
   undefined,

@@ -23,7 +23,7 @@ const getTabsContent = (
       icon: <User className="w-5 h-5" />,
       content: (
         <GeneralSettingsContent
-          profileImageSrc={userInfo.image}
+          profileImg={userInfo.image}
           hasPassword={userInfo.hasPassword}
         />
       ),

@@ -4,14 +4,13 @@ import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCurrentSession } from "@/lib/dal/user";
 import prisma from "@/lib/prisma";
 
-import { uploadProfileImage } from "@/lib/server/queries/upload/upload-profile-image";
 import { ActionResponse } from "@/lib/types/shared";
-import { profileImageSchema } from "@/lib/validation/profile-image-schema";
+
 import { revalidateTag } from "next/cache";
+import { z } from "zod";
 
 export async function updateProfileImageAction(
-  prevState: unknown,
-  formData: FormData
+  profileImgURL: string
 ): ActionResponse {
   const session = await getCurrentSession();
   if (!session) {
@@ -23,8 +22,9 @@ export async function updateProfileImageAction(
       },
     };
   }
-  const imageFile = formData.get("profileImage");
-  const schemaParseResult = profileImageSchema.safeParse(imageFile);
+  const schemaParseResult = z
+    .string({ required_error: "profile image url must be string" })
+    .safeParse(profileImgURL);
 
   if (!schemaParseResult.success) {
     return {
@@ -35,15 +35,15 @@ export async function updateProfileImageAction(
       },
     };
   }
-  try {
-    const imageUrl = await uploadProfileImage(schemaParseResult.data);
 
+  try {
+    // TODO: if database update failed remove the image from bucket
     await prisma.user.update({
       where: {
         id: session.user.id,
       },
       data: {
-        image: imageUrl,
+        image: schemaParseResult.data,
       },
     });
     revalidateTag(PRISMA_CACHE_KEY.USERS);

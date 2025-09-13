@@ -58,7 +58,7 @@ export default function CreateProductForm({
   // 2. Define a submit handler.
   async function onSubmit(values: CreateProductInputs) {
     try {
-      const res = await createProductAction({ ...values });
+      const res = await createProductAction(values);
       if (res.status === "success") {
         toast.success(res.message);
         setOpenModal(false);
