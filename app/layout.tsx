@@ -8,6 +8,7 @@ import { Metadata } from "next";
 import "./globals.css";
 import { AuthSessionProvider } from "@/providers/next-auth-session-provider";
 import { getBaseUrl } from "@/lib/utils";
+import AccountPopup from "./_components/account-popup";
 
 const ptSansNarrow = PT_Sans_Narrow({
   subsets: ["latin"],
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       >
         <ToastContainer closeOnClick pauseOnHover position="bottom-right" />
         <AuthSessionProvider>
+          <AccountPopup />
           <StoreProvider>
             <ReactQueryProvider>{children}</ReactQueryProvider>
           </StoreProvider>

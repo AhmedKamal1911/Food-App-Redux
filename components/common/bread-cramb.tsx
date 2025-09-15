@@ -8,6 +8,7 @@ import {
   // BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
+import Link from "next/link";
 
 export default function BreadCramb({
   // currentPage,
@@ -20,8 +21,8 @@ export default function BreadCramb({
     <Breadcrumb className="">
       <BreadcrumbList className="text-white capitalize text-[17px] sm:text-[19px]">
         <BreadcrumbItem>
-          <BreadcrumbLink className="hover:text-primary" href="/">
-            Home
+          <BreadcrumbLink className="hover:text-primary" asChild>
+            <Link href="/">Home</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         {pathes.map((path, index) => (

@@ -17,8 +17,8 @@ import Link from "next/link";
 import NavLinksGroup from "./nav-links-group";
 import HelpGroup from "./help-group";
 import { ProductCategory } from "@prisma/client";
-import { useLogOut } from "@/hooks/use-log-out";
-import { toast } from "react-toastify";
+import { useLogout } from "@/hooks/use-log-out";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -166,15 +166,12 @@ function AvatarBox() {
 }
 
 function LogoutBtn() {
-  const { isLoading, onLogout } = useLogOut();
-  async function onLogoutBtnClick() {
-    await onLogout();
-    toast.success("You Logged Out Successfully.");
-  }
+  const { isLoading, onLogout } = useLogout("/login");
+
   return (
     <SidebarMenuButton
       disabled={isLoading}
-      onClick={onLogoutBtnClick}
+      onClick={onLogout}
       className="cursor-pointer font-semibold hover:text-destructive transition-colors"
     >
       <LogOut /> {isLoading ? "Loading" : "Logout"}
