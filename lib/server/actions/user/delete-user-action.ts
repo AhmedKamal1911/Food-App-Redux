@@ -78,7 +78,7 @@ export async function deleteUserAction(userIdInput: string): ActionResponse {
       },
     });
 
-    await deleteImageFromBucket(userId);
+    await deleteImageFromBucket(`profile_images/${userId}`);
     revalidateTag(PRISMA_CACHE_KEY.USERS);
     return {
       status: "success",

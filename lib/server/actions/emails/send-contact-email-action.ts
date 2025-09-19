@@ -1,7 +1,7 @@
 "use server";
 
 import { ContactEmailTemplate } from "@/emails/contact-email-template";
-import { resend } from "@/lib/resend";
+import { resend, SENDER_EMAIL } from "@/lib/resend";
 import { ActionResponse } from "@/lib/types/shared";
 import { contactSchema, ContactSchema } from "@/lib/validation/contact-schema";
 
@@ -21,7 +21,7 @@ export async function sendContactEmailAction(
   const data = result.data;
   try {
     await resend.emails.send({
-      from: "Pizzon <onboarding@resend.dev>",
+      from: `Pizzon ${SENDER_EMAIL}`,
       to: [data.email],
       subject: `New Contact Request from ${data.email}`,
       react: ContactEmailTemplate(data),

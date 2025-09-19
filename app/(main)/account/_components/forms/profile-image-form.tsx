@@ -52,15 +52,14 @@ export function ProfileImageForm({
       // validation is successful
 
       tempProfileImg = URL.createObjectURL(schemaResult.data);
-      console.log({ tempProfileImg });
 
       setCurrentProfileImg(tempProfileImg);
       setIsPending(true);
-      await new Promise((resolve) => setTimeout(resolve, 5000));
 
       const uploadImageResponse = await uploadProfileImage(schemaResult.data);
 
       const uploadedImgURL = uploadImageResponse.url;
+
       const actionResponse = await updateProfileImageAction(uploadedImgURL);
       if (actionResponse.status === "success") {
         toast.success(actionResponse.message);

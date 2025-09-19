@@ -7,10 +7,12 @@ import { updateCategorySchema } from "@/lib/validation/update-category-schema";
 
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCategoryById, getCategoryBySlug } from "../../queries";
-import { requirePermission } from "@/lib/server-utils";
+import { deleteImageFromBucket, requirePermission } from "@/lib/server-utils";
 
 import { ActionResponse } from "@/lib/types/shared";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
+import { extractPublicIdFromUrl } from "@/lib/utils";
 const schema = updateCategorySchema
   .omit({ img: true })
   .merge(z.object({ imgUrl: z.string().optional() }));
@@ -89,6 +91,12 @@ export async function updateCategoryAction(inputs: Inputs): ActionResponse {
       message: `Category "${data.name}" updated successfully.`,
     };
   } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      inputs.imgUrl
+    ) {
+      await deleteImageFromBucket(extractPublicIdFromUrl(inputs.imgUrl));
+    }
     console.error(error);
 
     return {

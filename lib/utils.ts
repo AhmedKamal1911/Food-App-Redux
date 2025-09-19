@@ -91,3 +91,20 @@ export function getCurrentAndPreviousMonthRange() {
     startOfPrevMonth,
   };
 }
+
+export function extractPublicIdFromUrl(url: string): string {
+  // مثال: https://res.cloudinary.com/<cloud_name>/image/upload/v1234567890/folder/file-name.jpg
+  const parts = url.split("/upload/");
+  if (parts.length < 2) return "";
+
+  const pathWithVersion = parts[1]; // v1234567890/folder/file.jpg
+  const pathSegments = pathWithVersion.split("/");
+
+  // نشيل الـ version (أول segment بيبدأ بـ v)
+  if (pathSegments[0].startsWith("v")) {
+    pathSegments.shift();
+  }
+
+  // نجمع باقي المسار ونشيل الامتداد
+  return pathSegments.join("/").replace(/\.[^/.]+$/, "");
+}

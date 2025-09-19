@@ -6,7 +6,7 @@ import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState, useTransition } from "react";
 
 import { toast } from "react-toastify";
 
@@ -23,6 +23,7 @@ type Props = {
   setOpenModal: Dispatch<SetStateAction<boolean>>;
 };
 export default function UpdateCategoryForm({ category, setOpenModal }: Props) {
+  const [isPending, startTransition] = useTransition();
   const form = useForm<UpdateCategoryInputs>({
     resolver: zodResolver(updateCategorySchema),
     defaultValues: {
@@ -38,40 +39,35 @@ export default function UpdateCategoryForm({ category, setOpenModal }: Props) {
   );
 
   // 2. Define a submit handler.
-  async function onSubmit(values: UpdateCategoryInputs) {
-    try {
-      const uploadImgResponse = await (values.img === undefined
-        ? Promise.resolve(undefined)
-        : uploadImage({
-            imageFile: values.img,
-            pathname: `category_images/${values.id}`,
-          }));
+  function onSubmit(values: UpdateCategoryInputs) {
+    startTransition(async () => {
+      try {
+        const uploadImgResponse = await (values.img === undefined
+          ? Promise.resolve(undefined)
+          : uploadImage({
+              imageFile: values.img,
+              pathname: `category_images/${values.id}`,
+            }));
 
-      const res = await updateCategoryAction({
-        id: values.id,
-        name: values.name,
-        imgUrl: uploadImgResponse,
-      });
-      if (res.status === "success") {
-        toast.success(res.message);
-        setOpenModal(false);
+        const res = await updateCategoryAction({
+          id: values.id,
+          name: values.name,
+          imgUrl: uploadImgResponse,
+        });
+        if (res.status === "success") {
+          toast.success(res.message);
+          setOpenModal(false);
+        }
+        if (res.status === "validationError") return;
+        if (res.status === "error") {
+          toast.error(res.error.message);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Network Error Occurred");
       }
-      if (res.status === "validationError") return;
-      if (res.status === "error") {
-        toast.error(res.error.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Network Error Occurred");
-    }
-  }
-
-  useEffect(() => {
-    form.reset({
-      id: category.id,
-      name: category.name,
     });
-  }, [category, form]);
+  }
 
   return (
     <Form {...form}>
@@ -95,8 +91,8 @@ export default function UpdateCategoryForm({ category, setOpenModal }: Props) {
           className="rounded-sm!"
         />
 
-        <Button disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? "Updating" : "Update"}
+        <Button disabled={isPending}>
+          {isPending ? "Updating" : "Update"}
         </Button>
       </form>
     </Form>

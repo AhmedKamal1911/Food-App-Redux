@@ -24,11 +24,11 @@ export async function getSessionCookieString() {
       : "next-auth.session-token";
   const sessionCookieValue = cookieStore.get(sessionCookieName)?.value;
   console.log({ sessionCookieName });
-  return `${sessionCookieName}=${sessionCookieValue}`;
+  return `${sessionCookieName}=${sessionCookieValue}` as const;
 }
 
-export async function deleteImageFromBucket(userId: string) {
-  await cloudinary.uploader.destroy(`profile_images/${userId}`, {
+export async function deleteImageFromBucket(publicId: string) {
+  await cloudinary.uploader.destroy(publicId, {
     resource_type: "image",
     type: "upload",
     invalidate: true,

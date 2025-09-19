@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useTransition } from "react";
 
 import { toast } from "react-toastify";
 import {
@@ -20,6 +20,7 @@ export default function CreateCategoryForm({
 }: {
   setOpenModal: Dispatch<SetStateAction<boolean>>;
 }) {
+  const [isPending, startTransition] = useTransition();
   const form = useForm<CreateCategoryInputs>({
     resolver: zodResolver(createCategorySchema),
     defaultValues: {
@@ -32,21 +33,23 @@ export default function CreateCategoryForm({
   const [previewUrl, setPreviewUrl] = useState("");
 
   // 2. Define a submit handler.
-  async function onSubmit(values: CreateCategoryInputs) {
-    try {
-      const res = await createCategoryAction({ ...values });
-      if (res.status === "success") {
-        toast.success(res.message);
-        setOpenModal(false);
+  function onSubmit(values: CreateCategoryInputs) {
+    startTransition(async () => {
+      try {
+        const res = await createCategoryAction({ ...values });
+        if (res.status === "success") {
+          toast.success(res.message);
+          setOpenModal(false);
+        }
+        if (res.status === "validationError") return;
+        if (res.status === "error") {
+          toast.error(res.error.message);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("An Network error occured");
       }
-      if (res.status === "validationError") return;
-      if (res.status === "error") {
-        toast.error(res.error.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("An Network error occured");
-    }
+    });
   }
 
   return (
@@ -71,8 +74,8 @@ export default function CreateCategoryForm({
           className="rounded-sm!"
         />
 
-        <Button disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? "Creating" : "Create"}
+        <Button disabled={isPending}>
+          {isPending ? "Creating" : "Create"}
         </Button>
       </form>
     </Form>

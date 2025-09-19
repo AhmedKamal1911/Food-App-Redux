@@ -1,7 +1,7 @@
 "use server";
 
 import { BookTableTemplate } from "@/emails";
-import { resend } from "@/lib/resend";
+import { resend, SENDER_EMAIL } from "@/lib/resend";
 import { ActionResponse } from "@/lib/types/shared";
 
 import {
@@ -25,7 +25,7 @@ export async function sendBookTableEmailAction(
   const data = result.data;
   try {
     await resend.emails.send({
-      from: "Pizzon <onboarding@resend.dev>",
+      from: `Pizzon ${SENDER_EMAIL}`,
       to: [data.email],
       subject: `Table Booking Request - ${data.name}`,
       react: BookTableTemplate(data),

@@ -57,10 +57,10 @@ function CategoryCard({ category }: { category: ProductCategory }) {
     <div className="group rounded-md relative">
       <div className="overflow-hidden rounded-md">
         <Image
-          className="group-hover:scale-105 group-hover:grayscale-30 transition-all"
+          className="group-hover:scale-105 group-hover:grayscale-30 transition-all aspect-square"
           height={400}
           width={400}
-          alt={`${category.name} category`}
+          alt={`${category.name} category img`}
           src={category.image ?? "/images/decorations/placeholder.png"}
         />
       </div>

@@ -12,7 +12,7 @@ import {
 import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCategoryBySlug } from "../../queries";
-import { requirePermission } from "@/lib/server-utils";
+import { getSessionCookieString, requirePermission } from "@/lib/server-utils";
 import { uploadImage } from "@/lib/queries/upload/upload-image";
 import { ActionResponse } from "@/lib/types/shared";
 
@@ -62,6 +62,7 @@ export async function createCategoryAction(
       },
     });
     const imageUrl = await uploadImage({
+      authCookie: await getSessionCookieString(),
       imageFile: data.img,
       pathname: `category_images/${createdCategory.id}`,
     });

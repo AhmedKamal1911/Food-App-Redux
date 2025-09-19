@@ -3,8 +3,11 @@
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getCurrentSession } from "@/lib/dal/user";
 import prisma from "@/lib/prisma";
+import { deleteImageFromBucket } from "@/lib/server-utils";
 
 import { ActionResponse } from "@/lib/types/shared";
+import { extractPublicIdFromUrl } from "@/lib/utils";
+import { Prisma } from "@prisma/client";
 
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
@@ -53,6 +56,9 @@ export async function updateProfileImageAction(
       message: "Profile Image Updated Successfully.",
     };
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      await deleteImageFromBucket(extractPublicIdFromUrl(profileImgURL));
+    }
     console.error(error);
     return {
       status: "error",

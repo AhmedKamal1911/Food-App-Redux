@@ -10,7 +10,7 @@ import slugify from "slugify";
 import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
 import { getProductBySlug } from "../../queries";
-import { requirePermission } from "@/lib/server-utils";
+import { getSessionCookieString, requirePermission } from "@/lib/server-utils";
 import { uploadImage } from "@/lib/queries/upload/upload-image";
 import { ActionResponse } from "@/lib/types/shared";
 
@@ -36,7 +36,9 @@ export async function createProductAction(
       },
     };
   }
+
   const { data } = result;
+  console.dir({ data }, { depth: null });
   const slug = slugify(data.name, { lower: true });
   try {
     // Check if the product already exists
@@ -68,7 +70,9 @@ export async function createProductAction(
         sizes: { createMany: { data: data.sizes } },
       },
     });
+    console.log("produc created", { createdProduct });
     const imageUrl = await uploadImage({
+      authCookie: await getSessionCookieString(),
       imageFile: data.img,
       pathname: `product_images/${createdProduct.id}`,
     });

@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
         overwrite: true,
       }
     );
-
+    console.log("image uploaded");
     return NextResponse.json<FileUploadResponseSchema>(
       { url: uploadResponse.secure_url },
       {
@@ -62,6 +62,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error(error);
+    console.log("error from route");
     return NextResponse.json(
       { error: "Failed to upload file" },
       { status: 500 }

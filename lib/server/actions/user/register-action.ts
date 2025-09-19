@@ -11,7 +11,7 @@ import { VerificationTemplate } from "@/emails/email-verification-template";
 import { hashPassword } from "@/lib/server-utils";
 
 import parsePhoneNumber from "libphonenumber-js";
-import { resend } from "@/lib/resend";
+import { resend, SENDER_EMAIL } from "@/lib/resend";
 import { ActionResponse } from "@/lib/types/shared";
 
 export async function registerAction(
@@ -61,7 +61,7 @@ export async function registerAction(
       },
     });
     await resend.emails.send({
-      from: "Pizzon <onboarding@resend.dev>",
+      from: `Pizzon ${SENDER_EMAIL}`,
       to: [resultData.email],
       subject: "Hello world",
       react: VerificationTemplate({

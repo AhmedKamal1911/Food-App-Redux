@@ -9,13 +9,23 @@ import { getProductById, getProductBySlug } from "../../queries";
 import prisma from "@/lib/prisma";
 import { revalidateTag } from "next/cache";
 import { PRISMA_CACHE_KEY } from "@/lib/cache/cache-keys";
-import { requirePermission } from "@/lib/server-utils";
+import {
+  deleteImageFromBucket,
+  getSessionCookieString,
+  requirePermission,
+} from "@/lib/server-utils";
 import { uploadImage } from "@/lib/queries/upload/upload-image";
 import { ActionResponse } from "@/lib/types/shared";
+import { Prisma } from "@prisma/client";
+import { extractPublicIdFromUrl } from "@/lib/utils";
 
-export async function updateProductAction(
-  inputs: UpdateProductInputs
-): ActionResponse {
+export async function updateProductAction({
+  inputs,
+  productImg,
+}: {
+  inputs: UpdateProductInputs;
+  productImg: string | null;
+}): ActionResponse {
   if (!requirePermission(["admin", "superAdmin"])) {
     return {
       status: "error",
@@ -77,6 +87,7 @@ export async function updateProductAction(
 
     const imageUrl = data.img
       ? await uploadImage({
+          authCookie: await getSessionCookieString(),
           imageFile: data.img,
           pathname: `product_images/${productFromDb.id}`,
         })
@@ -118,6 +129,9 @@ export async function updateProductAction(
       message: `${data.name} updated successfully`,
     };
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && productImg) {
+      await deleteImageFromBucket(extractPublicIdFromUrl(productImg));
+    }
     console.error(error);
 
     return {

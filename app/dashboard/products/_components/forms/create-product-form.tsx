@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useTransition } from "react";
 
 import CustomTextArea from "@/components/common/custom-text-area";
 import { useCategoriesContext } from "@/providers/categories-provider";
@@ -40,6 +40,7 @@ export default function CreateProductForm({
 }: {
   setOpenModal: Dispatch<SetStateAction<boolean>>;
 }) {
+  const [isPending, startTransition] = useTransition();
   const form = useForm<CreateProductInputs>({
     resolver: zodResolver(createProductSchema),
     defaultValues: {
@@ -56,21 +57,23 @@ export default function CreateProductForm({
 
   const [previewUrl, setPreviewUrl] = useState("");
   // 2. Define a submit handler.
-  async function onSubmit(values: CreateProductInputs) {
-    try {
-      const res = await createProductAction(values);
-      if (res.status === "success") {
-        toast.success(res.message);
-        setOpenModal(false);
+  function onSubmit(values: CreateProductInputs) {
+    startTransition(async () => {
+      try {
+        const res = await createProductAction(values);
+        if (res.status === "success") {
+          toast.success(res.message);
+          setOpenModal(false);
+        }
+        if (res.status === "validationError") return;
+        if (res.status === "error") {
+          toast.error(res.error.message);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("An Network error occured");
       }
-      if (res.status === "validationError") return;
-      if (res.status === "error") {
-        toast.error(res.error.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("An Network error occured");
-    }
+    });
   }
 
   return (
@@ -143,8 +146,8 @@ export default function CreateProductForm({
             control={form.control}
           />
         </div>
-        <Button disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? "Creating" : "Create"}
+        <Button disabled={isPending}>
+          {isPending ? "Creating" : "Create"}
         </Button>
       </form>
     </Form>

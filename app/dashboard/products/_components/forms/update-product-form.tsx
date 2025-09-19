@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { ProductWithRelations } from "@/lib/types/product";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState, useTransition } from "react";
 import {
   UpdateProductInputs,
   updateProductSchema,
@@ -40,6 +40,7 @@ type Props = {
   setOpenModal: Dispatch<SetStateAction<boolean>>;
 };
 export default function UpdateProductForm({ product, setOpenModal }: Props) {
+  const [isPending, startTransition] = useTransition();
   const form = useForm<UpdateProductInputs>({
     resolver: zodResolver(updateProductSchema),
     defaultValues: {
@@ -60,34 +61,28 @@ export default function UpdateProductForm({ product, setOpenModal }: Props) {
     product.image ?? "/images/decorations/placeholder.png"
   );
   // 2. Define a submit handler.
-  async function onSubmit(values: UpdateProductInputs) {
-    try {
-      const res = await updateProductAction(values);
-      if (res.status === "success") {
-        toast.success(res.message);
-        setOpenModal(false);
-      }
-      if (res.status === "validationError") return;
-      if (res.status === "error") {
-        toast.error(res.error.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Network Error Occurred");
-    }
-  }
 
-  useEffect(() => {
-    form.reset({
-      categoryId: product?.categoryId ?? "",
-      desc: product.description,
-      extras: product.extras,
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      sizes: product.sizes,
+  function onSubmit(values: UpdateProductInputs) {
+    startTransition(async () => {
+      try {
+        const res = await updateProductAction({
+          inputs: values,
+          productImg: product.image,
+        });
+        if (res.status === "success") {
+          toast.success(res.message);
+          setOpenModal(false);
+        }
+        if (res.status === "validationError") return;
+        if (res.status === "error") {
+          toast.error(res.error.message);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Network Error Occurred");
+      }
     });
-  }, [product, form]);
+  }
 
   return (
     <Form {...form}>
@@ -157,8 +152,8 @@ export default function UpdateProductForm({ product, setOpenModal }: Props) {
             control={form.control}
           />
         </div>
-        <Button disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? "Updating" : "Update"}
+        <Button disabled={isPending}>
+          {isPending ? "Updating" : "Update"}
         </Button>
       </form>
     </Form>
