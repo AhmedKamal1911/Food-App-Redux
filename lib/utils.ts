@@ -108,3 +108,6 @@ export function extractPublicIdFromUrl(url: string): string {
   // نجمع باقي المسار ونشيل الامتداد
   return pathSegments.join("/").replace(/\.[^/.]+$/, "");
 }
+
+export const convertToSubcurrency = (amount: number, factor = 100) =>
+  Math.round(amount * factor);

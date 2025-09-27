@@ -1,8 +1,7 @@
+import { convertToSubcurrency } from "@/lib/utils";
 import { createPaymentIntentResponseSchema } from "@/lib/validation/payment-schema";
 import { useQuery } from "@tanstack/react-query";
-function formatCurrency(price: number) {
-  return Math.trunc(price) * 100;
-}
+
 async function fetchPaymentIntent({
   subtotal,
   metadata,
@@ -13,7 +12,7 @@ async function fetchPaymentIntent({
   const res = await fetch(`/api/create-payment-intent`, {
     method: "POST",
     body: JSON.stringify({
-      amount: formatCurrency(subtotal),
+      amount: convertToSubcurrency(subtotal),
       headers: {
         "Content-Type": "application/json",
       },

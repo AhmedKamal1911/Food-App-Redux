@@ -3,6 +3,7 @@ import { CheckoutForm } from "./forms/checkout-form";
 import { PromoCodeForm } from "./forms/promo-code-form";
 import { loadStripe } from "@stripe/stripe-js";
 import { CartProduct } from "@/lib/types/product";
+import { convertToSubcurrency } from "@/lib/utils";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -33,14 +34,11 @@ export default function CheckoutSection({
               theme: "stripe",
             },
             mode: "payment",
-            amount: Math.trunc(subtotal) * 100,
-            currency: "eur",
+            amount: convertToSubcurrency(subtotal),
+            currency: "usd",
           }}
         >
-          <CheckoutForm
-            cartProducts={cartProducts}
-            subtotal={Math.trunc(subtotal) * 100}
-          />
+          <CheckoutForm cartProducts={cartProducts} subtotal={subtotal} />
         </Elements>
       </div>
     </div>
