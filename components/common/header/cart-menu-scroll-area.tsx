@@ -90,11 +90,16 @@ const MemoizedCartProductBox = memo(function CartProductBox({
         <span className="text-primary font-semibold">
           {product.qty} x ${product.price}
         </span>
-
+        {product.selectedSize && (
+          <div className="flex gap-2">
+            <span>Size:</span>
+            <span className="font-semibold">{product.selectedSize.name}</span>
+          </div>
+        )}
         {/* Extras */}
-        {product.extras?.length > 0 && (
+        {product.selectedExtras?.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {product.extras.map((extra) => (
+            {product.selectedExtras.map((extra) => (
               <span
                 key={extra.id}
                 className="px-2 py-1 text-xs rounded-md bg-gray-100 text-gray-700 flex items-center gap-1"
