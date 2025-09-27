@@ -15,6 +15,7 @@ export default function AccountPopup() {
   const [open, setOpen] = useState(false);
   const isCalledFirstTimeRef = useRef(false);
   useEffect(() => {
+    console.log("from useEffect", { session, isCalledFirstTimeRef });
     if (session.status === "unauthenticated" && !isCalledFirstTimeRef.current) {
       isCalledFirstTimeRef.current = true;
       setOpen(true);

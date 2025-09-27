@@ -24,7 +24,7 @@ export default function CheckoutSection({
       <div className="flex flex-col gap-5">
         <div className="flex justify-between font-semibold">
           <span className="uppercase">total cost</span>
-          <span>${subtotal - 20}</span>
+          <span>${subtotal}</span>
         </div>
         <Elements
           stripe={stripePromise}
@@ -34,10 +34,13 @@ export default function CheckoutSection({
             },
             mode: "payment",
             amount: Math.trunc(subtotal) * 100,
-            currency: "eur",
+            currency: "usd",
           }}
         >
-          <CheckoutForm cartProducts={cartProducts} subtotal={subtotal} />
+          <CheckoutForm
+            cartProducts={cartProducts}
+            subtotal={Math.trunc(subtotal) * 100}
+          />
         </Elements>
       </div>
     </div>
