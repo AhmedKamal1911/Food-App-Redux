@@ -39,7 +39,7 @@ export default function CheckoutSection({
         >
           <CheckoutForm
             cartProducts={cartProducts}
-            subtotal={Math.trunc(subtotal)}
+            subtotal={Math.trunc(subtotal) * 100}
           />
         </Elements>
       </div>
