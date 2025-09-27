@@ -34,7 +34,7 @@ export default function CheckoutSection({
             },
             mode: "payment",
             amount: Math.trunc(subtotal) * 100,
-            currency: "usd",
+            currency: "eur",
           }}
         >
           <CheckoutForm
