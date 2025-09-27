@@ -1,4 +1,4 @@
-import BreadCramb from "./bread-cramb";
+import BreadCrumb from "./breadcrumb";
 
 export default function IntroBanner({
   title,
@@ -19,7 +19,7 @@ export default function IntroBanner({
           <span className="max-[300px]:text-xl max-md:text-center text-3xl md:text-5xl font-bold text-white uppercase">
             {title}
           </span>
-          <BreadCramb pathes={breadcrumbPaths} />
+          <BreadCrumb pathes={breadcrumbPaths} />
         </div>
       </div>
     </div>

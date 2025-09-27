@@ -74,7 +74,7 @@ export default async function ProductPage({ params }: Props) {
       <IntroBanner
         title={product.name}
         breadcrumbPaths={[
-          { name: "products", href: "/products" },
+          { name: "menu", href: "/menu" },
           { name: product.name, href: `/products/${product.slug}` },
         ]}
       />

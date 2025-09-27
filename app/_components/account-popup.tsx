@@ -8,19 +8,23 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 export default function AccountPopup() {
   const session = useSession();
   const [open, setOpen] = useState(false);
   const isCalledFirstTimeRef = useRef(false);
+  const pathname = usePathname();
   useEffect(() => {
     console.log("from useEffect", { session, isCalledFirstTimeRef });
+    if (pathname !== "/") return;
+
     if (session.status === "unauthenticated" && !isCalledFirstTimeRef.current) {
       isCalledFirstTimeRef.current = true;
       setOpen(true);
     }
-  }, [session]);
+  }, [pathname, session]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

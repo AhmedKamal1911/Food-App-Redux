@@ -10,7 +10,7 @@ import {
 } from "../ui/breadcrumb";
 import Link from "next/link";
 
-export default function BreadCramb({
+export default function BreadCrumb({
   // currentPage,
   pathes,
 }: {
@@ -36,11 +36,8 @@ export default function BreadCramb({
               </BreadcrumbItem>
             ) : (
               <BreadcrumbItem>
-                <BreadcrumbLink
-                  className="hover:text-primary"
-                  href={path.href ?? "#"}
-                >
-                  {path.name}
+                <BreadcrumbLink className="hover:text-primary" asChild>
+                  <Link href={path.href ?? "#"}>{path.name}</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             )}
