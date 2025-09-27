@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     // handle error
     return NextResponse.json({ error: "No metadata found" }, { status: 400 });
   }
-  const userId = metadata.userId as string | null;
+  const userId = metadata.userId as string | undefined;
   const billing_details = session.billing_details;
 
   switch (event.type) {

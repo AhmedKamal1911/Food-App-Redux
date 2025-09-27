@@ -38,7 +38,7 @@ export function CheckoutForm({
   const session = useSession();
 
   const metadata = {
-    userId: session.data?.user.id ?? null,
+    userId: session.data?.user.id ?? undefined,
     products: JSON.stringify(
       cartProducts.map((p) => ({
         id: p.id,
