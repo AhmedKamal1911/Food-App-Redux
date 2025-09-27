@@ -91,15 +91,17 @@ export default function ProductInfoBox({ product }: Props) {
           />
         )}
       </div>
-      <div>
-        <span className="text-gray-700 font-semibold">Quantity:</span>
-        <QuantityBox
-          onDecrease={onDecrementClick}
-          onIncrease={onIncrementClick}
-          onQtyChange={onQtyChange}
-          value={totalQuantity}
-        />
-      </div>
+      {totalQuantity !== 0 && (
+        <div>
+          <span className="text-gray-700 font-semibold">Quantity:</span>
+          <QuantityBox
+            onDecrease={onDecrementClick}
+            onIncrease={onIncrementClick}
+            onQtyChange={onQtyChange}
+            value={totalQuantity}
+          />
+        </div>
+      )}
 
       <Button
         onClick={addProductToCart}
