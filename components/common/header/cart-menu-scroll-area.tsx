@@ -54,6 +54,7 @@ const MemoizedCartProductBox = memo(function CartProductBox({
   product: CartProduct;
 }) {
   const dispatch = useAppDispatch();
+
   function onProductDelete() {
     dispatch(
       deleteCartItem({
@@ -64,31 +65,52 @@ const MemoizedCartProductBox = memo(function CartProductBox({
     );
     toast.success(`${product.name} Deleted From Cart`);
   }
+
   return (
-    <div className="flex items-center">
+    <div className="flex flex-col-reverse gap-2 sm:gap-1 p-1 sm:p-3 border-b items-start">
       <Image
         src={product.image ?? "/images/decorations/placeholder.png"}
         alt={product.name ?? "product image placeholder"}
         width={80}
         height={80}
+        className="rounded-md object-cover flex-shrink-0"
       />
-      <div className="flex flex-col gap-1 flex-1 px-4">
+
+      <div className="flex flex-col gap-2 flex-1 min-w-0">
+        {/* اسم المنتج */}
         <Link
           href={`/products/${product.slug}`}
-          className="line-clamp-2 word-break"
+          className="line-clamp-2 break-words font-medium"
           title={product.name}
         >
           {product.name}
         </Link>
-        <span className="text-primary">
+
+        {/* السعر */}
+        <span className="text-primary font-semibold">
           {product.qty} x ${product.price}
         </span>
+
+        {/* Extras */}
+        {product.extras?.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {product.extras.map((extra) => (
+              <span
+                key={extra.id}
+                className="px-2 py-1 text-xs rounded-md bg-gray-100 text-gray-700 flex items-center gap-1"
+              >
+                {extra.name} +{extra.price}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
+
       <button
         onClick={onProductDelete}
-        className="self-start cursor-pointer hover:bg-primary/10 transition-colors"
+        className="cursor-pointer hover:bg-red-50 transition-colors rounded-full p-1"
       >
-        <X className="text-red-600" />
+        <X className="text-red-600 w-5 h-5" />
       </button>
     </div>
   );

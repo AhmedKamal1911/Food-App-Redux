@@ -82,7 +82,7 @@ function ShoppingCartDrawer({
       </SheetTrigger>
       <SheetContent
         side="right"
-        className="items-start justify-center z-[999] p-4 "
+        className="items-start justify-center z-[999] p-2 sm:p-4 "
       >
         <SheetTitle>Shopping Cart</SheetTitle>
 
