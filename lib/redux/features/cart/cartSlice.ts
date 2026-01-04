@@ -115,6 +115,15 @@ export const cartSlice = createSlice({
         delete state.products[id];
       }
     },
+    removeCartItemById: (
+      state,
+      action: PayloadAction<{
+        id: string;
+      }>
+    ) => {
+      delete state.products[action.payload.id];
+      console.log("cart Product by id deleted");
+    },
   },
 });
 function generateSizeExtrasString(
@@ -136,5 +145,6 @@ export const {
   decrementCartItemQty,
   changeCartItemQty,
   deleteCartItem,
+  removeCartItemById,
 } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -6,7 +6,10 @@ import { useEffect, useMemo } from "react";
 
 import { TanstackQueryCacheKey } from "@/lib/cache/cache-keys";
 import { usePrevious } from "./use-prev";
-import { deleteCartItem } from "@/lib/redux/features/cart/cartSlice";
+import {
+  deleteCartItem,
+  removeCartItemById,
+} from "@/lib/redux/features/cart/cartSlice";
 import { useDispatch } from "react-redux";
 
 export function useGetCartProducts() {
@@ -33,26 +36,51 @@ export function useGetCartProducts() {
     }
   }, [cartProductsLength, client, prevCartItemsLength]);
 
-  const prevCartItems = usePrevious(cartItems);
   useEffect(() => {
-    if (!query.isSuccess || !data) return;
-
+    // FIXME: when cart has an item and that item no longer exists in database, it should remove that item.
+    if (!query.isSuccess || query.isFetching || !data) return;
     const dbProducts = data.data;
-    const validIds = new Set(dbProducts.map((p) => String(p.id)));
-
-    Object.entries(cartItems).forEach(([id, options]) => {
-      const existedBefore = prevCartItems?.[id] !== undefined;
-
-      if (existedBefore && !validIds.has(String(id))) {
-        console.log("product deleted");
-        options.forEach((op) => {
-          dispatch(
-            deleteCartItem({ id, extrasIds: op.extrasIds, sizeId: op.sizeId })
-          );
-        });
+    for (const [id, options] of Object.entries(cartItems)) {
+      const cartProductFromDb = dbProducts.find((p) => p.id === id);
+      console.log({ cartProductFromDb, dbProducts, storageProductID: id });
+      if (!cartProductFromDb) {
+        console.log("cartProduct is not in db delete it entirely");
+        dispatch(removeCartItemById({ id }));
+        continue;
       }
-    });
-  }, [query.isSuccess, data, cartItems, prevCartItems, dispatch]);
+      options.forEach((o) => {
+        if (!o.sizeId) return;
+        const productDbSize = cartProductFromDb.sizes.find(
+          (s) => s.id === o.sizeId
+        );
+        if (!productDbSize) {
+          console.log("cartProduct size is not in db delete it");
+          dispatch(
+            deleteCartItem({ sizeId: o.sizeId, extrasIds: o.extrasIds, id })
+          );
+          return;
+        }
+        if (o.extrasIds.length === 0) return;
+        const productDbExtras = o.extrasIds.find((storageExtraId) =>
+          Boolean(
+            cartProductFromDb.extras.find((ex) => ex.id === storageExtraId)
+          )
+        );
+        if (!productDbExtras) {
+          console.log("cartProduct extras is not in db delete it", {
+            productDbExtras,
+            extrasFromStorage: o.extrasIds,
+            extrasFromDb: cartProductFromDb.extras,
+            querySuccess: query.isSuccess,
+            data: dbProducts,
+          });
+          dispatch(
+            deleteCartItem({ sizeId: o.sizeId, extrasIds: o.extrasIds, id })
+          );
+        }
+      });
+    }
+  }, [query.isSuccess, data, cartItems, dispatch, cartProductsLength]);
 
   const cartProducts = useMemo(() => {
     const list: CartProduct[] = [];
